@@ -1,0 +1,10 @@
+version: '3'
+services:
+  django:
+    build: ./backend
+    ports:
+      - "8000:8000"
+  angular:
+    build: ./frontend
+    ports:
+      - "4200:4200"
