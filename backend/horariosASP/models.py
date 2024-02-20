@@ -1,3 +1,15 @@
 from django.db import models
+from clorm import Predicate, ConstantField, IntegerField
 
-# Create your models here.
+
+class Driver(Predicate):
+    name=ConstantField
+
+class Item(Predicate):
+    name=ConstantField
+
+class Assignment(Predicate):
+    item=ConstantField
+    driver=ConstantField
+    time=IntegerField
+
