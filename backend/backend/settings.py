@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-jqtt-tp=o5sq2@ya9)x6%1q9#yt+qu5!d%d%u2y6klh#ccxmzg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -45,11 +45,10 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -130,5 +129,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS settings authorization
-CORS_ALLOWED_ORIGINS = [
-]
+CORS_ALLOWED_ORIGINS = ['http://localhost:4200']
+# CORS_ALLOW_ALL_ORIGINS = True
+
+# ALLOWED_HOSTS = ['*']
+
