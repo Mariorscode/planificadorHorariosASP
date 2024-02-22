@@ -1,5 +1,16 @@
-<p>"Componente de ejemplo"</p>
-<div *ngFor="let dato of datos">
-  <p>Nombre: {{ dato.nombre }}</p>
-  <p>Duración: {{ dato.duracion }} horas</p>
+<!-- <p class="component-title">Componente de ejemplo</p>
+<div *ngFor="let dato of datos" class="div">
+  <body>
+    <p>Nombre: {{ dato.nombre }}</p>
+    <p>Duración: {{ dato.duracion }} horas</p>
+  </body>
+</div> -->
+<div *ngFor="let dato of datos" class="component-container">
+  <div class="component">
+    <p class="pTitle">Componente de ejemplo</p>
+    <div class="info">
+      <p class="p">Nombre: {{ dato.nombre }}</p>
+      <p class="p">Duración: {{ dato.duracion }} horas</p>
+    </div>
+  </div>
 </div>
