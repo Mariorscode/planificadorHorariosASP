@@ -45,7 +45,8 @@ def solve_program(request):
     if request.method == 'GET':
         solutions = solve_asp_program()
         print(solutions)    
-        # Convertir el resultado a un formato que puede ser serializado
+        
+#   # Convertir el resultado a un formato que puede ser serializado (comentado para hacer pruebas)
     #     formatted_result = []
     #     for solution in solutions:
     #         formatted_result.extend([{'item': str(a.item), 'driver': str(a.driver), 'time': a.time} for a in solution])
@@ -53,42 +54,31 @@ def solve_program(request):
     #     return JsonResponse(formatted_result, safe=False)
     # else:
     #     return HttpResponse(status=405)
-# @csrf_exempt
-# def solve_program(request):
-#     if  request.method == 'GET':
-#         # result = solve_asp_program()
-#         result = [
-#             {'item': 'item1', 'driver': 'dave', 'time': 1},
-#             {'item': 'item2', 'driver': 'morri', 'time': 2},
-#             {'item': 'item3', 'driver': 'michael', 'time': 3},
-#             {'item': 'item4', 'driver': 'dave', 'time': 4},
-#             {'item': 'item5', 'driver': 'morri', 'time': 5},
-#         ]
-#         serializer = AssignmentSerializer(data=result, many=True)
-#         if serializer.is_valid():
-#             return JsonResponse(serializer.data,safe=False)
-#         else:
-#             return JsonResponse({'error': 'Invalid data'}, status=400)
-#     else:
-#         return HttpResponse(status=405)
-# class AssignmentSerializer(serializers.Serializer):
-#     item = serializers.CharField()
-#     driver = serializers.CharField()
-#     time = serializers.IntegerField()
-# @csrf_exempt
-# def solve_program(request):
-#     if request.method == 'GET':
-#         result = [
-#             {'item': 'item1', 'driver': 'dave', 'time': 1},
-#             {'item': 'item2', 'driver': 'morri', 'time': 2},
-#             {'item': 'item3', 'driver': 'michael', 'time': 3},
-#             {'item': 'item4', 'driver': 'dave', 'time': 4},
-#             {'item': 'item5', 'driver': 'morri', 'time': 5},
-#         ]
-#         serializer = AssignmentSerializer(data=result, many=True)
-#         if serializer.is_valid():
-#             return JsonResponse(serializer.data, safe=False)
-#         else:
-#             return JsonResponse({'error': 'Invalid data'}, status=400)
-#     else:
-#         return HttpResponse(status=405)
+    
+
+''''
+# Este ejemplo devuelve correctamente la petición pero result está hardcoded por lo que no es válido
+
+class AssignmentSerializer(serializers.Serializer):
+    item = serializers.CharField()
+    driver = serializers.CharField()
+    time = serializers.IntegerField()
+@csrf_exempt
+def solve_program(request):
+    if request.method == 'GET':
+        result = [
+            {'item': 'item1', 'driver': 'dave', 'time': 1},
+            {'item': 'item2', 'driver': 'morri', 'time': 2},
+            {'item': 'item3', 'driver': 'michael', 'time': 3},
+            {'item': 'item4', 'driver': 'dave', 'time': 4},
+            {'item': 'item5', 'driver': 'morri', 'time': 5},
+        ]
+        serializer = AssignmentSerializer(data=result, many=True)
+        if serializer.is_valid():
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            return JsonResponse({'error': 'Invalid data'}, status=400)
+    else:
+        return HttpResponse(status=405)
+
+'''
