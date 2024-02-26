@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'horarios1',
     'horariosASP',
     'eventos',
+    'assigmentsASP',
 ]
 
 MIDDLEWARE = [

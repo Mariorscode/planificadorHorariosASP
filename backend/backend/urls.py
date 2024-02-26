@@ -17,11 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from eventos.api.router import router_evento
+# from AssigmentsASP import AssigmentsASP
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('horarios/', include('horariosASP.urls')),
     path('eventos/', include(router_evento.urls)),
-   
+    path('assigmentsASP/', include('assigmentsASP.urls')),
 ]
