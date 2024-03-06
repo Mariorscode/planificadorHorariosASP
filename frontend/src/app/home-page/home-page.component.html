@@ -1,0 +1,24 @@
+<div class="container-fluid" style="margin-top: 20px">
+  <div class="row">
+    <div class="col-md-2">
+      <button class="btn btn-info" (click)="agregarCard(1)">Columna 1</button>
+      <div *ngFor="let card of columnas[0]" class="card">
+        <!-- Contenido de la card -->
+        <p class="card-title">Hoola</p>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-info" (click)="agregarCard(2)">Columna 2</button>
+      <div *ngFor="let card of columnas[1]" class="card">
+        <!-- Contenido de la card -->
+      </div>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-info" (click)="agregarCard(3)">Columna 3</button>
+      <div *ngFor="let card of columnas[2]" class="card">
+        <!-- Contenido de la card -->
+      </div>
+    </div>
+    <!-- Agrega más columnas según sea necesario -->
+  </div>
+</div>
