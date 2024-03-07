@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,10 +8,14 @@ import { CommonModule } from '@angular/common';
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
 })
-export class HomePageComponent {
+export class HomePageComponent implements OnInit {
+  ngOnInit(): void {
+    this.add(1);
+  }
+
   columnas: any[][] = [[]];
 
-  agregarCard(columna: number): void {
+  add(columna: number): void {
     this.columnas[columna - 1].push({
       /* Datos de la card */
     });
