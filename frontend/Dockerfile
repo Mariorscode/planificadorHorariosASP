@@ -1,11 +1,14 @@
 FROM node:20
 
-WORKDIR /app
+WORKDIR /app/frontend
+
+ENV PATH /app/frontend/node_modules/.bin:$PATH
+
 
 COPY package*.json ./
-RUN npm install
+RUN npm install --no-cache
 RUN npm install -g @angular/cli
 
-COPY . .
+COPY . ./app/frontend/
 
-CMD ["ng", "serve", "--host", "0.0.0.0"]
+CMD ["ng","serve","--host","0.0.0.0"]
