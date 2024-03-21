@@ -27,17 +27,17 @@ class Subject(Predicate):
     name: ConstantStr
 class Day(Predicate):
     name: ConstantStr
-class Tourn(Predicate):
+class turn(Predicate):
     name: int
 
 class RestrictionTeacher(Predicate):
     teacher: ConstantStr
     hour: int
-    tourn: int
+    turn: int
 class RestrictionClassroom(Predicate):
     classroom: ConstantStr
     hour: int
-    tourn: int
+    turn: int
 class Assignment(Predicate):
     subject: ConstantStr
     part: ConstantStr
@@ -47,10 +47,11 @@ class Assignment(Predicate):
     
     
     
-ctrl = Control(unifier=[Teacher,Part,Group,Classroom,Subject,Day,Tourn,RestrictionTeacher,RestrictionClassroom,Assignment])
+ctrl = Control(unifier=[Teacher,Part,Group,Classroom,Subject,Day,turn,RestrictionTeacher,RestrictionClassroom,Assignment])
 # ctrl = Control(unifier=[Teacher])
 
 ctrl.load("./context.lp")
+ctrl.load("./knowledge.lp")
 
 # Posible en views.py
 from clorm import FactBase
@@ -70,13 +71,15 @@ group = [ Group(name=n) for n in ["groupA", "groupB" ] ]
 classroom = [ Classroom(name=n) for n in ["2.11", "3.05" ] ]
 subject = [ Subject(name=n) for n in ["calculo", "programming" ] ]
 
-instance = FactBase(teacher + part + group + classroom + subject)
+# Now, add the new assignment with the desired values
+
+new_assignment = Assignment(subject="SUBJECTASIGMENT", part="PARTASIGMENT", group="GROUPASIGMENT", teacher="TEACHERASIGMENT", classroom="CLASSROOMASIGMENT")
+
+new_restrictions = RestrictionTeacher(teacher="RESTRICTIONTEACHER", hour=1, turn=1)
+
+instance = FactBase(teacher + part + group + classroom + subject + [new_assignment] + [new_restrictions])
 
 ctrl.add_facts(instance)
-
-# Ahora, agrega el nuevo assignment con los valores deseados
-# new_assignment = Assignment(item="item5", driver="john", time=2)
-# ctrl.add_facts([new_assignment])
 
 ctrl.ground([("base",[])])
 
