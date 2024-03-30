@@ -23,7 +23,7 @@ schedule(friday,2,programacion,theory,group,Luis,1.4).
 schedule(friday,3,Fisica,theory,group,FernandoGalvez,1.4).
 
 % --------------------------------------------------------------
-% ------------Group B---------------------------------------- 
+% ------------Group B------------------------------------------- 
 
 schedule(monday,1,calculo,theory,group,Philipp,1.4).
 schedule(monday,2,programacion,practice,groupB,Manuel,14-15). 
@@ -46,7 +46,7 @@ schedule(friday,2,programacion,theory,group,Luis,1.4).
 schedule(friday,3,Fisica,theory,group,FernandoGalvez,1.4).
 
 % --------------------------------------------------------------
-% ------------Group C---------------------------------------- 
+% ------------Group C------------------------------------------- 
 schedule(monday,1,calculo,theory,group,Philipp,1.4).
 schedule(monday,4,programacion,theory,group,Luis,1.4).
 schedule(monday,5,programacion,practice,groupC,Luis,17-18).
