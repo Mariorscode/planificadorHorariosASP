@@ -26,6 +26,7 @@ subject(teco).
 subject(empresas).
 subject(fisica).
 
+
 % -----------------------------------------------
 
 % classroomCapacity(c,size) :- classroom(c).
