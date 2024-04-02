@@ -104,6 +104,7 @@ Workflow Creación planificación
     - Trabajadores asignados (checkbox con los trabajadores disponibles, opcional): sirve básicamente para añadirle a la tarea las restricciones de los trabajadores.
     - Espacio asignado (select con los espacios disponibles, opcional): sirve básicamente para añadirle a la tarea las restricciones del espacio.
     - Restricciones de turno (checkboxes con los turnos disponibles, opcional): sirve para indicar en qué turnos NO se puede realizar la tarea. Por ejemplo, podrían marcarse todos los turnos de tarde para forzar a que se realice por la mañana.
+    - Restricciones de grupo (lista de items dinámica con nombre del grupo, valores posibles y valor por defecto): los valores del listado añaden una restricción en conjunto. Por ejemplo, puede haber un grupo 'curso' (1,2,3 y 4, default:1) y un grupo 'grupo' (A, B, C y D, default:A). Esto permitiría que dos tareas cuyos grupos coinciden (todos) no puedan realizarse al mismo tiempo. Cálculo 1A y Cálculo 1B podrían darse al mismo tiempo, pero no Cálculo 1A y Prog. I 1A.
     - Botón 'Añadir tarea'
 13. Al añadir una tarea, se muestra en el listado de tareas planificables. Cada uno de los items del listado puede borrarse, editarse y copiarse (botones de borrar, editar y copiar).
     Si, por ejemplo, se han añadido dos tareas:
