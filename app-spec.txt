@@ -1,0 +1,210 @@
+Workflow Inicio
+---------------
+
+1. Se inicia sesión con usuario y contraseña.
+2. Se muestra la página principal con un listado de las planificaciones existentes.
+
+Workflow Settings
+-----------------
+
+1. En la barra superior aparece un botón de ajustes. Al pulsar en él, se abre un modal con un formulario con los siguientes campos:
+   En diferentes pesyañas (distintos forms):
+   Form 1:
+    - Nombre (texto)
+    - Apellidos (texto)
+    - Email (email)
+    - Botón 'Guardar'
+   Form 2:
+    - Contraseña actual (password)
+    - Nueva contraseña (password)
+    - Confirmar nueva contraseña (password)
+    - Botón 'Guardar'
+
+Workflow Creación planificación
+-------------------------------
+
+1. La página principal es un listado de las planificaciones existentes (aparece vacío si no hay ninguna) con un botón para añadir una nueva planificación.
+   Cada uno de los items del listado, las planificaciones, puede borrarse, editarse y copiarse (botones de borrar, editar y copiar). En este último caso se pide el nombre de la copia mediante un modal con un form de un solo input.
+3. Al pulsar el botón de añadir una nueva planificación, se abre una página con un formulario con los siguientes campos:
+    - Nombre de la planificación (texto)
+    - Días de la semana en los que se va a realizar (checkboxes)
+    - Duración de los turnos (number)
+    - Hora de inicio del primer turno (time)
+    - Hora de fin del último turno (time)
+    - El último turno puede extenderse más allá de la hora de fin (checkbox)
+    - Rangos de tiempo no disponibles (lista de items dinámica con nombre opcional y hora de inicio y fin, opcional)
+    - Botón continuar (para pasar a la siguiente página)
+4. Al pulsar en continuar, se crea y muestra un calendario en el que se representan los días de la semana y los turnos asignables.
+   Si, por ejemplo, se ha creado una planificación con nombre "Planificación 1" que se realiza los lunes y miércoles de 8h a 14h (puede excederse) con turnos de 1h y un rango no disponible llamado 'Descanso' de 11h a 11h30, el calendario se vería así:
+
+    DISTRIBUCIÓN PLANIFICACIÓN 1
+
+    | Hora   | Lunes    | Martes | Miércoles | Jueves | Viernes | Sábado | Domingo |
+    |------- |----------|--------|-----------|--------|---------|--------|---------|
+    | 08:00  | Turno 1**|        | Turno 7   |        |         |        |         |
+    |        | Turno 1  |        | Turno 7   |        |         |        |         |
+    | 09:00  | Turno 2  |        | Turno 8   |        |         |        |         |
+    |        | Turno 2  |        | Turno 8   |        |         |        |         |
+    | 10:00  | Turno 3  |        | Turno 9   |        |         |        |         |
+    |        | Turno 3  |        | Turno 9   |        |         |        |         |
+    | 11:00  | Descanso |        | Descanso  |        |         |        |         |
+    | 11:30  | Turno 4  |        | Turno 10  |        |         |        |         |
+    |        | Turno 4  |        | Turno 10  |        |         |        |         |
+    | 12:30  | Turno 5  |        | Turno 11  |        |         |        |         |
+    |        | Turno 5  |        | Turno 11  |        |         |        |         |
+    | 13:30* | Turno 6  |        | Turno 12  |        |         |        |         |
+    |        | Turno 6  |        | Turno 12  |        |         |        |         |
+    | 14:30  |          |        |           |        |         |        |         |
+
+    * Porque se ha marcado la opción de que el último turno puede extenderse más allá de la hora de fin. Si no se hubiese marcado, los turnos 6 y 12 no aparecerían.
+    ** Se puede hacer click en cada turno para borrarlo (en una versión más avanzada editarlo e incluso añadir otros turnos, de momento no).
+
+5. Click en botón 'Continuar con esta distribución'.
+6. Al pulsar en continuar, aparece un listado de espacios disponibles, al que se puede añadir elementos de forma dinámica. Pulsando en botón 'Nuevo espacio', se abre un modal (sin cambiar de página) con un formulario con los siguientes campos:
+    - Nombre del espacio (texto)
+    - Capacidad (number, opcional)
+    - Rangos de tiempo no disponibles (lista de items dinámica con nombre opcional y hora de inicio y fin, opcional)
+    - Botón 'Añadir espacio'
+7. Al añadir un espacio, se muestra en el listado de espacios disponibles. Cada uno de los items del listado puede borrarse y editarse (botones de borrar y editar).
+   Si, por ejemplo, se han añadido dos espacios llamados 'Sala 1' y 'Sala 2' con capacidades de 10 y 20 personas respectivamente y un rango no disponible llamado 'Limpieza' de 9h a 10h para el primer espacio, el listado se vería así:
+
+    ESPACIOS DISPONIBLES
+
+    | Nombre | Capacidad | Restricciones |
+    |--------|-----------|---------------|
+    | Sala 1 | 10        | Sí*           |
+    | Sala 2 | 20        | No            |
+
+    * Si se desea ver cuáles son las restricciones, es necesario hacer lick en editar (también se podrá consultar más adelante en los detalles de la planificación).
+    Esta tabla puede dejarse vacía para considerar un solo espacio (por ejemplo, en el caso de que sea un horario para una tienda, etc.).
+
+8. Click en botón 'Continuar con estos espacios'.
+9. Al pulsar en continuar, aparece un listado de trabajadores disponibles, al que se puede añadir elementos de forma dinámica. Pulsando en botón 'Nuevo trabajador', se abre un modal (sin cambiar de página) con un formulario con los siguientes campos:
+    - Nombre del trabajador (texto)
+    - Rangos de tiempo no disponibles (lista de items dinámica con nombre opcional y hora de inicio y fin, opcional)
+    - Botón 'Añadir trabajador'
+10. Al añadir un trabajador, se muestra en el listado de trabajadores disponibles. Cada uno de los items del listado puede borrarse, editarse y copiarse (botones de borrar, editar y copiar).
+    Si, por ejemplo, se han añadido dos trabajadores llamados 'Ana' y 'Rubén' con un rango no disponible llamado 'Clases en otro grado' de 1h a 2h para el primer trabajador, el listado se vería así:
+
+    TRABAJADORES DISPONIBLES
+
+    | Nombre       | Restricciones |
+    |--------------|---------------|
+    | Ana          | Sí*           |
+    | Rubén        | No            |
+
+    * Si se desea ver cuáles son las restricciones, es necesario hacer lick en editar (también se podrá consultar más adelante en los detalles de la planificación).
+    Esta tabla puede dejarse vacía para no considerar trabajadores.
+
+11. Click en botón 'Continuar con estos trabajadores'.
+12. Al pulsar en continuar, aparece un listado de tareas planificables, al que se puede añadir elementos de forma dinámica. Pulsando en botón 'Nueva tarea', se abre un modal (sin cambiar de página) con un formulario con los siguientes campos:
+    - Nombre de la tarea (texto): por simplicidad, se crea una tarea por cada asignatura, grupo y tipo. Por ejemplo: 'Matemáticas A, lab' (asignatura: Matemáticas, grupo: A, tipo: lab).
+    - Etiquetas (input con posibilidad de añadir varias etiquetas, opcional): valores de filtrado que no afectan a la planificación. Por ejemplo, el curso: 1º, 2º, etc.
+    - Capacidad necesaria (number, opcional)
+    - Trabajadores asignados (checkbox con los trabajadores disponibles, opcional): sirve básicamente para añadirle a la tarea las restricciones de los trabajadores.
+    - Espacio asignado (select con los espacios disponibles, opcional): sirve básicamente para añadirle a la tarea las restricciones del espacio.
+    - Restricciones de turno (checkboxes con los turnos disponibles, opcional): sirve para indicar en qué turnos NO se puede realizar la tarea. Por ejemplo, podrían marcarse todos los turnos de tarde para forzar a que se realice por la mañana.
+    - Botón 'Añadir tarea'
+13. Al añadir una tarea, se muestra en el listado de tareas planificables. Cada uno de los items del listado puede borrarse, editarse y copiarse (botones de borrar, editar y copiar).
+    Si, por ejemplo, se han añadido dos tareas:
+    - 'Cálculo A, lab' con etiquetas '1º', capacidad necesaria 20, trabajador asignado Ana, sin espacio asignado y con restricciones de turno.
+    - 'Programación I A, teoría' con etiquetas '1º' y 'teoría', sin capacidad necesaria asignada, sin trabajador asignado, espacio asignado 'Sala 2' y sin restricciones de turno.
+
+    TAREAS PLANIFICABLES
+
+    | Nombre                       | Etiquetas  | Capacidad necesaria | Trabajador asignado  | Espacio asignado | Restricciones de turno |
+    |------------------------------|------------|---------------------|----------------------|------------------|------------------------|
+    | Cálculo A, lab               | 1º         | 20                  | Ana                  | -                | Sí                     |
+    | Programación I A, teoría     | 1º, teoría | -                   | -                    | Sala 2           | No                     |
+
+    Esta tabla NO puede dejarse vacía.
+
+14. Click en 'Terminar y crear planificación'.
+15. A continuación, aparecen los detalles de toda la iformación introducida y una posible versión del horario, de acuerdo a dicha información.
+
+    DETALLES DE LA PLANIFICACIÓN
+    ----------------------------
+
+    DISTRIBUCIÓN PLANIFICACIÓN 1
+
+    | Hora   | Lunes    | Martes | Miércoles | Jueves | Viernes | Sábado | Domingo |
+    |------- |----------|--------|-----------|--------|---------|--------|---------|
+    | 08:00  | Turno 1  |        | Turno 7   |        |         |        |         |
+    |        | Turno 1  |        | Turno 7   |        |         |        |         |
+    | 09:00  | Turno 2  |        | Turno 8   |        |         |        |         |
+    |        | Turno 2  |        | Turno 8   |        |         |        |         |
+    | 10:00  | Turno 3  |        | Turno 9   |        |         |        |         |
+    |        | Turno 3  |        | Turno 9   |        |         |        |         |
+    | 11:00  | Descanso |        | Descanso  |        |         |        |         |
+    | 11:30  | Turno 4  |        | Turno 10  |        |         |        |         |
+    |        | Turno 4  |        | Turno 10  |        |         |        |         |
+    | 12:30  | Turno 5  |        | Turno 11  |        |         |        |         |
+    |        | Turno 5  |        | Turno 11  |        |         |        |         |
+    | 13:30  | Turno 6  |        | Turno 12  |        |         |        |         |
+    |        | Turno 6  |        | Turno 12  |        |         |        |         |
+    | 14:30  |          |        |           |        |         |        |         |
+
+    ESPACIOS DISPONIBLES
+
+    | Nombre | Capacidad | Restricciones |
+    |--------|-----------|---------------|
+    | Sala 1 | 10        | Sí*           |
+    | Sala 2 | 20        | No            |
+
+    TRABAJADORES DISPONIBLES
+
+    | Nombre       | Restricciones |
+    |--------------|---------------|
+    | Ana          | Sí*           |
+    | Rubén        | No            |
+
+    TAREAS PLANIFICABLES
+
+    | Nombre                       | Etiquetas  | Capacidad necesaria | Trabajador asignado  | Espacio asignado | Restricciones de turno |
+    |------------------------------|------------|---------------------|----------------------|------------------|------------------------|
+    | Cálculo A, lab               | 1º         | 20                  | Ana                  | -                | Sí                     |
+    | Programación I A, teoría     | 1º, teoría | -                   | -                    | Sala 2           | No                     |
+
+
+16. Los detalles de la planificación ya se habrán guardado en este momento, conforme se muestran en pantalla, pero debe hacerse click en 'Generar horario' par crear un horario concreto. Si se está conforme con el horario, se puede hacer click en 'Guardar horario'. Si no, se puede hacer click en 'Generar horario' para crear otra versión posible.
+    Todos los horarios guardados serán listados y se podrán consultar dentro de cada planificación.
+    Al pulsar en 'Generar horario', se muestra, justo debajo de los detalles de la planificación, un calendario con los días de la semana y los turnos asignados a cada tarea.
+    Con los ejemplos anteriores, los detalles y una de las opciones para el horario, cumpliendo todas las restricciones, podría ser la siguiente:
+
+    HORARIOS
+
+    | Nombre    |
+    |-----------|
+    | Horario 1 |
+    | Horario 2 |
+
+    POSIBLE HORARIO
+
+    | Hora   | Lunes    | Martes | Miércoles | Jueves | Viernes | Sábado | Domingo |
+    |------- |----------|--------|-----------|--------|---------|--------|---------|
+    | 08:00  | Cálculo  |        |           |        |         |        |         |
+    |        | Sala 2** |        |           |        |         |        |         |
+    | 09:00  |          |        |           |        |         |        |         |
+    |        |          |        |           |        |         |        |         |
+    | 10:00  | Prog. I  |        |           |        |         |        |         |
+    |        | Sala 1***|        |           |        |         |        |         |
+    | 11:00  |          |        |           |        |         |        |         |
+    | 11:30  |          |        |           |        |         |        |         |
+    |        |          |        |           |        |         |        |         |
+    | 12:30  |          |        |           |        |         |        |         |
+    |        |          |        |           |        |         |        |         |
+    | 13:30  |          |        |           |        |         |        |         |
+    |        |          |        |           |        |         |        |         |
+    | 14:30  |          |        |           |        |         |        |         |
+
+    * Se hace click aquí para ver las restricciones en un modal
+    ** Se ha asignado la tarea 'Cálculo A, lab' a la 'Sala 2' por la capacidad.
+    *** Se ha asignado la tarea 'Programación I A, teoría' a la 'Sala 1' a las 10h y no a las 9h por las restricciones de espacio ('limpieza').
+
+    El horario generado puede mostrarse con todas las tareas, con todas las tareas con una etiqueta, todas las tareas de un trabajador, o las tareas de un espacio concreto.
+    El horario puede descargarse en PDF, con o sin los detalles de la planificación.
+
+Workflow consulta planificación
+-------------------------------
+
+1. En la página principal, se muestra un listado de las planificaciones existentes. Al pulsar en una de ellas, se muestra una página con los detalles de la planificación y el listado de horarios generdos (puntos 15+16 del workflow de creación de planificación).
