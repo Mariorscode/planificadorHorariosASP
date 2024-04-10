@@ -1,13 +1,4 @@
-% turn(To).
-% day(D).
-% subject(S).
-% part(P).
-% group(G).
-% teacher(T).
-% classroom(C).
-% 
-% 
-% assignment(S,P,G,T,C).
+
 
 % 1 {schedule(D,To,S,P,G,T,C):day(D),turn(To),subject(S),part(P),group(G),teacher(T),classroom(C) } 1 :- turn(D,To).
 
@@ -15,6 +6,29 @@
 
 1 {schedule(D,To,S,T,C):day(D),taskName(S),worker(T),space(C) } 1 :- turn(D,To).
 
+% ------------Contar numero de schedules iguales para no superar 2 o el limite establecido (para teoria seran 2 para practicas 1)
+
+%#count{ 1 : schedule(D1,To1,S1,T1,C1): schedule(D2,To2,S2,T2,C2); D1 : D2; To1 : To2; S1 : S2; T1 : T2; C1 : C2 } = Count.
+
+%{ schedule(D,To,S,T,C) : schedule(D,To,S,T,C), not schedule(D,To,S,T,C1), To < To } = 2 :- Count > 2.
+
+% #count { schedule(D, To, S, T, C) : day(D), taskName(S), worker(T), space(C) } = N :- turn(D, To).
+% :- N > 2.
+% :- { schedule(D, To, S, T, C) : day(D), taskName(S), worker(T), space(C) } > 2.
+
+
+% ------------\Contar numero de schedules iguales para no superar 2 o el limite establecido (para teoria seran 2 para practicas 1)
+
+% 1 { schedule(D, To, S, T, C) : day(D), schedulableTask(S, T, C) } 1 :- turn(D, To).
+
+% 1 { schedule(D, To, S, T, C) :turn(D, To), schedulableTask(S, T, C) } 1 :- schedulableTask(S, T, C).
+
+% 1 { schedule(D, To, S, T, C) :  turn(D, To), schedulableTask(S, T, C) } 1 :- day(D).
+
+
+% No puede existir un schedule con worker, taskName y space no compatibles
+% :- schedule(D,To,S,T,C), not schedulableTask(S, T, C).
+ 
 
 % :- schedule(D, _, _, _, _), not availableDay(D). % no funciona
 
@@ -32,41 +46,26 @@
 %   Tag21 == Tag22, Tag31 == Tag32, Tag41 == Tag42,  
 %   D1 == D2,To1 == To2.
 
+% :- schedule(D1, To, S1, _, C), tags(S1, Tag1, Tag2, Tag3),
+%    schedule(D2, To, S2, _, C), tags(S2, Tag1, Tag2, Tag3),
+%    S1 != S2.
+
 
 % No se puede dar clase el mismo día en el mismo turno en la misma aula
 % :- schedule(D1,To1,S1,T1,C1),schedule(D2,To2,S2,T2,C2),D1 == D2,To1 == To2,C1 == C2. % No funciona
 
 
+% no puede existir un schedule en un turno en el que ese trabajador tenga restricciones
+
+% :- schedule(D,To,S,T,C),restrictionworker(T2,D,To2),T == T2, D == D2, To == To2. % --funciona
+
+% no puede existir un schedule en un turno en el que ese espacio tenga restricciones
+
+% :- schedule(D,To,S,T,C),restrictionspace(C2,D,To2),C == C2, D == D2, To == To2. % --funciona
 
 
 
 
-
-
-
-
-
-
-
-
-% % no puede existir un schedule en un turno en el que ese profesor tenga restricciones
-% :- schedule(D,To,S,P,G,T,C),restrictionTeacher(T2,D,To),T == T2, D == D2, To == T2.
-% 
-% % no puede existir un schedule en un turno en el que esa clase tenga restricciones
-% :- schedule(D,To,S,P,G,T,C),restrictionClassroom(C2,D,To),C == C2, D == D2, To == T2.
-% 
-% % no puede exitir dos schedule iguales
-% :- schedule(D,To,S,P,G,T,C),schedule(D2,To2,S2,P2,G2,T2,C2),S != S2. 
-% 
-% %(No puede existir un schedule con un assignment inexistente es decir que no 
-% %tenga S,P,G,T,C de un assignment)
-% % :- schedule(D,To,S,P,G,T,C),assignment(S2,P2,G2,T2,C2),S2. 
-% 
-% % No puede existir un schedule en el que se exceda el limite de turnos asignado
-% 
-% % :- schedule(D,To,S,P,G,T,C),
-% 
-% 
 % % No puede existir un schedule en el que se asigne un aula y se exceda la capacidad 
 % 
 % :- schedule(D,To,S,P,G,T,C),groupSize(G,Si),classroomCapacity(C,Si2),Si > Si2.

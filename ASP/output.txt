@@ -1,0 +1,30 @@
+clingo version 5.4.1
+Reading from knowledge.lp ...
+Solving...
+Answer: 1
+schedule(monday,3,calculo_1_theory,juanCarlos,"1.1.1") schedule(monday,1,programacion_1_theory,juanCarlos,"1.1.1") schedule(monday,2,calculo_1_practice_groupC,manuel,"1.4") schedule(monday,4,empresas_1_practice_groupC,luis,"1.1.1") schedule(monday,5,fisica_1_practice_groupC,franciscoJavier,"1.1.1")
+Answer: 2
+schedule(monday,3,calculo_1_theory,juanCarlos,"1.1.1") schedule(monday,1,programacion_1_theory,juanCarlos,"1.1.1") schedule(monday,2,calculo_1_practice_groupC,manuel,"1.4") schedule(monday,4,fisica_1_practice_groupA,luis,"17-18") schedule(monday,5,fisica_1_practice_groupC,franciscoJavier,"1.1.1")
+Answer: 3
+schedule(monday,3,calculo_1_theory,juanCarlos,"1.1.1") schedule(monday,1,programacion_1_theory,juanCarlos,"1.1.1") schedule(monday,2,calculo_1_practice_groupC,manuel,"1.4") schedule(monday,4,empresas_1_practice_groupB,fernandoGalvez,"1.1.1") schedule(monday,5,fisica_1_practice_groupC,franciscoJavier,"1.1.1")
+Answer: 4
+schedule(monday,3,calculo_1_theory,juanCarlos,"1.1.1") schedule(monday,1,programacion_1_theory,juanCarlos,"1.1.1") schedule(monday,2,calculo_1_practice_groupC,manuel,"1.4") schedule(monday,4,empresas_1_practice_groupC,manuel,"1.1.1") schedule(monday,5,fisica_1_practice_groupC,franciscoJavier,"1.1.1")
+Answer: 5
+schedule(monday,3,calculo_1_theory,juanCarlos,"1.1.1") schedule(monday,1,programacion_1_theory,juanCarlos,"1.1.1") schedule(monday,2,calculo_1_practice_groupC,manuel,"1.4") schedule(monday,4,fisica_1_practice_groupA,manuel,"17-18") schedule(monday,5,fisica_1_practice_groupC,franciscoJavier,"1.1.1")
+Answer: 6
+schedule(monday,3,calculo_1_theory,juanCarlos,"1.1.1") schedule(monday,1,programacion_1_theory,juanCarlos,"1.1.1") schedule(monday,2,calculo_1_practice_groupC,manuel,"1.4") schedule(monday,4,empresas_1_practice_groupB,santiago,"1.1.1") schedule(monday,5,fisica_1_practice_groupC,franciscoJavier,"1.1.1")
+Answer: 7
+schedule(monday,3,calculo_1_theory,juanCarlos,"1.1.1") schedule(monday,1,programacion_1_theory,juanCarlos,"1.1.1") schedule(monday,2,calculo_1_practice_groupC,manuel,"1.4") schedule(monday,4,empresas_1_practice_groupC,philipp,"1.1.1") schedule(monday,5,fisica_1_practice_groupC,franciscoJavier,"1.1.1")
+Answer: 8
+schedule(monday,3,calculo_1_theory,juanCarlos,"1.1.1") schedule(monday,1,programacion_1_theory,juanCarlos,"1.1.1") schedule(monday,2,calculo_1_practice_groupC,manuel,"1.4") schedule(monday,4,empresas_1_practice_groupC,manuel,"14-15") schedule(monday,5,fisica_1_practice_groupC,franciscoJavier,"1.1.1")
+Answer: 9
+schedule(monday,3,calculo_1_theory,juanCarlos,"1.1.1") schedule(monday,1,programacion_1_theory,juanCarlos,"1.1.1") schedule(monday,2,calculo_1_practice_groupC,manuel,"1.4") schedule(monday,4,fisica_1_practice_groupA,philipp,"17-18") schedule(monday,5,fisica_1_practice_groupC,franciscoJavier,"1.1.1")
+Answer: 10
+schedule(monday,3,calculo_1_theory,juanCarlos,"1.1.1") schedule(monday,3,programacion_1_theory,juanCarlos,"1.1.1") schedule(monday,4,calculo_1_practice_groupB,manuel,"14-15") schedule(monday,2,calculo_1_practice_groupC,manuel,"1.4") schedule(monday,5,fisica_1_practice_groupC,franciscoJavier,"1.1.1")
+
+SATISFIABLE
+
+Models       : 10+
+Calls        : 1
+Time         : 0.456s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
+CPU Time     : 0.456s

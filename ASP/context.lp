@@ -81,19 +81,19 @@ tags(fisica_1_practice_groupC,practice,1,groupC).
 
 % ---------turn------
 turn(monday,1..5).
-turn(tuesday,1..5).
-turn(wednesday,1..5).
-turn(thursday,1..5).
-turn(friday,1..5).
+% turn(tuesday,1..5).
+% turn(wednesday,1..5).
+% turn(thursday,1..5).
+% turn(friday,1..5).
 % ---------/turn------
 
 
 % -------availableDay------
 availableDay(monday).
-availableDay(tuesday).
-availableDay(wednesday).
-availableDay(thursday).
-availableDay(friday).
+% availableDay(tuesday).
+% availableDay(wednesday).
+% availableDay(thursday).
+% availableDay(friday).
 % -------/availableDay------
 
 
@@ -190,7 +190,7 @@ restrictionworker(philipp,friday,0).
 
 % restrictionspace(C,D,TO). :- turn(TO).,day(D).,space(C).
 
-restrictionspace("17-18",monday,4).
+restrictionspace("14-15",monday,4).
 restrictionspace("1.4",monday,5).
 
 
