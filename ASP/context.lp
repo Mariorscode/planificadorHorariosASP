@@ -81,7 +81,7 @@ tags(fisica_1_practice_groupC,practice,1,groupC).
 
 % ---------turn------
 turn(monday,1..5).
-% turn(tuesday,1..5).
+turn(tuesday,1..5).
 % turn(wednesday,1..5).
 % turn(thursday,1..5).
 % turn(friday,1..5).
