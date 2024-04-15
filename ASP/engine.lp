@@ -1,5 +1,4 @@
 
-
 % --------------------------------------------------------------------------------------------------------------
 % --------------------------------------------------------------------------------------------------------------
 % PROBAR A PONER EL LIMITE SUMANDO 1 Y LUEGO UNA REGLA DE SI TIENE MAYOR QUE EL NUMERO SEGUN SU TAG QUITAR O DEJAR
@@ -7,12 +6,13 @@
 % --------------------------------------------------------------------------------------------------------------
 % --------------------------------------------------------------------------------------------------------------
 
-% asiged(S) :- schedule(_,_,S,_,_). 
-
-% 1 {schedule(D,To,S,T,C):day(D),taskName(S),worker(T),space(C)} 1 :- turn(D,To),not asigned(S).
-1 {schedule(D,To,S,T,C):day(D),taskName(S),worker(T),space(C)} 1 :- turn(D,To).
 
 
+1 {schedule(D,To,S,T,C):day(D),taskName(S),worker(T),space(C)} 1 :- turn(D,To),not assigned(S).
+% 1 {schedule(D,To,S,T,C):day(D),taskName(S),worker(T),space(C)} 1 :- turn(D,To).
+
+assigned(S) :- schedule(D,To,S,T,C),taskName(S),not assigned(S). 
+% :- schedule(_,_,S,_,_),not assigned(S).
 
 % 1 {schedule(D,To,S,T,C):taskName(S),worker(T),space(C) } 1 :- schedulableTask(S,T,C).
 
@@ -63,11 +63,11 @@
 
 % no puede existir un schedule en un turno en el que ese trabajador tenga restricciones
 
-:- schedule(D,To,S,T,C),restrictionworker(T2,D,To2),T == T2, D == D2, To == To2. % --funciona
+% :- schedule(D,To,S,T,C),restrictionworker(T2,D,To2),T == T2, D == D2, To == To2. % --funciona
 
 % no puede existir un schedule en un turno en el que ese espacio tenga restricciones
 
-:- schedule(D,To,S,T,C),restrictionspace(C2,D,To2),C == C2, D == D2, To == To2. % --funciona
+% :- schedule(D,To,S,T,C),restrictionspace(C2,D,To2),C == C2, D == D2, To == To2. % --funciona
 
 
 
