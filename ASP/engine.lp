@@ -8,15 +8,15 @@
 
 
 
-1 {schedule(D,To,S,T,C):day(D),taskName(S),worker(T),space(C)} 1 :- turn(D,To),not assigned(S).
+% 1 {schedule(D,To,S,T,C):day(D),taskName(S),worker(T),space(C)} 1 :- turn(D,To),not assigned(S).
 % 1 {schedule(D,To,S,T,C):day(D),taskName(S),worker(T),space(C)} 1 :- turn(D,To).
 
-assigned(S) :- schedule(D,To,S,T,C),taskName(S),not assigned(S). 
+% assigned(S) :- schedule(D,To,S,T,C),taskName(S),not assigned(S). 
 % :- schedule(_,_,S,_,_),not assigned(S).
 
 % 1 {schedule(D,To,S,T,C):taskName(S),worker(T),space(C) } 1 :- schedulableTask(S,T,C).
 
-% 1 {schedule(D,To,S,T,C):taskName(S),worker(T),space(C) } 1 :- schedulableTask(S,T,C),turn(D,To).
+1 {schedule(D,To,S,T,C):turn(D,To),taskName(S),worker(T),space(C)} 1 :- schedulableTask(S,T,C).
 
 
 
@@ -57,7 +57,7 @@ assigned(S) :- schedule(D,To,S,T,C),taskName(S),not assigned(S).
 % 
 % 
 % No se puede dar clase el mismo día en el mismo turno en la misma aula
-% :- schedule(D1,To1,S1,T1,C1),schedule(D2,To2,S2,T2,C2),D1 == D2,To1 == To2,C1 == C2. % No funciona
+:- schedule(D,To,S1,T,C),schedule(D,To,S2,T,C),S1 != S2. % No funciona
 
 
 
