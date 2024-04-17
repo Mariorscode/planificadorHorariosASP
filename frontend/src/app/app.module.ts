@@ -17,6 +17,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { CalendarComponent } from './calendar/calendar.component';
 import { StteperFormComponent } from './stteper-form/stteper-form.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [AppComponent, CalendarComponent, StteperFormComponent],
@@ -31,6 +34,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
