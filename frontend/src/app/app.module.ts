@@ -20,6 +20,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [AppComponent, CalendarComponent, StteperFormComponent],
@@ -37,6 +38,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatCardModule,
     MatCheckboxModule,
     MatSelectModule,
+    MatListModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

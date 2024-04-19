@@ -10,7 +10,7 @@
         <div class="column">
           <mat-form-field appearance="outline" color="primary">
             <mat-label>Nombre del horario</mat-label>
-            <input matInput placeholder="" />
+            <input matInput formControlName="nombreHorario" placeholder="" />
           </mat-form-field>
           <div>
             <mat-form-field appearance="outline">
@@ -35,19 +35,34 @@
           </div>
           <mat-form-field appearance="outline" color="primary">
             <mat-label>Duración de los turnos</mat-label>
-            <input matInput type="number" placeholder="" />
+            <input
+              matInput
+              formControlName="turnDuration"
+              type="number"
+              placeholder=""
+            />
           </mat-form-field>
           <br />
           <mat-form-field appearance="outline">
             <mat-label>Hora Inicio primer turno</mat-label>
-            <input matInput type="time" placeholder="Selecciona una hora" />
+            <input
+              matInput
+              formControlName="firstTurnTime"
+              type="time"
+              placeholder="Selecciona una hora"
+            />
             <!-- <mat-icon matSuffix (click)="picker.open()">schedule</mat-icon>
       <mat-timepicker #picker></mat-timepicker> -->
           </mat-form-field>
           <br />
           <mat-form-field appearance="outline">
             <mat-label>Hora Inicio último turno</mat-label>
-            <input matInput type="time" placeholder="Selecciona una hora" />
+            <input
+              matInput
+              type="time"
+              formControlName="lastTurnTime"
+              placeholder="Selecciona una hora"
+            />
             <!-- <mat-icon matSuffix (click)="picker.open()">schedule</mat-icon>
       <mat-timepicker #picker></mat-timepicker> -->
           </mat-form-field>
@@ -56,7 +71,7 @@
         <div class="column">
           <mat-form-field appearance="outline">
             <mat-label>Días de la semana</mat-label>
-            <mat-select [formControl]="weekDays" multiple>
+            <mat-select [formControl]="weekDaysRestriction" multiple>
               <mat-option *ngFor="let day of daysOfWeek" [value]="day">{{
                 day
               }}</mat-option>
@@ -64,12 +79,31 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Hora del día</mat-label>
-            <input matInput type="time" placeholder="" />
+            <input
+              matInput
+              type="time"
+              formControlName="dayTimerestriction"
+              placeholder=""
+            />
           </mat-form-field>
-          <button mat-raised-button color="primary">Aceptar</button>
+          <button
+            mat-raised-button
+            (click)="addItemDayTimeRestriction()"
+            color="primary"
+          >
+            Aceptar
+          </button>
+          <mat-list class="restrictionList">
+            <mat-list-item
+              *ngFor="let item of items"
+              (contextmenu)="onRightClick($event, item)"
+            >
+              {{ item }}
+            </mat-list-item>
+          </mat-list>
         </div>
       </div>
-      <div>
+      <div class="button-container">
         <button mat-raised-button color="primary" matStepperNext>Next</button>
       </div>
     </form>
