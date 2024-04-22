@@ -72,9 +72,8 @@ turn(D, 1..NUM_TURNS) :- day(D),  availableDay(D), turnsPerDay(NUM_TURNS).
 
 
 
-% No puede existir un schedule en el que se asigne un aula y se exceda la capacidad 
-% -------------RENOVAR A NUEVAS VARIABLES--------------------------------------------
-:- schedule(D,To,S,T,C),groupSize(G,Si),spaceCapacity(C,Si2),Si > Si2.
+% There cannot be a schedule in which a classroom is assigned and the capacity is exceeded. 
+:- schedule(D,To,S,T,C),tags(S,_,_,G),groupSize(G,Si),spaceCapacity(C,Si2),Si > Si2.
 
 
 

@@ -46,7 +46,7 @@ tags(pruebaName,practice,1,groupA).
 % ---------/Tags------
 
 % ---------turn------
-turnsPerDay(4).
+turnsPerDay(5).
 
 % ---------/turn------
 
@@ -72,7 +72,7 @@ spaceCapacity("17-18",20).
 % -------groupSize------
 % groupSize(group,size). :- group(group).
 
-groupSize(group,60). 
+groupSize(group,50). 
 groupSize(groupA,20). 
 groupSize(groupB,20). 
 groupSize(groupC,20). 
@@ -86,7 +86,7 @@ schedulableTask(calculo_1_theory2,philipp,clase14).
 
 
 schedulableTask(programacion_1_theory1,luis,clase14).
-schedulableTask(programacion_1_theory2,luis,clase1415).
+schedulableTask(programacion_1_theory2,luis,clase14).
 
 schedulableTask(pruebaName,juanCarlos, clase1415).
 
@@ -99,9 +99,8 @@ restrictionworker(philipp,friday,0).
 
 
 
-% restrictionspace(C,D,TO). :- turn(TO).,day(D).,space(C).
 
 restrictionspace(clase14,monday,4).
-restrictionspace(clase14,monday,5).
+% restrictionspace(clase14,monday,3).
 
 
