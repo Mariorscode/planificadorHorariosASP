@@ -57,11 +57,21 @@ tag(practice).
 tag(group;groupA;groupB;groupC). 
 tag(1..4).
 
-tags(calculo_1_theory,theory,1,group).
-tags(programacion_1_theory,theory,1,group).
-tags(teco_1_theory,theory,1,group).
-tags(empresas_1_theory,theory,1,group).
-tags(fisica_1_theory,theory,1,group).
+tags(calculo_1_theory1,theory,1,group).
+tags(calculo_1_theory2,theory,1,group).
+
+tags(programacion_1_theory1,theory,1,group).
+tags(programacion_1_theory2,theory,1,group).
+
+tags(teco_1_theory1,theory,1,group).
+tags(teco_1_theory2,theory,1,group).
+
+tags(empresas_1_theory1,theory,1,group).
+tags(empresas_1_theory2,theory,1,group).
+
+tags(fisica_1_theory1,theory,1,group).
+tags(fisica_1_theory2,theory,1,group).
+
 
 tags(calculo_1_practice_groupA,practice,1,groupA).
 tags(calculo_1_practice_groupB,practice,1,groupB).
@@ -85,11 +95,8 @@ tags(fisica_1_practice_groupC,practice,1,groupC).
 % ---------/Tags------
 
 % ---------turn------
-turn(monday,1..5).
-turn(tuesday,1..5).
-% turn(wednesday,1..5).
-% turn(thursday,1..5).
-% turn(friday,1..5).
+turnsPerDay(6).
+
 % ---------/turn------
 
 
@@ -155,34 +162,34 @@ schedulableTask(calculo_1_theory2,philipp,"1.4").
 schedulableTask(programacion_1_theory1,luis,"1.4").
 schedulableTask(programacion_1_theory2,luis,"1.4").
 
-schedulableTask(teco_1_theory1,juanCarlos,"1.4").
-schedulableTask(teco_1_theory2,juanCarlos,"1.4").
-
-schedulableTask(empresas_1_theory1,santiago,"1.4").
-schedulableTask(empresas_1_theory2,santiago,"1.4").
-
-schedulableTask(fisica_1_theory1,fernandoGalvez,"1.4").
-schedulableTask(fisica_1_theory2,fernandoGalvez,"1.4").
-
-schedulableTask(calculo_1_practice_groupA,manuel,"14-15").
-schedulableTask(calculo_1_practice_groupB,manuel,"1.1.1").
-schedulableTask(calculo_1_practice_groupC,manuel,"17-18").
-
-schedulableTask(programacion_1_practice_groupA,manuel,"14-15").
-schedulableTask(programacion_1_practice_groupB,manuel,"14-15").
-schedulableTask(programacion_1_practice_groupC,luis,"17-18").
-
-schedulableTask(teco_1_practice_groupA,juanCarlos,"14-15").
-schedulableTask(teco_1_practice_groupB,juanCarlos,"1.1.1").
-schedulableTask(teco_1_practice_groupC,juanCarlos,"17-18").
-
-schedulableTask(empresas_1_practice_groupA,santiago,"14-15").
-schedulableTask(empresas_1_practice_groupB,santiago,"1.1.1").
-schedulableTask(empresas_1_practice_groupC,santiago,"17-18").
-
-schedulableTask(fisica_1_practice_groupA,fernandoGalvez,"14-15").
-schedulableTask(fisica_1_practice_groupB,fernandoGalvez,"1.1.1").
-schedulableTask(fisica_1_practice_groupC,fernandoGalvez,"17-18").
+% schedulableTask(teco_1_theory1,juanCarlos,"1.4").
+% schedulableTask(teco_1_theory2,juanCarlos,"1.4").
+% 
+% schedulableTask(empresas_1_theory1,santiago,"1.4").
+% schedulableTask(empresas_1_theory2,santiago,"1.4").
+% 
+% schedulableTask(fisica_1_theory1,fernandoGalvez,"1.4").
+% schedulableTask(fisica_1_theory2,fernandoGalvez,"1.4").
+% 
+% schedulableTask(calculo_1_practice_groupA,manuel,"14-15").
+% schedulableTask(calculo_1_practice_groupB,manuel,"1.1.1").
+% schedulableTask(calculo_1_practice_groupC,manuel,"17-18").
+% 
+% schedulableTask(programacion_1_practice_groupA,manuel,"14-15").
+% schedulableTask(programacion_1_practice_groupB,manuel,"14-15").
+% schedulableTask(programacion_1_practice_groupC,luis,"17-18").
+% 
+% schedulableTask(teco_1_practice_groupA,juanCarlos,"14-15").
+% schedulableTask(teco_1_practice_groupB,juanCarlos,"1.1.1").
+% schedulableTask(teco_1_practice_groupC,juanCarlos,"17-18").
+% 
+% schedulableTask(empresas_1_practice_groupA,santiago,"14-15").
+% schedulableTask(empresas_1_practice_groupB,santiago,"1.1.1").
+% schedulableTask(empresas_1_practice_groupC,santiago,"17-18").
+% 
+% schedulableTask(fisica_1_practice_groupA,fernandoGalvez,"14-15").
+% schedulableTask(fisica_1_practice_groupB,fernandoGalvez,"1.1.1").
+% schedulableTask(fisica_1_practice_groupC,fernandoGalvez,"17-18").
 
 % ---------/schedulableTask------
 % restrictionworker(T,D,TO). :- turn(TO).,day(D).,worker(T).
