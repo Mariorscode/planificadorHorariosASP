@@ -35,6 +35,8 @@ export class StteperFormComponent {
   items: string[] = [];
 
   // Form Steps
+
+  // First formStep
   firstFormGroup = this._formBuilder.group({
     // firstCtrl: ['', Validators.required],
     nombreHorario: ['', Validators.required],
@@ -45,6 +47,7 @@ export class StteperFormComponent {
     weekDaysRestriction: this.weekDaysRestriction,
     dayTimerestriction: ['', Validators.required],
   });
+  // First formStep
   secondFormGroup = this._formBuilder.group({
     secondCtrl: ['', Validators.required],
   });

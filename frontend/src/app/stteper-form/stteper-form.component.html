@@ -2,6 +2,40 @@
   {{ !isLinear ? "Enable linear mode" : "Disable linear mode" }}
 </button> -->
 <mat-stepper [linear]="isLinear" #stepper>
+  <mat-step
+    [stepControl]="secondFormGroup"
+    label="Restricciones y revisión horario"
+  >
+    <form [formGroup]="secondFormGroup">
+      <!-- <mat-form-field>
+      <mat-label>Address</mat-label>
+      <input
+        matInput
+        formControlName="secondCtrl"
+        placeholder="Ex. 1 Main St, New York, NY"
+        required
+      />
+    </mat-form-field> -->
+      <!-- <div>
+      <button
+        class="buttonForm"
+        mat-raised-button
+        color="primary"
+        matStepperPrevious
+      >
+        Back
+      </button>
+      <button
+        class="buttonForm"
+        mat-raised-button
+        color="primary"
+        matStepperNext
+      >
+        Next
+      </button>
+    </div> -->
+    </form>
+  </mat-step>
   <!-- -----Step 1------------ -->
   <mat-step [stepControl]="firstFormGroup" label="Información del horario">
     <form [formGroup]="firstFormGroup">
@@ -109,24 +143,7 @@
     </form>
   </mat-step>
   <!------------------------------------ Step 2 -------------------------------------->
-  <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
-    <form>
-      < [formGroup]="secondFormGroup">
-      <mat-form-field>
-        <mat-label>Address</mat-label>
-        <input
-          matInput
-          formControlName="secondCtrl"
-          placeholder="Ex. 1 Main St, New York, NY"
-          required
-        />
-      </mat-form-field>
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
-      </div>
-    </form>
-  </mat-step>
+
   <!------------------------------------ Step 3 -------------------------------------->
 
   <mat-step>

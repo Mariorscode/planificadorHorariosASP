@@ -13,7 +13,6 @@ import {
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import listPlugin from '@fullcalendar/list';
 import { INITIAL_EVENTS, createEventId } from './event-utils';
 
 @Component({
@@ -25,13 +24,24 @@ import { INITIAL_EVENTS, createEventId } from './event-utils';
 export class CalendarComponent {
   calendarVisible = signal(true);
   calendarOptions = signal<CalendarOptions>({
-    plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
+    plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
     headerToolbar: {
-      left: 'prev,next today',
+      // left: 'prev,next today',
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
-    initialView: 'dayGridMonth',
+    views: {
+      dayGridWeek: {
+        // name of view
+        dayHeaderFormat: {
+          weekday: 'long',
+        },
+        // other view-specific options here
+      },
+    },
+    locale: 'es',
+    firstDay: 1,
+    initialView: 'dayGridWeek',
     initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
     weekends: true,
     editable: true,

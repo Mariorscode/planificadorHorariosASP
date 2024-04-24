@@ -34,6 +34,9 @@
   justify-content: flex-end;
 }
 
+.buttonForm {
+  margin: 5px;
+}
 
 ul {
   list-style-type: none;
