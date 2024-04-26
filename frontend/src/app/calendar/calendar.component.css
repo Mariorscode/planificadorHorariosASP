@@ -1,0 +1,23 @@
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh; 
+}
+
+.demo-app {
+  display: flex;
+  min-height: 100vh; 
+  overflow: hidden; 
+}
+
+.demo-app-main {
+  flex-grow: 1; 
+  padding: 0; 
+}
+
+.fc {
+  width: 100%; 
+  height: 100%; 
+  margin: 0; 
+  padding: 0; 
+}

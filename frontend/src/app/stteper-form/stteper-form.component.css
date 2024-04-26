@@ -1,0 +1,48 @@
+.mat-stepper-horizontal {
+    margin-top: 8px;
+}
+  
+.mat-mdc-form-field {
+  /* margin-top: 16px; */
+  padding: 5px;
+}
+   
+.mat-grid-tile {
+  background: lightblue;
+}
+
+.example-section {
+  margin: 12px 0;
+}
+
+.restrictionList{
+  border:1px solid #000000;
+  border-radius: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  
+}
+
+.column {
+  flex: 1;
+  align-items: left;
+  /* background-color: aliceblue; */
+  border: 2px solid rgb(71, 71, 76); /* Establece un borde sólido de 2 píxeles de ancho y color azul */
+  border-radius: 10px; /* Establece un radio de borde de 10 píxeles para hacerlo redondeado */
+  padding: 10px; /* Añade un relleno interno de 10 píxeles para separar el contenido del borde */
+  margin: 5px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.buttonForm {
+  margin: 5px;
+}
+
+ul {
+  list-style-type: none;
+  margin-top: 4px;
+}

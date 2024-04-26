@@ -1,0 +1,113 @@
+<!-- <button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
+  {{ !isLinear ? "Enable linear mode" : "Disable linear mode" }}
+</button> -->
+<mat-stepper [linear]="isLinear" #stepper>
+  <!-- -----Step 1------------ -->
+  <mat-step [stepControl]="firstFormGroup" label="Información del horario">
+    <form [formGroup]="firstFormGroup">
+      <h2>Información del horario</h2>
+      <div style="display: flex">
+        <div class="column">
+          <mat-form-field appearance="outline" color="primary">
+            <mat-label>Nombre del horario</mat-label>
+            <input matInput formControlName="scheduleName" placeholder="" />
+          </mat-form-field>
+          <div>
+            <mat-form-field appearance="outline">
+              <mat-label>Días de la semana</mat-label>
+              <mat-select [formControl]="weekDays" multiple>
+                <mat-option *ngFor="let day of daysOfWeek" [value]="day">{{
+                  day
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <label *ngIf="weekDays.value && weekDays.value.length > 0">
+              Días seleccionados:
+              <span *ngFor="let selectedDay of weekDays.value">
+                {{ selectedDay }}
+                <!-- Añade una coma y un espacio si no es el último día -->
+                <ng-container *ngIf="!isLast(selectedDay, weekDays.value)"
+                  >,
+                </ng-container>
+              </span>
+            </label>
+          </div>
+          <mat-form-field appearance="outline" color="primary">
+            <mat-label>Duración de los turnos</mat-label>
+            <input
+              matInput
+              formControlName="turnDuration"
+              type="number"
+              placeholder=""
+            />
+          </mat-form-field>
+          <br />
+          <mat-form-field appearance="outline">
+            <mat-label>Hora Inicio primer turno</mat-label>
+            <input
+              matInput
+              formControlName="firstTurnTime"
+              type="time"
+              placeholder="Selecciona una hora"
+            />
+          </mat-form-field>
+          <br />
+          <mat-form-field appearance="outline">
+            <mat-label>Hora Inicio último turno</mat-label>
+            <input
+              matInput
+              type="time"
+              formControlName="lastTurnTime"
+              placeholder="Selecciona una hora"
+            />
+          </mat-form-field>
+          <mat-checkbox>Último turno extendible</mat-checkbox>
+        </div>
+      </div>
+      <div class="button-container">
+        <button
+          mat-raised-button
+          color="primary"
+          matStepperNext
+          (click)="fillTurns()"
+        >
+          Next
+        </button>
+      </div>
+    </form>
+  </mat-step>
+  <!------------------------------------ Step 2 -------------------------------------->
+  <mat-step
+    [stepControl]="secondFormGroup"
+    label="Restricciones y revisión horario"
+  >
+    <form [formGroup]="secondFormGroup">
+      <h3>
+        Seleccione los turnos libres (puede seleccionar varios o ningnuno)
+      </h3>
+      <div style="display: flex">
+        <div *ngFor="let day of weekDays.value" class="column">
+          <h2>{{ day }}</h2>
+          <mat-selection-list>
+            <ng-container *ngFor="let turn of turns">
+              <mat-list-option *ngIf="turn.day === day">
+                {{ turn.startTime }}
+              </mat-list-option>
+            </ng-container>
+          </mat-selection-list>
+        </div>
+      </div>
+    </form>
+  </mat-step>
+  <!------------------------------------ Step 3 -------------------------------------->
+
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    <p>You are now done.</p>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset()">Reset</button>
+    </div>
+  </mat-step>
+</mat-stepper>
