@@ -7,6 +7,10 @@
   padding: 5px;
 }
    
+.mat-grid-tile {
+  background: lightblue;
+}
+
 .example-section {
   margin: 12px 0;
 }

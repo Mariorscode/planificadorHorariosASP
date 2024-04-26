@@ -2,40 +2,6 @@
   {{ !isLinear ? "Enable linear mode" : "Disable linear mode" }}
 </button> -->
 <mat-stepper [linear]="isLinear" #stepper>
-  <mat-step
-    [stepControl]="secondFormGroup"
-    label="Restricciones y revisión horario"
-  >
-    <form [formGroup]="secondFormGroup">
-      <!-- <mat-form-field>
-      <mat-label>Address</mat-label>
-      <input
-        matInput
-        formControlName="secondCtrl"
-        placeholder="Ex. 1 Main St, New York, NY"
-        required
-      />
-    </mat-form-field> -->
-      <!-- <div>
-      <button
-        class="buttonForm"
-        mat-raised-button
-        color="primary"
-        matStepperPrevious
-      >
-        Back
-      </button>
-      <button
-        class="buttonForm"
-        mat-raised-button
-        color="primary"
-        matStepperNext
-      >
-        Next
-      </button>
-    </div> -->
-    </form>
-  </mat-step>
   <!-- -----Step 1------------ -->
   <mat-step [stepControl]="firstFormGroup" label="Información del horario">
     <form [formGroup]="firstFormGroup">
@@ -44,7 +10,7 @@
         <div class="column">
           <mat-form-field appearance="outline" color="primary">
             <mat-label>Nombre del horario</mat-label>
-            <input matInput formControlName="nombreHorario" placeholder="" />
+            <input matInput formControlName="scheduleName" placeholder="" />
           </mat-form-field>
           <div>
             <mat-form-field appearance="outline">
@@ -85,8 +51,6 @@
               type="time"
               placeholder="Selecciona una hora"
             />
-            <!-- <mat-icon matSuffix (click)="picker.open()">schedule</mat-icon>
-      <mat-timepicker #picker></mat-timepicker> -->
           </mat-form-field>
           <br />
           <mat-form-field appearance="outline">
@@ -97,53 +61,45 @@
               formControlName="lastTurnTime"
               placeholder="Selecciona una hora"
             />
-            <!-- <mat-icon matSuffix (click)="picker.open()">schedule</mat-icon>
-      <mat-timepicker #picker></mat-timepicker> -->
           </mat-form-field>
           <mat-checkbox>Último turno extendible</mat-checkbox>
         </div>
-        <div class="column">
-          <mat-form-field appearance="outline">
-            <mat-label>Días de la semana</mat-label>
-            <mat-select [formControl]="weekDaysRestriction" multiple>
-              <mat-option *ngFor="let day of daysOfWeek" [value]="day">{{
-                day
-              }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Hora del día</mat-label>
-            <input
-              matInput
-              type="time"
-              formControlName="dayTimerestriction"
-              placeholder=""
-            />
-          </mat-form-field>
-          <button
-            mat-raised-button
-            (click)="addItemDayTimeRestriction()"
-            color="primary"
-          >
-            Aceptar
-          </button>
-          <mat-list class="restrictionList">
-            <mat-list-item
-              *ngFor="let item of items"
-              (contextmenu)="onRightClick($event, item)"
-            >
-              {{ item }}
-            </mat-list-item>
-          </mat-list>
-        </div>
       </div>
       <div class="button-container">
-        <button mat-raised-button color="primary" matStepperNext>Next</button>
+        <button
+          mat-raised-button
+          color="primary"
+          matStepperNext
+          (click)="fillTurns()"
+        >
+          Next
+        </button>
       </div>
     </form>
   </mat-step>
   <!------------------------------------ Step 2 -------------------------------------->
-
+  <mat-step
+    [stepControl]="secondFormGroup"
+    label="Restricciones y revisión horario"
+  >
+    <form [formGroup]="secondFormGroup">
+      <h3>
+        Seleccione los turnos libres (puede seleccionar varios o ningnuno)
+      </h3>
+      <div style="display: flex">
+        <div *ngFor="let day of weekDays.value" class="column">
+          <h2>{{ day }}</h2>
+          <mat-selection-list>
+            <ng-container *ngFor="let turn of turns">
+              <mat-list-option *ngIf="turn.day === day">
+                {{ turn.startTime }}
+              </mat-list-option>
+            </ng-container>
+          </mat-selection-list>
+        </div>
+      </div>
+    </form>
+  </mat-step>
   <!------------------------------------ Step 3 -------------------------------------->
 
   <mat-step>

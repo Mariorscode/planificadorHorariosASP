@@ -21,7 +21,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatListModule } from '@angular/material/list';
-
+import { MatGridListModule } from '@angular/material/grid-list';
 @NgModule({
   declarations: [AppComponent, CalendarComponent, StteperFormComponent],
   imports: [
@@ -39,6 +39,7 @@ import { MatListModule } from '@angular/material/list';
     MatCheckboxModule,
     MatSelectModule,
     MatListModule,
+    MatGridListModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
