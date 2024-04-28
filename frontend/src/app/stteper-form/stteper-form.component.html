@@ -89,13 +89,16 @@
       <div style="display: flex">
         <div *ngFor="let day of weekDays.value" class="column">
           <h2>{{ day }}</h2>
-          <mat-selection-list>
-            <ng-container *ngFor="let turn of turns">
-              <mat-list-option *ngIf="turn.day === day">
+          <ng-container *ngFor="let turn of turns">
+            <mat-selection-list
+              #turnList
+              (selectionChange)="onSelectionChange(turn)"
+            >
+              <mat-list-option *ngIf="turn.day === day" [value]="turn">
                 {{ turn.startTime }}
               </mat-list-option>
-            </ng-container>
-          </mat-selection-list>
+            </mat-selection-list>
+          </ng-container>
         </div>
       </div>
     </form>

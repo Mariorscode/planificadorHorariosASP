@@ -37,8 +37,8 @@ export class StteperFormComponent {
   ];
   weekDays = new FormControl();
   weekDaysRestriction = new FormControl();
-  items: string[] = [];
   turns: Turn[] = [];
+  selectedTurns: Turn[] = [];
 
   // Form Steps
 
@@ -55,6 +55,7 @@ export class StteperFormComponent {
   // First formStep
   secondFormGroup = this._formBuilder.group({
     secondCtrl: ['', Validators.required],
+    selectedTurns: [this.selectedTurns, Validators.required],
   });
   isLinear = false;
 
@@ -146,6 +147,24 @@ export class StteperFormComponent {
     }
 
     console.log('Turnos llenados:', this.turns);
+  }
+
+  // Function to handle the selection of a turn
+  onSelectionChange(turn: Turn) {
+    // Verify if the turn is already selected
+    const index = this.selectedTurns.findIndex(
+      (t) => t.day === turn.day && t.startTime === turn.startTime
+    );
+
+    if (index === -1) {
+      // if it is not selected, add it to the list
+      this.selectedTurns.push(turn);
+    } else {
+      // if it is selected, remove it from the list
+      this.selectedTurns.splice(index, 1);
+    }
+
+    console.log('Selected turns:', this.selectedTurns);
   }
 
   constructor(private _formBuilder: FormBuilder) {}
