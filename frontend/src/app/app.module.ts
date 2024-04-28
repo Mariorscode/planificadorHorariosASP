@@ -16,14 +16,27 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { CalendarComponent } from './calendar/calendar.component';
 import { StteperFormComponent } from './stteper-form/stteper-form.component';
+import { SpaceDialogComponent } from './dialog/spaceDialog/spaceDialog/spaceDialog.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatExpansionModule } from '@angular/material/expansion';
+
+import {
+  MatDialog,
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+} from '@angular/material/dialog';
 @NgModule({
-  declarations: [AppComponent, CalendarComponent, StteperFormComponent],
+  declarations: [
+    AppComponent,
+    CalendarComponent,
+    StteperFormComponent,
+    SpaceDialogComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -40,6 +53,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatSelectModule,
     MatListModule,
     MatGridListModule,
+    MatExpansionModule,
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

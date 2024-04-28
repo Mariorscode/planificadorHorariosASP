@@ -72,7 +72,7 @@
           matStepperNext
           (click)="fillTurns()"
         >
-          Next
+          Siguiente
         </button>
       </div>
     </form>
@@ -101,16 +101,47 @@
           </ng-container>
         </div>
       </div>
+      <div class="button-container">
+        <button mat-raised-button color="primary" matStepperNext>
+          Siguiente
+        </button>
+      </div>
     </form>
   </mat-step>
   <!------------------------------------ Step 3 -------------------------------------->
 
-  <mat-step>
-    <ng-template matStepLabel>Done</ng-template>
-    <p>You are now done.</p>
-    <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button (click)="stepper.reset()">Reset</button>
+  <mat-step [stepControl]="thirdFormGroup" label="Espacios disponibles">
+    <form>
+      <h2>Espacios disponibles</h2>
+      <div style="display: flex">
+        <div class="column">
+          <div class="card-container">
+            <mat-card class="card">
+              <mat-card-header>
+                <mat-card-title>Actions Buttons</mat-card-title>
+                <mat-card-subtitle>Start</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-actions>
+                <button mat-button>LIKE</button>
+                <button mat-button>SHARE</button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="openSpaceDialog()"
+            style="margin: 5px"
+          >
+            Añadir espacio
+          </button>
+        </div>
+      </div>
+    </form>
+    <div class="button-container">
+      <button mat-raised-button color="primary" matStepperNext>
+        Siguiente
+      </button>
     </div>
   </mat-step>
 </mat-stepper>

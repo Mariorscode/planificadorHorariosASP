@@ -6,16 +6,18 @@ import {
   ReactiveFormsModule,
   FormControl,
 } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatStepperModule } from '@angular/material/stepper';
-import { MatButtonModule } from '@angular/material/button';
-import { ThemePalette } from '@angular/material/core';
-import { scheduled } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { SpaceDialogComponent } from '../dialog/spaceDialog/spaceDialog/spaceDialog.component';
 
-interface Turn {
+export interface Turn {
   day: String;
   startTime: String;
+}
+
+export interface Space {
+  name: String;
+  spaceCapacity: number;
+  restrictionsSpace: Turn[];
 }
 @Component({
   selector: 'app-stteper-form',
@@ -39,6 +41,7 @@ export class StteperFormComponent {
   weekDaysRestriction = new FormControl();
   turns: Turn[] = [];
   selectedTurns: Turn[] = [];
+  spaces: Space[] = [];
 
   // Form Steps
 
@@ -54,8 +57,11 @@ export class StteperFormComponent {
   });
   // First formStep
   secondFormGroup = this._formBuilder.group({
-    secondCtrl: ['', Validators.required],
     selectedTurns: [this.selectedTurns, Validators.required],
+  });
+
+  thirdFormGroup = this._formBuilder.group({
+    spaces: [this.spaces, Validators.required],
   });
   isLinear = false;
 
@@ -167,5 +173,23 @@ export class StteperFormComponent {
     console.log('Selected turns:', this.selectedTurns);
   }
 
-  constructor(private _formBuilder: FormBuilder) {}
+  // Function to open the space dialog
+  openSpaceDialog() {
+    const dialogRef = this.dialog.open(SpaceDialogComponent, {
+      data: this.turns,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+      this.spaces.push(result);
+      console.log('Spaces:', this.spaces);
+      for (let i = 0; i < this.spaces.length; i++) {
+        console.log('Spaces:', this.spaces[i].name);
+        console.log('Spaces:', this.spaces[i].spaceCapacity);
+        console.log('Spaces:', this.spaces[i].restrictionsSpace);
+      }
+    });
+  }
+
+  constructor(private _formBuilder: FormBuilder, public dialog: MatDialog) {}
 }
