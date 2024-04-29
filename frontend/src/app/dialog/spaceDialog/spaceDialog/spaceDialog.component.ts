@@ -12,28 +12,61 @@ import { Dialog } from '@angular/cdk/dialog';
   styleUrls: ['./spaceDialog.component.css'],
 })
 export class SpaceDialogComponent {
-  restrictionsSpace = new FormControl();
+  restrictionsSpace: Turn[] = [];
 
   spaceForm = this.fb.group({
-    name: ['', Validators.required],
+    name: [this.data.spaceName || '', Validators.required],
     spaceCapacity: ['', Validators.required],
-    restrictionsSpace: this.restrictionsSpace,
+    restrictionsSpace: [this.restrictionsSpace, Validators.required],
   });
 
   constructor(
     public dialogRef: MatDialogRef<SpaceDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Turn[],
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      spaceName: string;
+      turns: Turn[];
+      eliminate: (spaceToEliminate: String) => void;
+    },
     private fb: FormBuilder
   ) {}
+
+  ngOnInit(): void {
+    // Set the form value based on data.space
+    this.spaceForm.get('name')?.setValue(this.data.spaceName);
+    console.log('NOMBREEE', this.data.spaceName);
+  }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
   saveSpace(): void {
-    if (this.spaceForm.valid) {
-      this.dialogRef.close(this.spaceForm.value);
+    // If the name of the space is the same, do not eliminate it
+    if (this.data.spaceName === this.spaceForm.get('name')?.value) {
+    } else {
+      // If the name of the space is different, eliminate the space
+      this.data.eliminate(this.data.spaceName);
     }
+    this.dialogRef.close(this.spaceForm.value);
+
     console.log('DATA dentro dialogo', this.data);
+  }
+
+  onSelectionChange(turn: Turn) {
+    // Verify if the turn is already selected
+    const index = this.restrictionsSpace.findIndex(
+      (t) => t.day === turn.day && t.startTime === turn.startTime
+    );
+
+    if (index === -1) {
+      // if it is not selected, add it to the list
+      this.restrictionsSpace.push(turn);
+    } else {
+      // if it is selected, remove it from the list
+      this.restrictionsSpace.splice(index, 1);
+    }
+
+    console.log('Selected Space turns:', this.restrictionsSpace);
   }
 }

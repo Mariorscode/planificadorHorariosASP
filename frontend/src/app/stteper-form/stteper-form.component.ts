@@ -15,7 +15,7 @@ export interface Turn {
 }
 
 export interface Space {
-  name: String;
+  name: string;
   spaceCapacity: number;
   restrictionsSpace: Turn[];
 }
@@ -41,7 +41,18 @@ export class StteperFormComponent {
   weekDaysRestriction = new FormControl();
   turns: Turn[] = [];
   selectedTurns: Turn[] = [];
-  spaces: Space[] = [];
+  spaces: Space[] = [
+    {
+      name: 'Space 1',
+      spaceCapacity: 10,
+      restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
+    },
+    {
+      name: 'Space 1',
+      spaceCapacity: 10,
+      restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
+    },
+  ];
 
   // Form Steps
 
@@ -64,6 +75,11 @@ export class StteperFormComponent {
     spaces: [this.spaces, Validators.required],
   });
   isLinear = false;
+
+  ngOnInit(): void {
+    // load the space cards
+    this.loadSpaceCards();
+  }
 
   // calculate the number of turns per day given the first and last turn time and the turn duration
   calculateTurnsPerDay(): number {
@@ -173,22 +189,84 @@ export class StteperFormComponent {
     console.log('Selected turns:', this.selectedTurns);
   }
 
+  spaceCards: Space[] = [];
   // Function to open the space dialog
-  openSpaceDialog() {
-    const dialogRef = this.dialog.open(SpaceDialogComponent, {
-      data: this.turns,
-    });
+  openSpaceDialog(space?: Space) {
+    let spaceName: string;
+
+    let dialogRef;
+    if (space) {
+      spaceName = space.name;
+      dialogRef = this.dialog.open(SpaceDialogComponent, {
+        data: {
+          spaceName: spaceName,
+          turns: this.turns,
+          eliminate: this.deleteSpace.bind(this),
+        },
+      });
+    } else {
+      dialogRef = this.dialog.open(SpaceDialogComponent, {
+        data: {
+          spaceName: null,
+          turns: this.turns,
+          eliminate: this.deleteSpace.bind(this),
+        },
+      });
+    }
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
-      this.spaces.push(result);
-      console.log('Spaces:', this.spaces);
-      for (let i = 0; i < this.spaces.length; i++) {
-        console.log('Spaces:', this.spaces[i].name);
-        console.log('Spaces:', this.spaces[i].spaceCapacity);
-        console.log('Spaces:', this.spaces[i].restrictionsSpace);
+
+      if (result) {
+        // Create a new space object with the dialog result
+        const newSpace: Space = {
+          name: result.name,
+          spaceCapacity: result.spaceCapacity,
+          restrictionsSpace: result.restrictionsSpace,
+        };
+
+        // check if the space already exists
+        const existingSpaceIndex = this.spaceCards.findIndex(
+          (spaceCards) => spaceCards.name === newSpace.name
+        );
+
+        if (existingSpaceIndex !== -1) {
+          //in case the space already exists, update the space
+          this.spaces[existingSpaceIndex] = newSpace;
+        } else {
+          // if the space does not exist, add it to the spaces array
+          this.spaces.push(newSpace);
+        }
+        this.loadSpaceCards();
       }
     });
+  }
+  loadSpaceCards(): void {
+    // delete the existing space cards
+    this.spaceCards = [];
+
+    // iterate over the spaces array and create a card for each space
+    this.spaces.forEach((space: Space) => {
+      // Create a new card object with the space data
+      const newCard = {
+        name: space.name,
+        spaceCapacity: space.spaceCapacity,
+        restrictionsSpace: space.restrictionsSpace,
+      };
+
+      // Add the card to the spaceCards array
+      this.spaceCards.push(newCard);
+    });
+  }
+  deleteSpace(deleteSpace: String): void {
+    // Find the index of the space to delete
+    const index = this.spaces.findIndex((space) => space.name === deleteSpace);
+
+    // Delete the space from the spaces array
+    this.spaces.splice(index, 1);
+
+    // Reload the space cards
+    this.loadSpaceCards();
   }
 
   constructor(private _formBuilder: FormBuilder, public dialog: MatDialog) {}

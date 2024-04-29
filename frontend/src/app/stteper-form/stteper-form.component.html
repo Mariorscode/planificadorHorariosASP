@@ -116,16 +116,42 @@
       <div style="display: flex">
         <div class="column">
           <div class="card-container">
-            <mat-card class="card">
-              <mat-card-header>
-                <mat-card-title>Actions Buttons</mat-card-title>
-                <mat-card-subtitle>Start</mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-actions>
-                <button mat-button>LIKE</button>
-                <button mat-button>SHARE</button>
-              </mat-card-actions>
-            </mat-card>
+            <div *ngFor="let space of spaceCards">
+              <mat-card class="card">
+                <mat-card-header>
+                  <mat-card-title>{{ space.name }}</mat-card-title>
+                  <mat-card-subtitle
+                    >Capacidad: {{ space.spaceCapacity }}</mat-card-subtitle
+                  >
+                </mat-card-header>
+                <mat-card-content>
+                  <ul>
+                    <li *ngFor="let restriction of space.restrictionsSpace">
+                      Día: {{ restriction.day }}, Hora:
+                      {{ restriction.startTime }}
+                    </li>
+                  </ul>
+                </mat-card-content>
+                <mat-card-actions>
+                  <button
+                    mat-raised-button
+                    color="accent"
+                    (click)="openSpaceDialog(space)"
+                    style="margin: 5px"
+                  >
+                    Modificar
+                  </button>
+                  <button
+                    mat-raised-button
+                    color="warn"
+                    (click)="deleteSpace(space.name)"
+                    style="margin: 5px"
+                  >
+                    Eliminar
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            </div>
           </div>
           <button
             mat-raised-button
