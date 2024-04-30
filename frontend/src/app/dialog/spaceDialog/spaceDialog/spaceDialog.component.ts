@@ -50,7 +50,7 @@ export class SpaceDialogComponent {
     }
     this.dialogRef.close(this.spaceForm.value);
 
-    console.log('DATA dentro dialogo', this.data);
+    // console.log('DATA dentro dialogo', this.data);
   }
 
   onSelectionChange(turn: Turn) {

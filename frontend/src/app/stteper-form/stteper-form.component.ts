@@ -239,6 +239,7 @@ export class StteperFormComponent {
         }
         this.loadSpaceCards();
       }
+      console.log('Todas las spaces:', this.spaces);
     });
   }
   loadSpaceCards(): void {
@@ -256,6 +257,7 @@ export class StteperFormComponent {
 
       // Add the card to the spaceCards array
       this.spaceCards.push(newCard);
+      console.log('todas Space cards:', this.spaceCards);
     });
   }
   deleteSpace(deleteSpace: String): void {

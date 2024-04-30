@@ -78,7 +78,7 @@
     </form>
   </mat-step>
   <!------------------------------------ Step 2 -------------------------------------->
-  <mat-step
+  <!-- <mat-step
     [stepControl]="secondFormGroup"
     label="Restricciones y revisión horario"
   >
@@ -99,6 +99,38 @@
               </mat-list-option>
             </mat-selection-list>
           </ng-container>
+        </div>
+      </div>
+      <div class="button-container">
+        <button mat-raised-button color="primary" matStepperNext>
+          Siguiente
+        </button>
+      </div>
+    </form>
+  </mat-step> -->
+  <mat-step
+    [stepControl]="secondFormGroup"
+    label="Restricciones y revisión horario"
+  >
+    <form [formGroup]="secondFormGroup">
+      <h3>
+        Seleccione los turnos libres (puede seleccionar varios o ningnuno)
+      </h3>
+      <div style="display: flex">
+        <div *ngFor="let day of weekDays.value" class="column">
+          <h2>{{ day }}</h2>
+          <mat-selection-list>
+            <div class="card-container">
+              <ng-container *ngFor="let turn of turns">
+                <mat-list-option
+                  *ngIf="turn.day === day"
+                  (selectedChange)="onSelectionChange(turn)"
+                >
+                  {{ turn.startTime }}
+                </mat-list-option>
+              </ng-container>
+            </div>
+          </mat-selection-list>
         </div>
       </div>
       <div class="button-container">
