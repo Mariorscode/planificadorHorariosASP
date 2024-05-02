@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { SpaceDialogComponent } from '../dialog/spaceDialog/spaceDialog/spaceDialog.component';
-
+import { WorkerDialogComponent } from '../dialog/workerDialog/workerDialog/workerDialog.component';
 export interface Turn {
   day: String;
   startTime: String;
@@ -19,6 +19,11 @@ export interface Space {
   spaceCapacity: number;
   restrictionsSpace: Turn[];
 }
+export interface Worker {
+  name: string;
+  restrictionsWorker: Turn[];
+}
+
 @Component({
   selector: 'app-stteper-form',
   templateUrl: './stteper-form.component.html',
@@ -54,7 +59,18 @@ export class StteperFormComponent {
     },
   ];
 
-  // Form Steps
+  workers: Worker[] = [
+    {
+      name: 'John Doe',
+      restrictionsWorker: [{ day: 'Lunes', startTime: '08:00' }],
+    },
+    {
+      name: 'Jane Doe',
+      restrictionsWorker: [{ day: 'Lunes', startTime: '10:00' }],
+    },
+  ];
+
+  //-------------------- Form Steps --------------------
 
   // First formStep
   firstFormGroup = this._formBuilder.group({
@@ -66,19 +82,30 @@ export class StteperFormComponent {
     weekDaysRestriction: this.weekDaysRestriction,
     dayTimerestriction: ['', Validators.required],
   });
-  // First formStep
+  // Second formStep
   secondFormGroup = this._formBuilder.group({
     selectedTurns: [this.selectedTurns, Validators.required],
   });
-
+  // Third formStep
   thirdFormGroup = this._formBuilder.group({
     spaces: [this.spaces, Validators.required],
   });
+  // Fourth formStep
+  fourthFormGroup = this._formBuilder.group({
+    workers: [this.workers, Validators.required],
+  });
+
   isLinear = false;
 
+  //--------------------/Form Steps --------------------
+
+  //-------------------- Methods --------------------
+
+  // excute at the load of the component
   ngOnInit(): void {
     // load the space cards
     this.loadSpaceCards();
+    this.loadWorkerCards();
   }
 
   // calculate the number of turns per day given the first and last turn time and the turn duration
@@ -190,6 +217,7 @@ export class StteperFormComponent {
   }
 
   spaceCards: Space[] = [];
+  workerCards: Worker[] = [];
   // Function to open the space dialog
   openSpaceDialog(space?: Space) {
     let spaceName: string;
@@ -242,6 +270,59 @@ export class StteperFormComponent {
       console.log('Todas las spaces:', this.spaces);
     });
   }
+
+  openWorkerDialog(worker?: Worker) {
+    let workerName: string;
+
+    let dialogRef;
+    if (worker) {
+      workerName = worker.name;
+      dialogRef = this.dialog.open(WorkerDialogComponent, {
+        data: {
+          workerName: workerName,
+          turns: this.turns,
+          eliminate: this.deleteWorker.bind(this),
+        },
+      });
+    } else {
+      dialogRef = this.dialog.open(WorkerDialogComponent, {
+        data: {
+          workerName: null,
+          turns: this.turns,
+          eliminate: this.deleteWorker.bind(this),
+        },
+      });
+    }
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+
+      if (result) {
+        // Create a new worker object with the dialog result
+        const newWorker: Worker = {
+          name: result.name,
+          restrictionsWorker: result.restrictionsWorker,
+        };
+
+        // check if the worker already exists
+        const existingWorkerIndex = this.workerCards.findIndex(
+          (workerCards) => workerCards.name === newWorker.name
+        );
+
+        if (existingWorkerIndex !== -1) {
+          //in case the worker already exists, update the worker
+          this.workers[existingWorkerIndex] = newWorker;
+        } else {
+          // if the worker does not exist, add it to the workers array
+          this.workers.push(newWorker);
+        }
+        this.loadWorkerCards();
+      }
+      console.log('Todas las workers:', this.workers);
+    });
+  }
+
+  // Function to load the space cards in card list form the spaces array
   loadSpaceCards(): void {
     // delete the existing space cards
     this.spaceCards = [];
@@ -260,6 +341,26 @@ export class StteperFormComponent {
       console.log('todas Space cards:', this.spaceCards);
     });
   }
+
+  loadWorkerCards(): void {
+    // delete the existing worker cards
+    this.workerCards = [];
+
+    // iterate over the workers array and create a card for each worker
+    this.workers.forEach((worker: Worker) => {
+      // Create a new card object with the worker data
+      const newCard = {
+        name: worker.name,
+        restrictionsWorker: worker.restrictionsWorker,
+      };
+
+      // Add the card to the workerCards array
+      this.workerCards.push(newCard);
+      console.log('todas Worker cards:', this.workerCards);
+    });
+  }
+
+  // Function to delete a space from the spaces array and reload the space cards
   deleteSpace(deleteSpace: String): void {
     // Find the index of the space to delete
     const index = this.spaces.findIndex((space) => space.name === deleteSpace);
@@ -269,6 +370,19 @@ export class StteperFormComponent {
 
     // Reload the space cards
     this.loadSpaceCards();
+  }
+
+  deleteWorker(deleteWorker: String): void {
+    // Find the index of the worker to delete
+    const index = this.workers.findIndex(
+      (worker) => worker.name === deleteWorker
+    );
+
+    // Delete the worker from the workers array
+    this.workers.splice(index, 1);
+
+    // Reload the worker cards
+    this.loadWorkerCards();
   }
 
   constructor(private _formBuilder: FormBuilder, public dialog: MatDialog) {}

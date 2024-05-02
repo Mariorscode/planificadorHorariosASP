@@ -17,6 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CalendarComponent } from './calendar/calendar.component';
 import { StteperFormComponent } from './stteper-form/stteper-form.component';
 import { SpaceDialogComponent } from './dialog/spaceDialog/spaceDialog/spaceDialog.component';
+import { WorkerDialogComponent } from './dialog/workerDialog/workerDialog/workerDialog.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -36,6 +37,7 @@ import {
     CalendarComponent,
     StteperFormComponent,
     SpaceDialogComponent,
+    WorkerDialogComponent,
   ],
   imports: [
     BrowserModule,

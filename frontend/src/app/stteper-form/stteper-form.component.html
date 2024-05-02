@@ -78,36 +78,6 @@
     </form>
   </mat-step>
   <!------------------------------------ Step 2 -------------------------------------->
-  <!-- <mat-step
-    [stepControl]="secondFormGroup"
-    label="Restricciones y revisión horario"
-  >
-    <form [formGroup]="secondFormGroup">
-      <h3>
-        Seleccione los turnos libres (puede seleccionar varios o ningnuno)
-      </h3>
-      <div style="display: flex">
-        <div *ngFor="let day of weekDays.value" class="column">
-          <h2>{{ day }}</h2>
-          <ng-container *ngFor="let turn of turns">
-            <mat-selection-list
-              #turnList
-              (selectionChange)="onSelectionChange(turn)"
-            >
-              <mat-list-option *ngIf="turn.day === day" [value]="turn">
-                {{ turn.startTime }}
-              </mat-list-option>
-            </mat-selection-list>
-          </ng-container>
-        </div>
-      </div>
-      <div class="button-container">
-        <button mat-raised-button color="primary" matStepperNext>
-          Siguiente
-        </button>
-      </div>
-    </form>
-  </mat-step> -->
   <mat-step
     [stepControl]="secondFormGroup"
     label="Restricciones y revisión horario"
@@ -192,6 +162,64 @@
             style="margin: 5px"
           >
             Añadir espacio
+          </button>
+        </div>
+      </div>
+    </form>
+    <div class="button-container">
+      <button mat-raised-button color="primary" matStepperNext>
+        Siguiente
+      </button>
+    </div>
+  </mat-step>
+  <!------------------------------------ Step 4 -------------------------------------->
+  <mat-step [stepControl]="fourthFormGroup" label="Trabajadores disponibles">
+    <form>
+      <h2>Trabajadores disponibles</h2>
+      <div style="display: flex">
+        <div class="column">
+          <div class="card-container">
+            <div *ngFor="let worker of workerCards">
+              <mat-card class="card">
+                <mat-card-header>
+                  <mat-card-title>{{ worker.name }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <ul>
+                    <li *ngFor="let restriction of worker.restrictionsWorker">
+                      Día: {{ restriction.day }}, Hora:
+                      {{ restriction.startTime }}
+                    </li>
+                  </ul>
+                </mat-card-content>
+                <mat-card-actions>
+                  <button
+                    mat-raised-button
+                    color="accent"
+                    (click)="openWorkerDialog(worker)"
+                    style="margin: 5px"
+                  >
+                    Modificar
+                  </button>
+                  <button
+                    mat-raised-button
+                    color="warn"
+                    (click)="deleteWorker(worker.name)"
+                    style="margin: 5px"
+                  >
+                    Eliminar
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            </div>
+          </div>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="openWorkerDialog()"
+            style="margin: 5px"
+          >
+            Añadir Trabajor
           </button>
         </div>
       </div>
