@@ -230,4 +230,77 @@
       </button>
     </div>
   </mat-step>
+
+  <!------------------------------------ Step 5 -------------------------------------->
+  <mat-step [stepControl]="fithFormGroup" label="Tareas programables">
+    <form>
+      <div style="display: flex">
+        <h2>Tags disponibles</h2>
+        <button
+          mat-raised-button
+          style="align-self: center; margin: 5px"
+          color="primary"
+          (click)="openTagsDialog()"
+        >
+          Añadir tags
+        </button>
+      </div>
+      <div>
+        <!-- Div para los tags disponibles -->
+        <div style="display: flex; flex-wrap: wrap">
+          <mat-chip style="margin: 5px" *ngFor="let tag of availableTags">{{
+            tag.name
+          }}</mat-chip>
+        </div>
+        <mat-divider style="margin: 5px"></mat-divider>
+        <h2>Tareas programables</h2>
+        <div class="column">
+          <div class="card-container">
+            <div class="card-container">
+              <div *ngFor="let scheduableTask of scheduableTasks">
+                <mat-card class="card">
+                  <mat-card-header>
+                    <mat-card-title>{{ scheduableTask.name }}</mat-card-title>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <ul>
+                      <li
+                        *ngFor="let restriction of scheduableTask.restrictions"
+                      >
+                        Día: {{ restriction.day }}, Hora:
+                        {{ restriction.startTime }}
+                      </li>
+                    </ul>
+                  </mat-card-content>
+                  <mat-card-actions>
+                    <button
+                      mat-raised-button
+                      color="accent"
+                      (click)="openWorkerDialog()"
+                      style="margin: 5px"
+                    >
+                      Modificar
+                    </button>
+                  </mat-card-actions>
+                </mat-card>
+              </div>
+            </div>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="openWorkerDialog()"
+              style="margin: 5px"
+            >
+              Añadir tarea
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="button-container">
+      <button mat-raised-button color="primary" matStepperNext>
+        Siguiente
+      </button>
+    </div>
+  </mat-step>
 </mat-stepper>

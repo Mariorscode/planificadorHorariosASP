@@ -18,6 +18,8 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { StteperFormComponent } from './stteper-form/stteper-form.component';
 import { SpaceDialogComponent } from './dialog/spaceDialog/spaceDialog/spaceDialog.component';
 import { WorkerDialogComponent } from './dialog/workerDialog/workerDialog/workerDialog.component';
+import { TagsDialogComponent } from './dialog/tagsDialog/tagsDialog/tagsDialog.component';
+import { ScheduableTaskDialogComponent } from './dialog/scheduableTaskDialog/scheduableTaskDialog/scheduableTaskDialog.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -25,6 +27,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatChipsModule } from '@angular/material/chips';
 
 import {
   MatDialog,
@@ -38,6 +41,8 @@ import {
     StteperFormComponent,
     SpaceDialogComponent,
     WorkerDialogComponent,
+    TagsDialogComponent,
+    ScheduableTaskDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,6 +62,7 @@ import {
     MatGridListModule,
     MatExpansionModule,
     MatDialogModule,
+    MatChipsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

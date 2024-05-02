@@ -9,6 +9,8 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { SpaceDialogComponent } from '../dialog/spaceDialog/spaceDialog/spaceDialog.component';
 import { WorkerDialogComponent } from '../dialog/workerDialog/workerDialog/workerDialog.component';
+import { TagsDialogComponent } from '../dialog/tagsDialog/tagsDialog/tagsDialog.component';
+import { s } from '@fullcalendar/core/internal-common';
 export interface Turn {
   day: String;
   startTime: String;
@@ -23,7 +25,16 @@ export interface Worker {
   name: string;
   restrictionsWorker: Turn[];
 }
-
+export interface Tag {
+  name: string;
+}
+export interface ScheduableTask {
+  name: string;
+  duration: number;
+  restrictions: Turn[];
+  workers: Worker[];
+  spaces: Space[];
+}
 @Component({
   selector: 'app-stteper-form',
   templateUrl: './stteper-form.component.html',
@@ -70,6 +81,20 @@ export class StteperFormComponent {
     },
   ];
 
+  availableTags: Tag[] = [
+    {
+      name: 'Tag 1',
+    },
+    {
+      name: 'Tag 2',
+    },
+    {
+      name: 'Tag 3',
+    },
+  ];
+  taskTags: Tag[] = [];
+  scheduableTasks: ScheduableTask[] = [];
+
   //-------------------- Form Steps --------------------
 
   // First formStep
@@ -93,6 +118,9 @@ export class StteperFormComponent {
   // Fourth formStep
   fourthFormGroup = this._formBuilder.group({
     workers: [this.workers, Validators.required],
+  });
+  fithFormGroup = this._formBuilder.group({
+    scheduableTasks: [this.scheduableTasks, Validators.required],
   });
 
   isLinear = false;
@@ -323,6 +351,21 @@ export class StteperFormComponent {
     });
   }
 
+  openTagsDialog() {
+    let dialogRef = this.dialog.open(TagsDialogComponent, {
+      data: {
+        spaceName: this.firstFormGroup.get('scheduleName')?.value,
+        eliminate: this.deleteSpace.bind(this),
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('RESULTADO TAGS', result);
+      this.loadTags(result);
+      // console.log('Todas las tags:', this.tags);
+    });
+  }
+
   // Function to load the space cards in card list form the spaces array
   loadSpaceCards(): void {
     // delete the existing space cards
@@ -358,6 +401,20 @@ export class StteperFormComponent {
       // Add the card to the workerCards array
       this.workerCards.push(newCard);
       console.log('todas Worker cards:', this.workerCards);
+    });
+  }
+
+  loadTags(tags: Tag[]): void {
+    // iterate over the workers array and create a card for each worker
+    tags.forEach((tag: Tag) => {
+      // Create a new card object with the worker data
+      const newTag = {
+        name: tag.name,
+      };
+
+      // Add the card to the workerCards array
+      this.taskTags.push(newTag);
+      console.log('todas TAGS', this.taskTags);
     });
   }
 
