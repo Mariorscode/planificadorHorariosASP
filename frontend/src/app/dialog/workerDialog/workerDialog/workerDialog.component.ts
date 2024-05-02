@@ -42,11 +42,6 @@ export class WorkerDialogComponent {
 
   saveSpace(): void {
     // If the name of the space is the same, do not eliminate it
-    if (this.data.workerName === this.workerForm.get('name')?.value) {
-    } else {
-      // If the name of the space is different, eliminate the space
-      this.data.eliminate(this.data.workerName);
-    }
     this.dialogRef.close(this.workerForm.value);
 
     // console.log('DATA dentro dialogo', this.data);

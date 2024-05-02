@@ -53,7 +53,7 @@ export class StteperFormComponent {
       restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
     },
     {
-      name: 'Space 1',
+      name: 'Space 2',
       spaceCapacity: 10,
       restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
     },
@@ -104,6 +104,7 @@ export class StteperFormComponent {
   // excute at the load of the component
   ngOnInit(): void {
     // load the space cards
+    console.log('OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOo');
     this.loadSpaceCards();
     this.loadWorkerCards();
   }

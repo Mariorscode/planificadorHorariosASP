@@ -43,11 +43,8 @@ export class SpaceDialogComponent {
 
   saveSpace(): void {
     // If the name of the space is the same, do not eliminate it
-    if (this.data.spaceName === this.spaceForm.get('name')?.value) {
-    } else {
-      // If the name of the space is different, eliminate the space
-      this.data.eliminate(this.data.spaceName);
-    }
+    // if (this.data.spaceName == this.spaceForm.get('name')?.value) {
+    // }
     this.dialogRef.close(this.spaceForm.value);
 
     // console.log('DATA dentro dialogo', this.data);
