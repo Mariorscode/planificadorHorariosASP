@@ -28,6 +28,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 
 import {
   MatDialog,
@@ -63,6 +64,7 @@ import {
     MatExpansionModule,
     MatDialogModule,
     MatChipsModule,
+    MatIconModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

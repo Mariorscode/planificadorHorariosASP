@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SpaceDialogComponent } from '../dialog/spaceDialog/spaceDialog/spaceDialog.component';
 import { WorkerDialogComponent } from '../dialog/workerDialog/workerDialog/workerDialog.component';
 import { TagsDialogComponent } from '../dialog/tagsDialog/tagsDialog/tagsDialog.component';
+import { ScheduableTaskDialogComponent } from '../dialog/scheduableTaskDialog/scheduableTaskDialog/scheduableTaskDialog.component';
 import { s } from '@fullcalendar/core/internal-common';
 export interface Turn {
   day: String;
@@ -32,8 +33,8 @@ export interface ScheduableTask {
   name: string;
   size: number;
   restrictions: Turn[];
-  workers: Worker[];
-  spaces: Space[];
+  taskWorker: Worker;
+  takSpace: Space;
   taskTags: Tag[];
 }
 @Component({
@@ -94,7 +95,24 @@ export class StteperFormComponent {
     },
   ];
   taskTags: Tag[] = [];
-  scheduableTasks: ScheduableTask[] = [];
+  scheduableTasks: ScheduableTask[] = [
+    {
+      name: 'Calculo1',
+      size: 10,
+      restrictions: [{ day: 'Lunes', startTime: '08:00' }],
+      taskWorker: {
+        name: 'John Doe',
+        restrictionsWorker: [{ day: 'Lunes', startTime: '08:00' }],
+      },
+      takSpace: {
+        name: 'Space 1',
+        spaceCapacity: 10,
+        restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
+      },
+
+      taskTags: [{ name: 'Grupo A' }, { name: 'primero' }, { name: 'teoria' }],
+    },
+  ];
 
   //-------------------- Form Steps --------------------
 
@@ -357,6 +375,20 @@ export class StteperFormComponent {
       data: {
         spaceName: this.firstFormGroup.get('scheduleName')?.value,
         eliminate: this.deleteSpace.bind(this),
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('RESULTADO TAGS', result);
+      this.loadTags(result);
+      // console.log('Todas las tags:', this.tags);
+    });
+  }
+  openScheduableTaskDialog() {
+    let dialogRef = this.dialog.open(ScheduableTaskDialogComponent, {
+      data: {
+        // spaceName: this.firstFormGroup.get('scheduleName')?.value,
+        // eliminate: this.deleteSpace.bind(this),
       },
     });
 

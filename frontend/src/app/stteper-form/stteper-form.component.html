@@ -242,7 +242,12 @@
           color="primary"
           (click)="openTagsDialog()"
         >
-          Añadir tags
+          Añadir tag
+          <mat-icon
+            aria-hidden="false"
+            aria-label="add"
+            fontIcon="add"
+          ></mat-icon>
         </button>
       </div>
       <div>
@@ -263,14 +268,34 @@
                     <mat-card-title>{{ scheduableTask.name }}</mat-card-title>
                   </mat-card-header>
                   <mat-card-content>
-                    <ul>
-                      <li
+                    Tamaño: {{ scheduableTask.size }}
+                  </mat-card-content>
+                  <mat-card-content>
+                    Espacio asignado: {{ scheduableTask.takSpace.name }}
+                  </mat-card-content>
+                  <mat-card-content>
+                    Trabajador asignado: {{ scheduableTask.taskWorker.name }}
+                  </mat-card-content>
+                  <mat-card-content>
+                    <mat-divider style="margin: 5px"></mat-divider>
+                    <p>Restricciones</p>
+                    <mat-list>
+                      <mat-list-item
                         *ngFor="let restriction of scheduableTask.restrictions"
                       >
                         Día: {{ restriction.day }}, Hora:
                         {{ restriction.startTime }}
-                      </li>
-                    </ul>
+                      </mat-list-item>
+                    </mat-list>
+                  </mat-card-content>
+                  <mat-card-content>
+                    <div style="display: flex; flex-wrap: wrap">
+                      <mat-chip
+                        style="margin: 5px"
+                        *ngFor="let taskTag of scheduableTask.taskTags"
+                        >{{ taskTag.name }}</mat-chip
+                      >
+                    </div>
                   </mat-card-content>
                   <mat-card-actions>
                     <button
@@ -281,6 +306,9 @@
                     >
                       Modificar
                     </button>
+                    <button mat-raised-button color="warn" style="margin: 5px">
+                      Eliminar
+                    </button>
                   </mat-card-actions>
                 </mat-card>
               </div>
@@ -288,7 +316,7 @@
             <button
               mat-raised-button
               color="primary"
-              (click)="openWorkerDialog()"
+              (click)="openScheduableTaskDialog()"
               style="margin: 5px"
             >
               Añadir tarea
