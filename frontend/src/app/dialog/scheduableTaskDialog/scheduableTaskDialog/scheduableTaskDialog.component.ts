@@ -2,7 +2,10 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
-import { Space } from 'src/app/stteper-form/stteper-form.component';
+import {
+  ScheduableTask,
+  Space,
+} from 'src/app/stteper-form/stteper-form.component';
 import { Turn } from 'src/app/stteper-form/stteper-form.component';
 import { Tag } from 'src/app/stteper-form/stteper-form.component';
 import { Worker } from 'src/app/stteper-form/stteper-form.component';
@@ -30,7 +33,7 @@ export class ScheduableTaskDialogComponent {
     public dialogRef: MatDialogRef<ScheduableTaskDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      // spaceName: string;
+      taskName: ScheduableTask;
       turns: Turn[];
       dataWorkers: Worker[];
       datatags: Tag[];
@@ -77,5 +80,12 @@ export class ScheduableTaskDialogComponent {
       // if it is selected, remove it from the list
       this.spaces.splice(index, 1);
     }
+  }
+  saveScheduableTask(): void {
+    this.dialogRef.close(this.scheduableTaskForm.value);
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 }

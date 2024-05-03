@@ -1,0 +1,18 @@
+.formsTitles{
+    margin: 5px;
+    align-self: center;
+}
+
+.formFields{
+    margin: 5px;
+    align-self: bottom;
+}
+
+.column {
+    flex: 1;
+    align-items: left;
+    border-radius: 10px; 
+    padding: 10px; 
+    margin: 5px;
+}
+

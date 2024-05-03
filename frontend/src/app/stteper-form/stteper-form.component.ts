@@ -327,8 +327,9 @@ export class StteperFormComponent {
       workerName = worker.name;
       dialogRef = this.dialog.open(WorkerDialogComponent, {
         data: {
-          workerName: workerName,
+          workers: this.workers,
           turns: this.turns,
+
           eliminate: this.deleteWorker.bind(this),
         },
       });
@@ -384,16 +385,19 @@ export class StteperFormComponent {
       // console.log('Todas las tags:', this.tags);
     });
   }
-  openScheduableTaskDialog() {
+  openScheduableTaskDialog(scheduableTask?: ScheduableTask) {
     let dialogRef = this.dialog.open(ScheduableTaskDialogComponent, {
       data: {
-        // spaceName: this.firstFormGroup.get('scheduleName')?.value,
-        // eliminate: this.deleteSpace.bind(this),
+        task: scheduableTask,
+        turns: this.turns,
+        dataWorkers: this.workers,
+        dataSpaces: this.spaces,
+        datatags: this.availableTags,
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('RESULTADO TAGS', result);
+      console.log('RESULTADO ', result);
       this.loadTags(result);
       // console.log('Todas las tags:', this.tags);
     });
@@ -447,6 +451,7 @@ export class StteperFormComponent {
 
       // Add the card to the workerCards array
       this.taskTags.push(newTag);
+      this.availableTags.push(newTag);
       console.log('todas TAGS', this.taskTags);
     });
   }
