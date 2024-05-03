@@ -30,10 +30,11 @@ export interface Tag {
 }
 export interface ScheduableTask {
   name: string;
-  duration: number;
+  size: number;
   restrictions: Turn[];
   workers: Worker[];
   spaces: Space[];
+  taskTags: Tag[];
 }
 @Component({
   selector: 'app-stteper-form',

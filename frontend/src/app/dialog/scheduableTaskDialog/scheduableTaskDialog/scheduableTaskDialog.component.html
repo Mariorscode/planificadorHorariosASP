@@ -1,3 +1,60 @@
-<p>
-  scheduableTaskDialog works!
-</p>
+<h1 mat-dialog-title>Introduzca la Información del espacio</h1>
+<div mat-dialog-content>
+  <form [formGroup]="scheduableTaskForm" style="margin: 10px">
+    <mat-form-field appearance="outline" color="primary">
+      <mat-label>Nombre de la tarea</mat-label>
+      <input matInput formControlName="name" placeholder="" />
+    </mat-form-field>
+    <br />
+    <mat-form-field appearance="outline" color="primary">
+      <mat-label>Tamaño requerido</mat-label>
+      <input
+        matInput
+        formControlName="spaceCapacity"
+        placeholder=""
+        type="number"
+      />
+    </mat-form-field>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Días de la semana (restriccion)</mat-label>
+        <mat-select multiple>
+          <mat-option
+            *ngFor="let turn of data.turns"
+            [value]="turn"
+            (onSelectionChange)="onSelectionTurn(turn)"
+            >{{ turn.day }}, {{ turn.startTime }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Trabajador</mat-label>
+        <mat-select>
+          <mat-option
+            *ngFor="let worker of data.dataWorkers"
+            [value]="worker"
+            (onSelectionChange)="onSelectionWorker(worker)"
+            >{{ worker }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Espacio</mat-label>
+        <mat-select>
+          <mat-option
+            *ngFor="let space of data.dataSpaces"
+            [value]="space"
+            (onSelectionChange)="onSelectionSpace(space)"
+            >{{ space }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <!-- <button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="saveSpace()">
+  Guardar
+  </button> -->
+</div>
