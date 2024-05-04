@@ -12,7 +12,7 @@
           <mat-label>Tamaño requerido</mat-label>
           <input
             matInput
-            formControlName="spaceCapacity"
+            formControlName="taskSize"
             placeholder=""
             type="number"
           />
@@ -56,6 +56,16 @@
         </mat-form-field>
       </div>
     </div>
+    <h4>Tags disponibles:</h4>
+    <mat-chip-listbox multiple="true">
+      <mat-chip-option
+        *ngFor="let tag of availableTags"
+        [value]="tag"
+        (selectionChange)="onSelectionTag(tag)"
+      >
+        {{ tag.name }}
+      </mat-chip-option>
+    </mat-chip-listbox>
   </form>
 </div>
 <div mat-dialog-actions>

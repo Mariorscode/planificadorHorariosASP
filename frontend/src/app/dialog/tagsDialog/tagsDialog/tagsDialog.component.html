@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>Introduzca tags que desee tener</h1>
-<div mat-dialog-content style="max-width: 500px">
+<div mat-dialog-content style="display: flex; max-width: 500px">
   <mat-form-field appearance="outline" color="primary">
     <mat-label>Nombre de la tag</mat-label>
     <input matInput [(ngModel)]="name" placeholder="" />
@@ -13,11 +13,11 @@
     Añadir
   </button>
   <br />
-  <div style="display: flex">
-    <mat-chip style="margin: 5px" *ngFor="let tag of tagsToAdd">{{
-      tag.name
-    }}</mat-chip>
-  </div>
+</div>
+<div style="display: flex; flex-wrap: wrap">
+  <mat-chip style="margin: 5px" *ngFor="let tag of tagsToAdd">{{
+    tag.name
+  }}</mat-chip>
 </div>
 <div mat-dialog-actions>
   <button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>

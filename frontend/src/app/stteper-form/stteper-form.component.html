@@ -262,7 +262,7 @@
         <div class="column">
           <div class="card-container">
             <div class="card-container">
-              <div *ngFor="let scheduableTask of scheduableTasks">
+              <div *ngFor="let scheduableTask of taskCards">
                 <mat-card class="card">
                   <mat-card-header>
                     <mat-card-title>{{ scheduableTask.name }}</mat-card-title>
@@ -270,11 +270,15 @@
                   <mat-card-content>
                     Tamaño: {{ scheduableTask.size }}
                   </mat-card-content>
-                  <mat-card-content>
-                    Espacio asignado: {{ scheduableTask.takSpace.name }}
+                  <mat-card-content
+                    *ngFor="let space of scheduableTask.taskSpace"
+                  >
+                    Espacio asignado: {{ space.name }}
                   </mat-card-content>
-                  <mat-card-content>
-                    Trabajador asignado: {{ scheduableTask.taskWorker.name }}
+                  <mat-card-content
+                    *ngFor="let worker of scheduableTask.taskWorker"
+                  >
+                    Trabajador asignado: {{ worker.name }}
                   </mat-card-content>
                   <mat-card-content>
                     <mat-divider style="margin: 5px"></mat-divider>
@@ -301,27 +305,32 @@
                     <button
                       mat-raised-button
                       color="accent"
-                      (click)="openWorkerDialog()"
+                      (click)="openScheduableTaskDialog(scheduableTask)"
                       style="margin: 5px"
                     >
                       Modificar
                     </button>
-                    <button mat-raised-button color="warn" style="margin: 5px">
+                    <button
+                      mat-raised-button
+                      color="warn"
+                      style="margin: 5px"
+                      (click)="deleteTask(scheduableTask.name)"
+                    >
                       Eliminar
                     </button>
                   </mat-card-actions>
                 </mat-card>
               </div>
             </div>
-            <button
-              mat-raised-button
-              color="primary"
-              (click)="openScheduableTaskDialog()"
-              style="margin: 5px"
-            >
-              Añadir tarea
-            </button>
           </div>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="openScheduableTaskDialog()"
+            style="margin: 5px"
+          >
+            Añadir tarea
+          </button>
         </div>
       </div>
     </form>

@@ -33,8 +33,8 @@ export interface ScheduableTask {
   name: string;
   size: number;
   restrictions: Turn[];
-  taskWorker: Worker;
-  takSpace: Space;
+  taskWorker: Worker[];
+  taskSpace: Space[];
   taskTags: Tag[];
 }
 @Component({
@@ -100,15 +100,39 @@ export class StteperFormComponent {
       name: 'Calculo1',
       size: 10,
       restrictions: [{ day: 'Lunes', startTime: '08:00' }],
-      taskWorker: {
-        name: 'John Doe',
-        restrictionsWorker: [{ day: 'Lunes', startTime: '08:00' }],
-      },
-      takSpace: {
-        name: 'Space 1',
-        spaceCapacity: 10,
-        restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
-      },
+      taskWorker: [
+        {
+          name: 'John Doe',
+          restrictionsWorker: [{ day: 'Lunes', startTime: '08:00' }],
+        },
+      ],
+      taskSpace: [
+        {
+          name: 'Space 1',
+          spaceCapacity: 10,
+          restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
+        },
+      ],
+
+      taskTags: [{ name: 'Grupo A' }, { name: 'primero' }, { name: 'teoria' }],
+    },
+    {
+      name: 'Calculo2',
+      size: 10,
+      restrictions: [{ day: 'Lunes', startTime: '08:00' }],
+      taskWorker: [
+        {
+          name: 'John Doe',
+          restrictionsWorker: [{ day: 'Lunes', startTime: '08:00' }],
+        },
+      ],
+      taskSpace: [
+        {
+          name: 'Space 1',
+          spaceCapacity: 10,
+          restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
+        },
+      ],
 
       taskTags: [{ name: 'Grupo A' }, { name: 'primero' }, { name: 'teoria' }],
     },
@@ -151,9 +175,9 @@ export class StteperFormComponent {
   // excute at the load of the component
   ngOnInit(): void {
     // load the space cards
-    console.log('OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOo');
     this.loadSpaceCards();
     this.loadWorkerCards();
+    this.loadTaskCards();
   }
 
   // calculate the number of turns per day given the first and last turn time and the turn duration
@@ -266,6 +290,7 @@ export class StteperFormComponent {
 
   spaceCards: Space[] = [];
   workerCards: Worker[] = [];
+  taskCards: ScheduableTask[] = [];
   // Function to open the space dialog
   openSpaceDialog(space?: Space) {
     let spaceName: string;
@@ -386,20 +411,60 @@ export class StteperFormComponent {
     });
   }
   openScheduableTaskDialog(scheduableTask?: ScheduableTask) {
-    let dialogRef = this.dialog.open(ScheduableTaskDialogComponent, {
-      data: {
-        task: scheduableTask,
-        turns: this.turns,
-        dataWorkers: this.workers,
-        dataSpaces: this.spaces,
-        datatags: this.availableTags,
-      },
-    });
+    let dialogRef;
+
+    if (scheduableTask) {
+      dialogRef = this.dialog.open(ScheduableTaskDialogComponent, {
+        data: {
+          taskName: scheduableTask.name,
+          turns: this.turns,
+          dataWorkers: this.workers,
+          dataSpaces: this.spaces,
+          datatags: this.availableTags,
+          scheduableTask: scheduableTask,
+        },
+      });
+    } else {
+      dialogRef = this.dialog.open(ScheduableTaskDialogComponent, {
+        data: {
+          taskName: null,
+          turns: this.turns,
+          dataWorkers: this.workers,
+          dataSpaces: this.spaces,
+          datatags: this.availableTags,
+        },
+      });
+    }
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log('RESULTADO ', result);
-      this.loadTags(result);
-      // console.log('Todas las tags:', this.tags);
+      if (result) {
+        const newTask: ScheduableTask = {
+          name: result.name,
+          size: result.taskSize,
+          restrictions: result.restrictions,
+          taskWorker: result.workers,
+          taskSpace: result.spaces,
+          taskTags: result.tags,
+        };
+
+        // check if the space already exists
+        const existingTaskIndex = this.scheduableTasks.findIndex(
+          (task) => task.name === newTask.name
+        );
+        // this.scheduableTasks.push(newTask);
+
+        if (existingTaskIndex !== -1) {
+          //in case the space already exists, update the space
+          this.scheduableTasks[existingTaskIndex] = newTask;
+          console.log('44444444444444:', this.scheduableTasks);
+        } else {
+          // if the space does not exist, add it to the spaces array
+          this.scheduableTasks.push(newTask);
+        }
+        this.loadTaskCards();
+      }
+      console.log('Todas las task:', this.scheduableTasks);
     });
   }
 
@@ -456,6 +521,28 @@ export class StteperFormComponent {
     });
   }
 
+  loadTaskCards(): void {
+    // delete the existing space cards
+    this.taskCards = [];
+
+    // iterate over the spaces array and create a card for each space
+    this.scheduableTasks.forEach((task: ScheduableTask) => {
+      // Create a new card object with the space data
+      const newCard = {
+        name: task.name,
+        size: task.size,
+        restrictions: task.restrictions,
+        taskWorker: task.taskWorker,
+        taskSpace: task.taskSpace,
+        taskTags: task.taskTags,
+      };
+
+      // Add the card to the spaceCards array
+      this.taskCards.push(newCard);
+      console.log('todas task cards:', this.taskCards);
+    });
+  }
+
   // Function to delete a space from the spaces array and reload the space cards
   deleteSpace(deleteSpace: String): void {
     // Find the index of the space to delete
@@ -479,6 +566,19 @@ export class StteperFormComponent {
 
     // Reload the worker cards
     this.loadWorkerCards();
+  }
+
+  deleteTask(deleteTask: String): void {
+    // Find the index of the worker to delete
+    const index = this.scheduableTasks.findIndex(
+      (task) => task.name === deleteTask
+    );
+
+    // Delete the worker from the workers array
+    this.scheduableTasks.splice(index, 1);
+
+    // Reload the worker cards
+    this.loadTaskCards();
   }
 
   constructor(private _formBuilder: FormBuilder, public dialog: MatDialog) {}
