@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>Introduzca tags que desee tener</h1>
+<div mat-dialog-content style="display: flex; max-width: 500px">
+  <mat-form-field appearance="outline" color="primary">
+    <mat-label>Nombre de la tag</mat-label>
+    <input matInput [(ngModel)]="name" placeholder="" />
+  </mat-form-field>
+  <button
+    mat-raised-button
+    style="margin: 5px"
+    (click)="addTag(name)"
+    color="accent"
+  >
+    Añadir
+  </button>
+  <br />
+</div>
+<div style="display: flex; flex-wrap: wrap">
+  <mat-chip style="margin: 5px" *ngFor="let tag of tagsToAdd">{{
+    tag.name
+  }}</mat-chip>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="saveTags()">
+    Guardar
+  </button>
+</div>

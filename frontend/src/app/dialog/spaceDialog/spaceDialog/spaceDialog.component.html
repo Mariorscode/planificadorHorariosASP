@@ -1,0 +1,38 @@
+<h1 mat-dialog-title>Introduzca la Información del espacio</h1>
+<div mat-dialog-content>
+  <form [formGroup]="spaceForm" style="margin: 10px">
+    <mat-form-field appearance="outline" color="primary">
+      <mat-label>Nombre del espacio</mat-label>
+      <input matInput formControlName="name" placeholder="" />
+    </mat-form-field>
+    <br />
+    <mat-form-field appearance="outline" color="primary">
+      <mat-label>Capacidad del espacio</mat-label>
+      <input
+        matInput
+        formControlName="spaceCapacity"
+        placeholder=""
+        type="number"
+      />
+    </mat-form-field>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Días de la semana</mat-label>
+        <mat-select multiple>
+          <mat-option
+            *ngFor="let turn of data.turns"
+            [value]="turn"
+            (onSelectionChange)="onSelectionChange(turn)"
+            >{{ turn.day }}, {{ turn.startTime }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="saveSpace()">
+    Guardar
+  </button>
+</div>

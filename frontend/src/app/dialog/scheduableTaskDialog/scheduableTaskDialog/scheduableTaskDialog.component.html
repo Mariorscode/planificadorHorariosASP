@@ -1,0 +1,76 @@
+<h1 mat-dialog-title>Introduzca la Información de la tarea</h1>
+<div mat-dialog-content>
+  <form [formGroup]="scheduableTaskForm" style="margin: 10px">
+    <div style="display: flex">
+      <div class="column">
+        <mat-form-field appearance="outline" color="primary">
+          <mat-label>Nombre de la tarea</mat-label>
+          <input matInput formControlName="name" placeholder="" />
+        </mat-form-field>
+        <br />
+        <mat-form-field appearance="outline" color="primary">
+          <mat-label>Tamaño requerido</mat-label>
+          <input
+            matInput
+            formControlName="taskSize"
+            placeholder=""
+            type="number"
+          />
+        </mat-form-field>
+      </div>
+      <div class="column">
+        <mat-form-field appearance="outline">
+          <mat-label>Días de la semana (restriccion)</mat-label>
+          <mat-select multiple>
+            <mat-option
+              *ngFor="let turn of data.turns"
+              [value]="turn"
+              (onSelectionChange)="onSelectionTurn(turn)"
+              >{{ turn.day }}, {{ turn.startTime }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <br />
+        <mat-form-field appearance="outline">
+          <mat-label>Trabajador</mat-label>
+          <mat-select>
+            <mat-option
+              *ngFor="let worker of data.dataWorkers"
+              [value]="worker"
+              (onSelectionChange)="onSelectionWorker(worker)"
+              >{{ worker.name }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <br />
+        <mat-form-field appearance="outline">
+          <mat-label>Espacio</mat-label>
+          <mat-select>
+            <mat-option
+              *ngFor="let space of data.dataSpaces"
+              [value]="space"
+              (onSelectionChange)="onSelectionSpace(space)"
+              >{{ space.name }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <h4>Tags disponibles:</h4>
+    <mat-chip-listbox multiple="true">
+      <mat-chip-option
+        *ngFor="let tag of availableTags"
+        [value]="tag"
+        (selectionChange)="onSelectionTag(tag)"
+      >
+        {{ tag.name }}
+      </mat-chip-option>
+    </mat-chip-listbox>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="saveScheduableTask()">
+    Guardar
+  </button>
+</div>

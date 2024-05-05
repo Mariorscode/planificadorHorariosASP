@@ -72,7 +72,7 @@
           matStepperNext
           (click)="fillTurns()"
         >
-          Next
+          Siguiente
         </button>
       </div>
     </form>
@@ -90,24 +90,254 @@
         <div *ngFor="let day of weekDays.value" class="column">
           <h2>{{ day }}</h2>
           <mat-selection-list>
-            <ng-container *ngFor="let turn of turns">
-              <mat-list-option *ngIf="turn.day === day">
-                {{ turn.startTime }}
-              </mat-list-option>
-            </ng-container>
+            <div class="card-container">
+              <ng-container *ngFor="let turn of turns">
+                <mat-list-option
+                  *ngIf="turn.day === day"
+                  (selectedChange)="onSelectionChange(turn)"
+                >
+                  {{ turn.startTime }}
+                </mat-list-option>
+              </ng-container>
+            </div>
           </mat-selection-list>
         </div>
+      </div>
+      <div class="button-container">
+        <button mat-raised-button color="primary" matStepperNext>
+          Siguiente
+        </button>
       </div>
     </form>
   </mat-step>
   <!------------------------------------ Step 3 -------------------------------------->
 
-  <mat-step>
-    <ng-template matStepLabel>Done</ng-template>
-    <p>You are now done.</p>
-    <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button (click)="stepper.reset()">Reset</button>
+  <mat-step [stepControl]="thirdFormGroup" label="Espacios disponibles">
+    <form>
+      <h2>Espacios disponibles</h2>
+      <div style="display: flex">
+        <div class="column">
+          <div class="card-container">
+            <div *ngFor="let space of spaceCards">
+              <mat-card class="card">
+                <mat-card-header>
+                  <mat-card-title>{{ space.name }}</mat-card-title>
+                  <mat-card-subtitle
+                    >Capacidad: {{ space.spaceCapacity }}</mat-card-subtitle
+                  >
+                </mat-card-header>
+                <mat-card-content>
+                  <ul>
+                    <li *ngFor="let restriction of space.restrictionsSpace">
+                      Día: {{ restriction.day }}, Hora:
+                      {{ restriction.startTime }}
+                    </li>
+                  </ul>
+                </mat-card-content>
+                <mat-card-actions>
+                  <button
+                    mat-raised-button
+                    color="accent"
+                    (click)="openSpaceDialog(space)"
+                    style="margin: 5px"
+                  >
+                    Modificar
+                  </button>
+                  <button
+                    mat-raised-button
+                    color="warn"
+                    (click)="deleteSpace(space.name)"
+                    style="margin: 5px"
+                  >
+                    Eliminar
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            </div>
+          </div>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="openSpaceDialog()"
+            style="margin: 5px"
+          >
+            Añadir espacio
+          </button>
+        </div>
+      </div>
+    </form>
+    <div class="button-container">
+      <button mat-raised-button color="primary" matStepperNext>
+        Siguiente
+      </button>
+    </div>
+  </mat-step>
+  <!------------------------------------ Step 4 -------------------------------------->
+  <mat-step [stepControl]="fourthFormGroup" label="Trabajadores disponibles">
+    <form>
+      <h2>Trabajadores disponibles</h2>
+      <div style="display: flex">
+        <div class="column">
+          <div class="card-container">
+            <div *ngFor="let worker of workerCards">
+              <mat-card class="card">
+                <mat-card-header>
+                  <mat-card-title>{{ worker.name }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <ul>
+                    <li *ngFor="let restriction of worker.restrictionsWorker">
+                      Día: {{ restriction.day }}, Hora:
+                      {{ restriction.startTime }}
+                    </li>
+                  </ul>
+                </mat-card-content>
+                <mat-card-actions>
+                  <button
+                    mat-raised-button
+                    color="accent"
+                    (click)="openWorkerDialog(worker)"
+                    style="margin: 5px"
+                  >
+                    Modificar
+                  </button>
+                  <button
+                    mat-raised-button
+                    color="warn"
+                    (click)="deleteWorker(worker.name)"
+                    style="margin: 5px"
+                  >
+                    Eliminar
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            </div>
+          </div>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="openWorkerDialog()"
+            style="margin: 5px"
+          >
+            Añadir Trabajor
+          </button>
+        </div>
+      </div>
+    </form>
+    <div class="button-container">
+      <button mat-raised-button color="primary" matStepperNext>
+        Siguiente
+      </button>
+    </div>
+  </mat-step>
+
+  <!------------------------------------ Step 5 -------------------------------------->
+  <mat-step [stepControl]="fithFormGroup" label="Tareas programables">
+    <form>
+      <div style="display: flex">
+        <h2>Tags disponibles</h2>
+        <button
+          mat-raised-button
+          style="align-self: center; margin: 5px"
+          color="primary"
+          (click)="openTagsDialog()"
+        >
+          Añadir tag
+          <mat-icon
+            aria-hidden="false"
+            aria-label="add"
+            fontIcon="add"
+          ></mat-icon>
+        </button>
+      </div>
+      <div>
+        <!-- Div para los tags disponibles -->
+        <div style="display: flex; flex-wrap: wrap">
+          <mat-chip style="margin: 5px" *ngFor="let tag of availableTags">{{
+            tag.name
+          }}</mat-chip>
+        </div>
+        <mat-divider style="margin: 5px"></mat-divider>
+        <h2>Tareas programables</h2>
+        <div class="column">
+          <div class="card-container">
+            <div class="card-container">
+              <div *ngFor="let scheduableTask of taskCards">
+                <mat-card class="card">
+                  <mat-card-header>
+                    <mat-card-title>{{ scheduableTask.name }}</mat-card-title>
+                  </mat-card-header>
+                  <mat-card-content>
+                    Tamaño: {{ scheduableTask.size }}
+                  </mat-card-content>
+                  <mat-card-content
+                    *ngFor="let space of scheduableTask.taskSpace"
+                  >
+                    Espacio asignado: {{ space.name }}
+                  </mat-card-content>
+                  <mat-card-content
+                    *ngFor="let worker of scheduableTask.taskWorker"
+                  >
+                    Trabajador asignado: {{ worker.name }}
+                  </mat-card-content>
+                  <mat-card-content>
+                    <mat-divider style="margin: 5px"></mat-divider>
+                    <p>Restricciones</p>
+                    <mat-list>
+                      <mat-list-item
+                        *ngFor="let restriction of scheduableTask.restrictions"
+                      >
+                        Día: {{ restriction.day }}, Hora:
+                        {{ restriction.startTime }}
+                      </mat-list-item>
+                    </mat-list>
+                  </mat-card-content>
+                  <mat-card-content>
+                    <div style="display: flex; flex-wrap: wrap">
+                      <mat-chip
+                        style="margin: 5px"
+                        *ngFor="let taskTag of scheduableTask.taskTags"
+                        >{{ taskTag.name }}</mat-chip
+                      >
+                    </div>
+                  </mat-card-content>
+                  <mat-card-actions>
+                    <button
+                      mat-raised-button
+                      color="accent"
+                      (click)="openScheduableTaskDialog(scheduableTask)"
+                      style="margin: 5px"
+                    >
+                      Modificar
+                    </button>
+                    <button
+                      mat-raised-button
+                      color="warn"
+                      style="margin: 5px"
+                      (click)="deleteTask(scheduableTask.name)"
+                    >
+                      Eliminar
+                    </button>
+                  </mat-card-actions>
+                </mat-card>
+              </div>
+            </div>
+          </div>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="openScheduableTaskDialog()"
+            style="margin: 5px"
+          >
+            Añadir tarea
+          </button>
+        </div>
+      </div>
+    </form>
+    <div class="button-container">
+      <button mat-raised-button color="primary" matStepperNext>
+        Siguiente
+      </button>
     </div>
   </mat-step>
 </mat-stepper>
