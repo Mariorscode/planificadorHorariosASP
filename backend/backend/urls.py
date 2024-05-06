@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from eventos.api.router import router_evento
+from schedulerASP.router import router
 # from AssigmentsASP import AssigmentsASP
 
 
@@ -25,4 +26,19 @@ urlpatterns = [
     path('horarios/', include('horariosASP.urls')),
     path('eventos/', include(router_evento.urls)),
     path('assigmentsASP/', include('assigmentsASP.urls')),
+    path('schedulerASP/', include(router.urls)),
 ]
+
+# urlpatterns = [
+#     path('turns/', views.TurnList.as_view(), name='turn-list'),
+#     path('turns/<int:pk>/', views.TurnDetail.as_view(), name='turn-detail'),
+#     path('workers/', views.WorkerList.as_view(), name='worker-list'),
+#     path('workers/<int:pk>/', views.WorkerDetail.as_view(), name='worker-detail'),
+#     path('spaces/', views.SpaceList.as_view(), name='space-list'),
+#     path('spaces/<int:pk>/', views.SpaceDetail.as_view(), name='space-detail'),
+#     path('tags/', views.TagList.as_view(), name='tag-list'),
+#     path('tags/<int:pk>/', views.TagDetail.as_view(), name='tag-detail'),
+#     path('scheduable-tasks/', views.ScheduableTaskList.as_view(), name='scheduable-task-list'),
+#     path('scheduable-tasks/<int:pk>/', views.ScheduableTaskDetail.as_view(), name='scheduable-task-detail'),
+# ]
+

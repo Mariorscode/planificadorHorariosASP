@@ -5,8 +5,20 @@
 turn(D, 1..NUM_TURNS) :- day(D),  availableDay(D), turnsPerDay(NUM_TURNS).
 
 
+% comprobar que tipo de schedulable hay si tiene asignado espacio o no 
+% y si tiene asignado trabajador, hacer combinatorias distintas en cada caso
+% --> problema, cuando algunos schedule tienen espacio y otros no (lo mismo para trabajador)
+
+
 % Generate the schedules for the tasks that are schedulable
+
 1 {schedule(D,To,S,T,C):turn(D,To),taskName(S),worker(T),space(C)} 1 :- schedulableTask(S,T,C).
+
+% 1 {schedule(D,To,S,T,C):turn(D,To),taskName(S),worker(T),space(C)} 1 :- schedulableTask(S,T).
+
+
+% 1 {schedule(D,To,S,T,C):turn(D,To),taskName(S),worker(T),space(C)} 1 :- schedulableTask(S,C).
+
 
 
 
