@@ -1,18 +1,21 @@
 from unittest import TestCase
 from clorm import FactBase
 
-from . import ClingoScheduler
+from . import ClingoTest
 from . import Terms
 
-class TestTurns(TestCase, ClingoScheduler):
+class TestTurns(TestCase, ClingoTest):
     def setUp(self):
         self.clingo_setup()
 
     def test_no_turnsPerDay_no_turns(self):
         self.load_knowledge(FactBase([]))
-        solution = self.get_solution()
 
-        query = list(solution
+        solutions = list(self.get_solutions())
+        self.assertEqual(len(solutions), 1)
+        solution = solutions[0]
+
+        query = list(solution.facts(atoms=True)
             .query(Terms.Turn)
             .all()
         )
@@ -24,9 +27,11 @@ class TestTurns(TestCase, ClingoScheduler):
             Terms.UnavailableDay(day="monday")
         ]))
 
-        solution = self.get_solution()
+        solutions = list(self.get_solutions())
+        self.assertEqual(len(solutions), 1)
+        solution = solutions[0]
 
-        query = list(solution
+        query = list(solution.facts(atoms=True)
             .query(Terms.Turn)
             .all()
         )
@@ -38,9 +43,11 @@ class TestTurns(TestCase, ClingoScheduler):
             Terms.TurnsPerDay(1)
         ]))
 
-        solution = self.get_solution()
+        solutions = list(self.get_solutions())
+        self.assertEqual(len(solutions), 1)
+        solution = solutions[0]
 
-        query = list(solution
+        query = list(solution.facts(atoms=True)
             .query(Terms.Turn)
             .all()
         )
@@ -69,9 +76,11 @@ class TestTurns(TestCase, ClingoScheduler):
             Terms.UnavailableDay(day="sunday")
         ]))
 
-        solution = self.get_solution()
+        solutions = list(self.get_solutions())
+        self.assertEqual(len(solutions), 1)
+        solution = solutions[0]
 
-        query = list(solution
+        query = list(solution.facts(atoms=True)
             .query(Terms.Turn)
             .all()
         )
@@ -85,9 +94,11 @@ class TestTurns(TestCase, ClingoScheduler):
             Terms.UnavailableDay(day="sunday")
         ]))
 
-        solution = self.get_solution()
+        solutions = list(self.get_solutions())
+        self.assertEqual(len(solutions), 1)
+        solution = solutions[0]
 
-        query = list(solution
+        query = list(solution.facts(atoms=True)
             .query(Terms.Turn)
             .all()
         )
@@ -108,7 +119,7 @@ class TestTurns(TestCase, ClingoScheduler):
         self.assertCountEqual(query, expected)
 
 
-class TestSchedule(TestCase, ClingoScheduler):
+class TestSchedule(TestCase, ClingoTest):
     def setUp(self):
         self.clingo_setup()
 

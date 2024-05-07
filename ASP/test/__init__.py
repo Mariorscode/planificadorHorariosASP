@@ -3,9 +3,9 @@ monkey.patch() # must call this before importing clingo
 from clingo import Control
 
 
-class ClingoScheduler:
+class ClingoTest:
     def clingo_setup(self, *files):
-        self.ctrl = Control(unifier=[
+        self.ctrl = Control(['--models=0'], unifier=[
             Terms.Turn,
             Terms.TurnsPerDay,
             Terms.Day,
@@ -25,15 +25,8 @@ class ClingoScheduler:
         self.ctrl.add_facts(facts)
         self.ctrl.ground([("base", [])])
 
-    def get_solution(self):
-        solution = None
-
-        def on_model(model):
-            nonlocal solution
-            solution = model.facts(atoms=True)
-
-        self.ctrl.solve(on_model=on_model)
-        return solution
+    def get_solutions(self):
+        return self.ctrl.solve(yield_=True)
 
 
 from clorm import Predicate, ConstantField, IntegerField
