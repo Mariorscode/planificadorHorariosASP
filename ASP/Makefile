@@ -1,10 +1,12 @@
 ROOT_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
-PYTHONPATH := $(ROOT_DIR)
 
-install:
-	@echo "Installing dependencies..."
-	@pip3 install -r requirements.txt
+pythonpath:
+	@echo "Setting PYTHONPATH..."
+	@export PYTHONPATH=$(ROOT_DIR)
 
-unittest:
+unittest: pythonpath
 	@echo "Running tests with pytest..."
-	@PYTHONPATH=$(PYTHONPATH) pytest-3 test/ -v # Add -s to see print statements
+	@pytest-3 test/ -v # Add -s to see print statements
+
+run:
+	clingo engine.lp knowledge.lp context.lp
