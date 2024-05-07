@@ -1,6 +1,5 @@
 % Knowledge that can be applied to every schedule
 
-
 % Days of the week
 day(monday).
 day(tuesday).

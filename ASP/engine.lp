@@ -10,7 +10,7 @@ turn(D, 1..NUM_TURNS) :- day(D),  not unavailableDay(D), turnsPerDay(NUM_TURNS).
 
 
 
-% there cannot be a schedule in a not available day
+% there cannot be a schedule in an unavailable day
 :- schedule(D, _, _, _, _), unavailableDay(D).
 %
 %  Two schedules cannot have the same tags and be in the same day and turn
