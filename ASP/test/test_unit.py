@@ -1,8 +1,8 @@
 from unittest import TestCase
 from clorm import FactBase
 
-from ClingoScheduler import ClingoScheduler
-from ClingoScheduler import Terms
+from . import ClingoScheduler
+from . import Terms
 
 class TestTurns(TestCase, ClingoScheduler):
     def setUp(self):
