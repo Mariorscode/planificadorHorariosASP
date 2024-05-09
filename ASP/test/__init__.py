@@ -21,6 +21,8 @@ class ClingoTest:
             Terms.Restrictionspace,
             Terms.TaskSize,
             Terms.Spacecapacity,
+            Terms.Tag,
+            Terms.Tags,
             # ...
         ])
 
@@ -105,4 +107,11 @@ class Terms:
         space = ConstantField
         size = IntegerField
     
-    
+    class Tag(Predicate):
+        name = ConstantField    
+        
+    class Tags(Predicate):
+        taskname = ConstantField
+        tag1 = ConstantField
+        tag2 = ConstantField
+        tag3 = ConstantField
