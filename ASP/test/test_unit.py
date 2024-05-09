@@ -138,22 +138,25 @@ class TestSchedule(TestCase, ClingoTest):
             Terms.UnavailableDay(day="saturday"),
             Terms.UnavailableDay(day="sunday"),
             Terms.TaskName(name="task1"),
-            Terms.TaskName(name="task2"),
             Terms.Worker(name="john"),
-            Terms.Worker(name="jane"),
             Terms.Space(name="space1"),
-            Terms.Space(name="space2"),
             Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
-            Terms.SchedulableTask(taskname="task2", worker="jane", space="space2"),            
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
             
         ]))
         
         solutions = list(self.get_solutions())
         solution = solutions[0]
         
-        query1 = solution.facts(atoms=True).query(Terms.Schedule).where(Terms.Schedule.number == 1)
+        # query1 = list(solution.facts(atoms=True).query(Terms.Schedule).where(Terms.Schedule.number == 1))
         
-        self.assertEqual(query1.count(),1)
+        query = list(solution.facts(atoms=True)
+            .query(Terms.Schedule)
+            .where(Terms.Schedule.number == 1)
+            .all()
+        )
+                
+        self.assertEqual(len(query),1)
         
         # query10=fb.query(Pet).where(Pet[0] == "dave").order_by(Pet[1])
         
@@ -187,6 +190,87 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.assertCountEqual(query, expected)
         
+    def test_restrictions_worker(self):
+        
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(1),
+            Terms.UnavailableDay(day="tuesday"),
+            Terms.UnavailableDay(day="wednesday"),
+            Terms.UnavailableDay(day="thursday"),
+            Terms.UnavailableDay(day="friday"),
+            Terms.UnavailableDay(day="saturday"),
+            Terms.UnavailableDay(day="sunday"),
+            Terms.TaskName(name="task1"),
+            Terms.Worker(name="john"),
+            Terms.Space(name="space1"),
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            Terms.Restrictionworker(worker="john", day="monday", number=2)
+        ]))
+        
+        expected = [
+            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1")
+        ]
+        
+        solutions = list(self.get_solutions())
+        solution = solutions[0]
+        query = solution.facts(atoms=True).query(Terms.Schedule).all()
+        
+        query = solution.facts(atoms=True).query(Terms.Schedule).all()
+        
+        self.assertCountEqual(query, expected)
+
+    def test_restrictions_space(self):
+        
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(2),
+            Terms.UnavailableDay(day="tuesday"),
+            Terms.UnavailableDay(day="wednesday"),
+            Terms.UnavailableDay(day="thursday"),
+            Terms.UnavailableDay(day="friday"),
+            Terms.UnavailableDay(day="saturday"),
+            Terms.UnavailableDay(day="sunday"),
+            Terms.TaskName(name="task1"),
+            Terms.Worker(name="john"),
+            Terms.Space(name="space1"),
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            Terms.Restrictionspace(space="space1", day="monday", number=2)
+        ]))
+        
+        expected = [
+            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1")
+        ]
+        
+        solutions = list(self.get_solutions())
+        solution = solutions[0]
+        query = solution.facts(atoms=True).query(Terms.Schedule).all()
+        print(query)
+        
+        self.assertCountEqual(query, expected)
+
+
+    # revisar (se colocan solo la cantidad de schedule que hay)
+    def test_onlyschedule_scheduabletask(self):
+            
+            self.load_knowledge(FactBase([
+                Terms.TurnsPerDay(2),
+                Terms.UnavailableDay(day="tuesday"),
+                Terms.UnavailableDay(day="wednesday"),
+                Terms.UnavailableDay(day="thursday"),
+                Terms.UnavailableDay(day="friday"),
+                Terms.UnavailableDay(day="saturday"),
+                Terms.UnavailableDay(day="sunday"),
+                Terms.TaskName(name="task1"),
+                Terms.Worker(name="john"),
+                Terms.Space(name="space1"),
+                Terms.SchedulableTask(taskname="task1", worker="john", space="space1")
+            ]))
+            
+            solutions = list(self.get_solutions())
+            solution = solutions[1]
+            query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
+            
+            self.assertEqual(len(query),1)
+
 
     # ToDo: Add more tests
     # You have the base facts in self.facts, but other facts can be
