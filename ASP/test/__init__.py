@@ -10,6 +10,17 @@ class ClingoTest:
             Terms.TurnsPerDay,
             Terms.Day,
             Terms.UnavailableDay,
+            Terms.Schedule,
+            Terms.Worker,
+            Terms.Space,
+            Terms.SpaceCapacity,
+            Terms.TaskName,
+            Terms.Tag,
+            Terms.SchedulableTask,
+            Terms.Restrictionworker,
+            Terms.Restrictionspace,
+            Terms.TaskSize,
+            Terms.Spacecapacity,
             # ...
         ])
 
@@ -33,7 +44,7 @@ from clorm import Predicate, ConstantField, IntegerField
 
 class Terms:
     class Turn(Predicate):
-        name = ConstantField
+        day = ConstantField
         number = IntegerField
 
     class TurnsPerDay(Predicate):
@@ -44,3 +55,54 @@ class Terms:
 
     class UnavailableDay(Predicate):
         day = ConstantField
+
+    class Schedule(Predicate):
+        day = ConstantField
+        number = IntegerField
+        taskname = ConstantField
+        worker = ConstantField
+        space = ConstantField
+    
+    class Worker(Predicate):
+        name = ConstantField
+
+    class Space(Predicate):
+        name = ConstantField
+    
+    class SpaceCapacity(Predicate):
+        space = ConstantField
+        capacity = IntegerField
+    
+    class TaskName(Predicate):
+        name = ConstantField
+    
+    class Tag(Predicate):
+        name = ConstantField
+        
+    #class tags con list de tag
+    
+    class SchedulableTask(Predicate):
+        taskname = ConstantField
+        worker = ConstantField
+        space = ConstantField
+    
+    class Restrictionworker(Predicate):
+        worker = ConstantField
+        day = ConstantField
+        number = IntegerField
+
+    
+    class Restrictionspace(Predicate):
+        space = ConstantField
+        day = ConstantField
+        number = IntegerField
+        
+    class TaskSize(Predicate):
+        taskname = ConstantField
+        size = IntegerField
+        
+    class Spacecapacity(Predicate):
+        space = ConstantField
+        size = IntegerField
+    
+    

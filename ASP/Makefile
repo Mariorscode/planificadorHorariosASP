@@ -6,7 +6,7 @@ pythonpath:
 
 unittest: pythonpath
 	@echo "Running tests with pytest..."
-	@pytest-3 test/ -v # Add -s to see print statements
+	@pytest test/ -v # Add -s to see print statements
 
 run:
 	clingo engine.lp knowledge.lp context.lp

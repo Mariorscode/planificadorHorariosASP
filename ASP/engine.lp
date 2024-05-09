@@ -35,7 +35,7 @@ turn(D, 1..NUM_TURNS) :- day(D),  not unavailableDay(D), turnsPerDay(NUM_TURNS).
 :- schedule(D,To,S,T,C),restrictionspace(C2,D,To2),C == C2, D == D2, To == To2.
 
 % There cannot be a schedule in which a classroom is assigned and the capacity is exceeded.
-:- schedule(D,To,S,T,C),tags(S,_,_,G),groupSize(G,Si),spaceCapacity(C,Si2),Si > Si2.
+:- schedule(D,To,S,T,C),taskSize(S,Si),spaceCapacity(C,Si2),Si > Si2.
 
 %filter for only showing the schedules
 #show schedule/5.

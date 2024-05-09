@@ -69,10 +69,10 @@ spaceCapacity("17-18",20).
 % -------groupSize------
 % groupSize(group,size). :- group(group).
 
-groupSize(group,50).
-groupSize(groupA,20).
-groupSize(groupB,20).
-groupSize(groupC,20).
+taskSize(calculo_1_theory1,50).
+taskSize(calculo_1_theory2,20).
+taskSize(programacion_1_theory1,20).
+taskSize(programacion_1_theory2,20).
 % -------/groupSize------
 
 % ---------schedulableTask------

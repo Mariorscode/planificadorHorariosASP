@@ -53,13 +53,13 @@ class TestTurns(TestCase, ClingoTest):
         )
 
         expected = [
-            Terms.Turn(name="monday", number=1),
-            Terms.Turn(name="tuesday", number=1),
-            Terms.Turn(name="wednesday", number=1),
-            Terms.Turn(name="thursday", number=1),
-            Terms.Turn(name="friday", number=1),
-            Terms.Turn(name="saturday", number=1),
-            Terms.Turn(name="sunday", number=1)
+            Terms.Turn(day="monday", number=1),
+            Terms.Turn(day="tuesday", number=1),
+            Terms.Turn(day="wednesday", number=1),
+            Terms.Turn(day="thursday", number=1),
+            Terms.Turn(day="friday", number=1),
+            Terms.Turn(day="saturday", number=1),
+            Terms.Turn(day="sunday", number=1)
         ]
 
         self.assertCountEqual(query, expected)
@@ -104,16 +104,16 @@ class TestTurns(TestCase, ClingoTest):
         )
 
         expected = [
-            Terms.Turn(name="monday", number=1),
-            Terms.Turn(name="monday", number=2),
-            Terms.Turn(name="tuesday", number=1),
-            Terms.Turn(name="tuesday", number=2),
-            Terms.Turn(name="wednesday", number=1),
-            Terms.Turn(name="wednesday", number=2),
-            Terms.Turn(name="thursday", number=1),
-            Terms.Turn(name="thursday", number=2),
-            Terms.Turn(name="friday", number=1),
-            Terms.Turn(name="friday", number=2)
+            Terms.Turn(day="monday", number=1),
+            Terms.Turn(day="monday", number=2),
+            Terms.Turn(day="tuesday", number=1),
+            Terms.Turn(day="tuesday", number=2),
+            Terms.Turn(day="wednesday", number=1),
+            Terms.Turn(day="wednesday", number=2),
+            Terms.Turn(day="thursday", number=1),
+            Terms.Turn(day="thursday", number=2),
+            Terms.Turn(day="friday", number=1),
+            Terms.Turn(day="friday", number=2)
         ]
 
         self.assertCountEqual(query, expected)
@@ -123,15 +123,70 @@ class TestSchedule(TestCase, ClingoTest):
     def setUp(self):
         self.clingo_setup()
 
-        # Only monday is available
-        self.facts = FactBase([
+    def test_2_schedule_dont_same_tags_same_day(self):
+        
+        pass
+        
+    def test_same_worker_dont_different_turn(self):
+        
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(1),
             Terms.UnavailableDay(day="tuesday"),
             Terms.UnavailableDay(day="wednesday"),
             Terms.UnavailableDay(day="thursday"),
             Terms.UnavailableDay(day="friday"),
             Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday")
-        ])
+            Terms.UnavailableDay(day="sunday"),
+            Terms.TaskName(name="task1"),
+            Terms.TaskName(name="task2"),
+            Terms.Worker(name="john"),
+            Terms.Worker(name="jane"),
+            Terms.Space(name="space1"),
+            Terms.Space(name="space2"),
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            Terms.SchedulableTask(taskname="task2", worker="jane", space="space2"),            
+            
+        ]))
+        
+        solutions = list(self.get_solutions())
+        solution = solutions[0]
+        
+        query1 = solution.facts(atoms=True).query(Terms.Schedule).where(Terms.Schedule.number == 1)
+        
+        self.assertEqual(query1.count(),1)
+        
+        # query10=fb.query(Pet).where(Pet[0] == "dave").order_by(Pet[1])
+        
+    def test_task_dont_in_space_smaller(self):
+        
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(1),
+            Terms.UnavailableDay(day="tuesday"),
+            Terms.UnavailableDay(day="wednesday"),
+            Terms.UnavailableDay(day="thursday"),
+            Terms.UnavailableDay(day="friday"),
+            Terms.UnavailableDay(day="saturday"),
+            Terms.UnavailableDay(day="sunday"),
+            Terms.TaskName(name="task1"),
+            Terms.Worker(name="john"),
+            Terms.Space(name="space1"),
+            Terms.SpaceCapacity(space="space1", capacity=10),
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            Terms.TaskSize(taskname="task1", size=5)
+        
+        ]))
+        
+        solutions = list(self.get_solutions())
+        solution = solutions[0]
+        
+        expected = [
+            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1")
+        ]
+        
+        query = solution.facts(atoms=True).query(Terms.Schedule).all()
+        
+        self.assertCountEqual(query, expected)
+        
 
     # ToDo: Add more tests
     # You have the base facts in self.facts, but other facts can be
