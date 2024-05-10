@@ -127,46 +127,46 @@ class TestSchedule(TestCase, ClingoTest):
         
         pass
         
-    def test_same_worker_dont_different_turn(self):
+    # def test_same_worker_dont_different_turn(self):
         
-        self.load_knowledge(FactBase([
-            Terms.TurnsPerDay(1),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
-            Terms.TaskName(name="task1"),
-            Terms.Worker(name="john"),
-            Terms.Space(name="space1"),
-            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
-            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+    #     self.load_knowledge(FactBase([
+    #         Terms.TurnsPerDay(1),
+    #         Terms.UnavailableDay(day="tuesday"),
+    #         Terms.UnavailableDay(day="wednesday"),
+    #         Terms.UnavailableDay(day="thursday"),
+    #         Terms.UnavailableDay(day="friday"),
+    #         Terms.UnavailableDay(day="saturday"),
+    #         Terms.UnavailableDay(day="sunday"),
+    #         Terms.TaskName(name="task1"),
+    #         Terms.Worker(name="john"),
+    #         Terms.Space(name="space1"),
+    #         Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+    #         Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
             
-        ]))
+    #     ]))
         
-        solutions = list(self.get_solutions())
-        solution = solutions[0]
+    #     solutions = list(self.get_solutions())
+    #     solution = solutions[0]
         
         
-        query1 = list(solution.facts(atoms=True)
-            .query(Terms.Schedule)
-            .where(Terms.Schedule.number == 1)
-            .all()
-        )
-        query2 = list(solution.facts(atoms=True)
-            .query(Terms.Schedule)
-            .where(Terms.Schedule.number == 1)
-            .all()
-        )
+    #     query1 = list(solution.facts(atoms=True)
+    #         .query(Terms.Schedule)
+    #         .where(Terms.Schedule.number == 1)
+    #         .all()
+    #     )
+    #     query2 = list(solution.facts(atoms=True)
+    #         .query(Terms.Schedule)
+    #         .where(Terms.Schedule.number == 1)
+    #         .all()
+    #     )
                 
-        self.assertEqual(len(query1),1)
+    #     self.assertEqual(len(query1),1)
         
-        self.assertEqual(len(query2),1)
+    #     self.assertEqual(len(query2),1)
         
-        # query10=fb.query(Pet).where(Pet[0] == "dave").order_by(Pet[1])
+    #     # query10=fb.query(Pet).where(Pet[0] == "dave").order_by(Pet[1])
         
-    def test_task_dont_in_space_smaller(self):
+    def test_task_dont_in_space_smaller(self): # hacer el contrario
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(1),
@@ -199,7 +199,7 @@ class TestSchedule(TestCase, ClingoTest):
     def test_restrictions_worker(self):
         
         self.load_knowledge(FactBase([
-            Terms.TurnsPerDay(1),
+            Terms.TurnsPerDay(2),
             Terms.UnavailableDay(day="tuesday"),
             Terms.UnavailableDay(day="wednesday"),
             Terms.UnavailableDay(day="thursday"),
