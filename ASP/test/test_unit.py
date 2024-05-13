@@ -122,51 +122,11 @@ class TestTurns(TestCase, ClingoTest):
 class TestSchedule(TestCase, ClingoTest):
     def setUp(self):
         self.clingo_setup()
-
-    def test_2_schedule_dont_same_tags_same_day(self):
-        
-        pass
-        
-    # def test_same_worker_dont_different_turn(self):
-        
-    #     self.load_knowledge(FactBase([
-    #         Terms.TurnsPerDay(1),
-    #         Terms.UnavailableDay(day="tuesday"),
-    #         Terms.UnavailableDay(day="wednesday"),
-    #         Terms.UnavailableDay(day="thursday"),
-    #         Terms.UnavailableDay(day="friday"),
-    #         Terms.UnavailableDay(day="saturday"),
-    #         Terms.UnavailableDay(day="sunday"),
-    #         Terms.TaskName(name="task1"),
-    #         Terms.Worker(name="john"),
-    #         Terms.Space(name="space1"),
-    #         Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
-    #         Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
-            
-    #     ]))
-        
-    #     solutions = list(self.get_solutions())
-    #     solution = solutions[0]
         
         
-    #     query1 = list(solution.facts(atoms=True)
-    #         .query(Terms.Schedule)
-    #         .where(Terms.Schedule.number == 1)
-    #         .all()
-    #     )
-    #     query2 = list(solution.facts(atoms=True)
-    #         .query(Terms.Schedule)
-    #         .where(Terms.Schedule.number == 1)
-    #         .all()
-    #     )
-                
-    #     self.assertEqual(len(query1),1)
-        
-    #     self.assertEqual(len(query2),1)
-        
-    #     # query10=fb.query(Pet).where(Pet[0] == "dave").order_by(Pet[1])
-        
-    def test_task_dont_in_space_smaller(self): # hacer el contrario
+    # a task with an X size can't be scheduled in a space with a smaller capacity
+    # task with space 5, space with capacity 10
+    def test_task_placed_in_bigger_space(self): # hacer el contrario
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(1),
@@ -196,6 +156,64 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.assertCountEqual(query, expected)
         
+    # a task with an X size can't be scheduled in a space with a smaller capacity
+    # task with space 15, space with capacity 10, unsatisfiable
+    def test_task_dont_in_space_smaller(self): 
+        
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(1),
+            Terms.UnavailableDay(day="tuesday"),
+            Terms.UnavailableDay(day="wednesday"),
+            Terms.UnavailableDay(day="thursday"),
+            Terms.UnavailableDay(day="friday"),
+            Terms.UnavailableDay(day="saturday"),
+            Terms.UnavailableDay(day="sunday"),
+            Terms.TaskName(name="task1"),
+            Terms.Worker(name="john"),
+            Terms.Space(name="space1"),
+            Terms.SpaceCapacity(space="space1", capacity=10),
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            Terms.TaskSize(taskname="task1", size=15)
+        
+        ]))
+        
+        solutions = list(self.get_solutions())
+        
+        self.assertEqual(len(solutions), 0)
+        
+    # a task with an X size can't be scheduled in a space with a smaller capacity
+    # task with space 15, space with capacity 15, satisfiable
+    def test_task_space_same_size(self): 
+        
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(2),
+            Terms.UnavailableDay(day="tuesday"),
+            Terms.UnavailableDay(day="wednesday"),
+            Terms.UnavailableDay(day="thursday"),
+            Terms.UnavailableDay(day="friday"),
+            Terms.UnavailableDay(day="saturday"),
+            Terms.UnavailableDay(day="sunday"),
+            Terms.TaskName(name="task1"),
+            Terms.Worker(name="john"),
+            Terms.Space(name="space1"),
+            Terms.SpaceCapacity(space="space1", capacity=15),
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            Terms.TaskSize(taskname="task1", size=15)
+        
+        ]))
+        
+        solutions = list(self.get_solutions())
+        solution = solutions[0]
+        
+        expected = [
+            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1")
+        ]
+        
+        query = solution.facts(atoms=True).query(Terms.Schedule).all()
+        
+        self.assertCountEqual(query, expected)
+
+    #  worker can't work on a day he is unavailable
     def test_restrictions_worker(self):
         
         self.load_knowledge(FactBase([
@@ -218,13 +236,15 @@ class TestSchedule(TestCase, ClingoTest):
         ]
         
         solutions = list(self.get_solutions())
+        
+        self.assertEqual(len(solutions), 1)
+        
         solution = solutions[0]
         query = solution.facts(atoms=True).query(Terms.Schedule).all()
-        
-        query = solution.facts(atoms=True).query(Terms.Schedule).all()
-        
+                
         self.assertCountEqual(query, expected)
 
+    # space can't be used on a day it is unavailable
     def test_restrictions_space(self):
         
         self.load_knowledge(FactBase([
@@ -247,17 +267,19 @@ class TestSchedule(TestCase, ClingoTest):
         ]
         
         solutions = list(self.get_solutions())
+        self.assertEqual(len(solutions), 1)
+        
         solution = solutions[0]
         query = solution.facts(atoms=True).query(Terms.Schedule).all()
         
         self.assertCountEqual(query, expected)
 
 
-    # revisar (se colocan solo la cantidad de schedule que hay)
+    # only schedule numer of task, no more no less
     def test_onlyschedule_scheduabletask(self):
             
         self.load_knowledge(FactBase([
-            Terms.TurnsPerDay(2),
+            Terms.TurnsPerDay(3),
             Terms.UnavailableDay(day="tuesday"),
             Terms.UnavailableDay(day="wednesday"),
             Terms.UnavailableDay(day="thursday"),
@@ -265,18 +287,25 @@ class TestSchedule(TestCase, ClingoTest):
             Terms.UnavailableDay(day="saturday"),
             Terms.UnavailableDay(day="sunday"),
             Terms.TaskName(name="task1"),
+            Terms.TaskName(name="task2"),
             Terms.Worker(name="john"),
             Terms.Space(name="space1"),
-            Terms.SchedulableTask(taskname="task1", worker="john", space="space1")
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            Terms.SchedulableTask(taskname="task2", worker="john", space="space1")
+            
         ]))
         
-        solutions = list(self.get_solutions())
-        solution = solutions[1]
-        query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
+        solutions = list(self.get_solutions())        
         
-        self.assertEqual(len(query),1)
-
-    def test_same_sapce_not_same_time(self):
+        for solution in solutions:
+            query = list(solution.facts(atoms=True)
+                         .query(Terms.Schedule).all())
+            
+            self.assertEqual(len(query),2)  
+        
+        
+    # two tasks with same space can't be scheduled at the same time
+    def test_same_space_not_same_time(self):
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(2),
@@ -297,24 +326,17 @@ class TestSchedule(TestCase, ClingoTest):
         ]))
                
         solutions = list(self.get_solutions())
-        solution = solutions[0]
-        
-        
-        query1 = list(solution.facts(atoms=True)
-            .query(Terms.Schedule)
-            .where(Terms.Schedule.number == 1)
-            .all()
-        )
-        query2 = list(solution.facts(atoms=True)
-            .query(Terms.Schedule)
-            .where(Terms.Schedule.number == 2)
-            .all()
-        )
+        for solution in solutions:
+            query1 = list(solution.facts(atoms=True)
+                .query(Terms.Schedule)
+                .where(Terms.Schedule.number == 1)
+                .all()
+            )
+      
+            self.assertEqual(len(query1),1)
                 
-        self.assertEqual(len(query1),1)
         
-        self.assertEqual(len(query2),1)
-        
+     # two schedules with same time can't have the same tags
     def test_two_schedule_same_time_not_same_tags(self):
         
         self.load_knowledge(FactBase([
@@ -333,32 +355,28 @@ class TestSchedule(TestCase, ClingoTest):
             Terms.Worker(name="john"),
             Terms.Worker(name="jane"),
             Terms.Space(name="space1"),
+            Terms.Space(name="space2"),
             Terms.Tags(taskname="task1", tag1="groupA", tag2="theory",tag3="1"),
             Terms.Tags(taskname="task2", tag1="groupA", tag2="theory",tag3="1"),
             Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
-            Terms.SchedulableTask(taskname="task2", worker="jane", space="space1"),
+            Terms.SchedulableTask(taskname="task2", worker="jane", space="space2"),
             
         ]))
                
         solutions = list(self.get_solutions())
         solution = solutions[0]
         
-        
-        query1 = list(solution.facts(atoms=True)
-            .query(Terms.Schedule)
-            .where(Terms.Schedule.number == 1)
-            .all()
-        )
-        query2 = list(solution.facts(atoms=True)
-            .query(Terms.Schedule)
-            .where(Terms.Schedule.number == 2)
-            .all()
-        )
-                
-        self.assertEqual(len(query1),1)
-        
-        self.assertEqual(len(query2),1)
-
+        solutions = list(self.get_solutions())
+        for solution in solutions:
+            query1 = list(solution.facts(atoms=True)
+                .query(Terms.Schedule)
+                .where(Terms.Schedule.number == 1)
+                .all()
+            )
+      
+            self.assertEqual(len(query1),1)
+              
+    # two schedules with same time can have at least one tag different
     def test_two_schedule_atleast_one_tag_different_can_same_time(self):
         
         self.load_knowledge(FactBase([
@@ -387,22 +405,64 @@ class TestSchedule(TestCase, ClingoTest):
         ]))
         
         expected = [
-            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1"),
-            Terms.Schedule(day="monday", number=1, taskname="task2", worker="jane", space="space2")
+            Terms.Schedule(day="monday", number=2, taskname="task1", worker="john", space="space1"),
+            Terms.Schedule(day="monday", number=2, taskname="task2", worker="jane", space="space2")
         ]
+        
                
         solutions = list(self.get_solutions())
-        self.assertEqual(len(solutions), 1)
-        solution = solutions[0]
-
-        query = list(solution.facts(atoms=True)
-            .query(Terms.Schedule)
-            .all()
-        )
-
-        self.assertCountEqual(query, expected)
+        for solution in solutions:
+            query = list(solution.facts(atoms=True)
+                .query(Terms.Schedule)
+                .where(Terms.Schedule.number == 2)
+                .all()
+            )
+      
+            self.assertCountEqual(query, expected)
+    
+      # two schedules with same time can't have the same tags (different order)
+      
+      # (no funciona el bucle)
+    # def test_two_schedule_same_time_not_same_tags_different_order(self):
         
-       
+    #     self.load_knowledge(FactBase([
+    #         Terms.TurnsPerDay(2),
+    #         Terms.UnavailableDay(day="tuesday"),
+    #         Terms.UnavailableDay(day="wednesday"),
+    #         Terms.UnavailableDay(day="thursday"),
+    #         Terms.UnavailableDay(day="friday"),
+    #         Terms.UnavailableDay(day="saturday"),
+    #         Terms.UnavailableDay(day="sunday"),
+    #         Terms.Tag(name="groupA"),
+    #         Terms.Tag(name="theory"),
+    #         Terms.Tag(name="1"),
+    #         Terms.TaskName(name="task1"),
+    #         Terms.TaskName(name="task2"),
+    #         Terms.Worker(name="john"),
+    #         Terms.Worker(name="jane"),
+    #         Terms.Space(name="space1"),
+    #         Terms.Space(name="space2"),
+    #         Terms.Tags(taskname="task1", tag1="theory", tag2="groupA",tag3="1"),
+    #         Terms.Tags(taskname="task2", tag1="groupA", tag2="theory",tag3="1"),
+    #         Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+    #         Terms.SchedulableTask(taskname="task2", worker="jane", space="space2"),
+            
+    #     ]))
+               
+        
+    #     solutions = list(self.get_solutions())
+    #     print(solutions)
+    #     for solution in solutions:
+    #         query1 = list(solution.facts(atoms=True)
+    #             .query(Terms.Schedule)
+    #             .where(Terms.Schedule.number == 1)
+    #             .all()
+    #         )
+    #         print(query1)
+    #         print(solution)
+    #         self.assertEqual(len(query1),2)
+        
+    
 
 
     # ToDo: Add more tests

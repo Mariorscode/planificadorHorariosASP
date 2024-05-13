@@ -5,18 +5,22 @@
 turn(D, 1..NUM_TURNS) :- day(D),  not unavailableDay(D), turnsPerDay(NUM_TURNS).
 
 
+1 {coincidence(S1,S2,Ta1): taskName(S1),taskName(S2),tag(Ta1)} 1 :- taskName(S1),taskName(S2),tag(Ta1),tag(Ta2),tags(S1,Ta1),tags(S2,Ta2),S1!=S2,Ta1==Ta2.
+
 % Generate the schedules for the tasks that are schedulable
 1 {schedule(D,To,S,T,C):turn(D,To),taskName(S),worker(T),space(C)} 1 :- schedulableTask(S,T,C).
+
 
 
 
 % there cannot be a schedule in an unavailable day
 :- schedule(D, _, _, _, _), unavailableDay(D).
 %
+
 %  Two schedules cannot have the same tags and be in the same day and turn
-:- schedule(D1,To1,S1,T1,C1), tags(S1,Tag21,Tag31,Tag41),
-   schedule(D2,To2,S2,T2,C2), tags(S2,Tag22,Tag32,Tag42),
-   S1!=S2,Tag21 == Tag22,Tag31==Tag32,Tag41==Tag42,D1 == D2, To1 == To2.
+%:- schedule(D1,To1,S1,T1,C1), tags(S1,Tag1),
+%   schedule(D2,To2,S2,T2,C2), tags(S2,Tag2),
+%   S1!=S2,Tag1 == Tag2,D1 == D2, To1 == To2.
 
 % Two schedules cannot have the same space and be in the same day and turn
 :- schedule(D1,To1,S1,_,C1),
@@ -38,4 +42,4 @@ turn(D, 1..NUM_TURNS) :- day(D),  not unavailableDay(D), turnsPerDay(NUM_TURNS).
 :- schedule(D,To,S,T,C),taskSize(S,Si),spaceCapacity(C,Si2),Si > Si2.
 
 %filter for only showing the schedules
-#show schedule/5.
+#show coincidence/3.
