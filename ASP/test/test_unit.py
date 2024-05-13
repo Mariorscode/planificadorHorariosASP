@@ -334,9 +334,184 @@ class TestSchedule(TestCase, ClingoTest):
             )
       
             self.assertEqual(len(query1),1)
-                
+    
+    # task with unknown space shuld get a space with enough capacity for the task and acompplish restrictions
+    def test_task_unknonw_space_known_worker_3_different_space_and_asigned_size_and_restriction(self):
         
-     # two schedules with same time can't have the same tags
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(2),
+            Terms.UnavailableDay(day="tuesday"),
+            Terms.UnavailableDay(day="wednesday"),
+            Terms.UnavailableDay(day="thursday"),
+            Terms.UnavailableDay(day="friday"),
+            Terms.UnavailableDay(day="saturday"),
+            Terms.UnavailableDay(day="sunday"),
+            Terms.TaskName(name="task1"),
+            Terms.TaskName(name="task2"),
+            Terms.Worker(name="john"),
+            Terms.Space(name="space1"),
+            Terms.Space(name="space2"),
+            Terms.SpaceCapacity(space="space1", capacity=5),
+            Terms.SpaceCapacity(space="space2", capacity=10),
+            Terms.TaskSize(taskname="task1", size=4),
+            Terms.TaskSize(taskname="task2", size=6),
+            Terms.Restrictionspace(space="space2", day="monday", number=1),
+            Terms.TaskUnknownSpace(taskname="task2", worker="john"),
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),            
+        ]))
+    
+        expected = [
+            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1"),
+            Terms.Schedule(day="monday", number=2, taskname="task2", worker="john", space="space2"),
+        ]
+        
+        solutions = list(self.get_solutions())
+        self.assertEqual(len(solutions), 1)
+        
+        solution = solutions[0]
+        query = solution.facts(atoms=True).query(Terms.Schedule).all()
+        
+        self.assertCountEqual(query, expected)
+        
+    # task with unknown worker should get a worker
+    def test_task_unknonw_worker(self):
+        
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(2),
+            Terms.UnavailableDay(day="tuesday"),
+            Terms.UnavailableDay(day="wednesday"),
+            Terms.UnavailableDay(day="thursday"),
+            Terms.UnavailableDay(day="friday"),
+            Terms.UnavailableDay(day="saturday"),
+            Terms.UnavailableDay(day="sunday"),
+            Terms.TaskName(name="task1"),
+            Terms.TaskName(name="task2"),
+            Terms.Worker(name="john"),
+            Terms.Space(name="space1"),
+            Terms.Space(name="space2"),
+            Terms.TaskUnknownWorker(taskname="task2", space="space2"),
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            
+        ]))
+        
+        expected = [
+            Terms.Schedule(day="monday", number=2, taskname="task2", worker="john", space="space2"),
+            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1"),
+        ]
+        
+        solutions = list(self.get_solutions())
+        # self.assertEqual(len(solutions), 1)
+        
+        solution = solutions[0]
+        query = solution.facts(atoms=True).query(Terms.Schedule).all()
+        
+        self.assertCountEqual(query, expected)
+        
+        # task with unknown worker should get a worker and acompplish restrictions
+    def test_task_unknonw_worker_with_restrictions(self):
+        
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(2),
+            Terms.UnavailableDay(day="tuesday"),
+            Terms.UnavailableDay(day="wednesday"),
+            Terms.UnavailableDay(day="thursday"),
+            Terms.UnavailableDay(day="friday"),
+            Terms.UnavailableDay(day="saturday"),
+            Terms.UnavailableDay(day="sunday"),
+            Terms.TaskName(name="task1"),
+            Terms.TaskName(name="task2"),
+            Terms.Worker(name="john"),
+            Terms.Worker(name="jane"),
+            Terms.Space(name="space1"),
+            Terms.Space(name="space2"),
+            Terms.Restrictionworker(worker="john", day="monday", number=2),
+            Terms.Restrictionspace(space="space2", day="monday", number=1),
+            Terms.TaskUnknownWorker(taskname="task2", space="space2"),
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            
+        ]))
+        
+        expected = [
+            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1"),
+            Terms.Schedule(day="monday", number=2, taskname="task2", worker="jane", space="space2"),
+        ]
+        
+        solutions = list(self.get_solutions())
+        # self.assertEqual(len(solutions), 1)
+        
+        solution = solutions[0]
+        query = solution.facts(atoms=True).query(Terms.Schedule).all()
+        
+        self.assertCountEqual(query, expected)
+
+    # task with unknown worker and space should get a worker and space and acompplish restrictions
+    def test_unknow_space_and_worker_with_restrictions(self):
+        
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(2),
+            Terms.UnavailableDay(day="tuesday"),
+            Terms.UnavailableDay(day="wednesday"),
+            Terms.UnavailableDay(day="thursday"),
+            Terms.UnavailableDay(day="friday"),
+            Terms.UnavailableDay(day="saturday"),
+            Terms.UnavailableDay(day="sunday"),
+            Terms.TaskName(name="task1"),
+            Terms.TaskName(name="task2"),
+            Terms.Worker(name="john"),
+            Terms.Space(name="space1"),
+            Terms.TaskSize(taskname="task1", size=3),
+            Terms.TaskSize(taskname="task2", size=7),
+            Terms.TaskUnknownWorkerAndSpace(taskname="task2"),
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            
+        ]))
+
+        expected = [
+            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1"),
+            Terms.Schedule(day="monday", number=2, taskname="task2", worker="john", space="space1"),
+        ]
+        
+        solutions = list(self.get_solutions())
+        # self.assertEqual(len(solutions), 1)
+        
+        solution = solutions[0]
+                
+        query = solution.facts(atoms=True).query(Terms.Schedule).all()
+        
+        self.assertCountEqual(query, expected)
+
+    # mix of all possible unknowns (worker, space, worker and space)
+    def test_mix_of_all_possible_unknowns_and_restrictions(self):
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(3),
+            Terms.UnavailableDay(day="tuesday"),
+            Terms.UnavailableDay(day="wednesday"),
+            Terms.UnavailableDay(day="thursday"),
+            Terms.UnavailableDay(day="friday"),
+            Terms.UnavailableDay(day="saturday"),
+            Terms.UnavailableDay(day="sunday"),
+            Terms.TaskName(name="task1"),
+            Terms.TaskName(name="task2"),
+            Terms.TaskName(name="task3"),
+            Terms.Worker(name="john"),
+            Terms.Space(name="space1"),
+            Terms.TaskUnknownWorkerAndSpace(taskname="task2"),
+            Terms.TaskUnknownWorker(taskname="task3", space="space1"),
+            Terms.TaskUnknownSpace(taskname="task1", worker="john"),            
+        ]))
+        
+        solutions = list(self.get_solutions())
+        for solution in solutions:
+            query = list(solution.facts(atoms=True)
+                .query(Terms.Schedule)
+                .where(Terms.Schedule.number == 1)
+                .all()
+            )
+      
+            self.assertEqual(len(query),1)
+
+
+    # two schedules with same time can't have the same tags
     def test_two_schedule_same_time_not_same_tags(self):
         
         self.load_knowledge(FactBase([

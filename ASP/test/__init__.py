@@ -23,6 +23,9 @@ class ClingoTest:
             Terms.Spacecapacity,
             Terms.Tag,
             Terms.Tags,
+            Terms.TaskUnknownSpace,
+            Terms.TaskUnknownWorker,
+            Terms.TaskUnknownWorkerAndSpace,
             # ...
         ])
 
@@ -115,3 +118,14 @@ class Terms:
         tag1 = ConstantField
         tag2 = ConstantField
         tag3 = ConstantField
+
+    class TaskUnknownSpace(Predicate):
+        taskname = ConstantField
+        worker = ConstantField   
+    
+    class TaskUnknownWorker(Predicate):
+        taskname = ConstantField
+        space = ConstantField
+        
+    class TaskUnknownWorkerAndSpace(Predicate):
+        taskname = ConstantField

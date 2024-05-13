@@ -37,53 +37,36 @@
 % schedulableTask(task2,jane,dos).
 % 
 
-turnsPerDay(2).
+taskUnknownSpace(task1, john).
+taskUnknownWorkerAndSpace(task2).
+taskUnknownWorker(task3, space1).
+
+turnsPerDay(3).
+
 unavailableDay(tuesday).
 unavailableDay(wednesday).
 unavailableDay(thursday).
 unavailableDay(friday).
 unavailableDay(saturday).
 unavailableDay(sunday).
+
 taskName(task1).
 taskName(task2).
+taskName(task3).
+
+
 worker(john).
-worker(jane).
-
-tag(groupA).
-tag(theory).
-tag("1").
-tag(practice).
-
-tags(task1,theory).
-tags(task1,groupA).
-tags(task1,"1").
-
-tags(task2,groupA).
-tags(task2,practice).
-tags(task2,"1").
+%worker(jane).
 
 space(space1).
-space(space2).
+%space(space2).
 
-schedulableTask(task1, john, space1).
-schedulableTask(task2, jane, space2).
+spaceCapacity(space1, 5).
+% spaceCapacity(space2, 15).
 
-% day(monday).
-% day(tuesday).
-% day(wednesday).
-% day(thursday).
-% day(friday).
-% day(saturday).
-% day(sunday).
-% 
-% % Días no disponibles
-% unavailableDay(tuesday).
-% 
-% % Números para contar
-% number(0).
-% 
-% % Regla para contar los días no disponibles
-% #count {unavailableDay; day(Day) } = CountUnavailableDays.
-% 
-% % Imprimir el resultado
-% #show CountUnavailableDays.
+% taskSize(task1, 3).
+% taskSize(task2, 7).
+
+%restrictionspace(space1,monday,1).
+
+
