@@ -12,9 +12,11 @@ import { WorkerDialogComponent } from '../dialog/workerDialog/workerDialog/worke
 import { TagsDialogComponent } from '../dialog/tagsDialog/tagsDialog/tagsDialog.component';
 import { ScheduableTaskDialogComponent } from '../dialog/scheduableTaskDialog/scheduableTaskDialog/scheduableTaskDialog.component';
 import { s } from '@fullcalendar/core/internal-common';
+import { StteperFormService } from './stteper-form.service';
 export interface Turn {
   day: String;
   startTime: String;
+  is_free_time?: boolean;
 }
 
 export interface Space {
@@ -59,6 +61,9 @@ export class StteperFormComponent {
   weekDaysRestriction = new FormControl();
   turns: Turn[] = [];
   selectedTurns: Turn[] = [];
+
+  turnsPrueba: Turn[] = [{ day: 'Lunes', startTime: '17:00' }];
+
   spaces: Space[] = [
     {
       name: 'Space 1',
@@ -580,6 +585,20 @@ export class StteperFormComponent {
     // Reload the worker cards
     this.loadTaskCards();
   }
+  createTurns() {
+    this.stteperFormService.createTurns(this.turnsPrueba).subscribe(
+      (data) => {
+        console.log('Turnos creados:', data);
+      },
+      (error) => {
+        console.error('Error al crear los turnos:', error);
+      }
+    );
+  }
 
-  constructor(private _formBuilder: FormBuilder, public dialog: MatDialog) {}
+  constructor(
+    private _formBuilder: FormBuilder,
+    public dialog: MatDialog,
+    private stteperFormService: StteperFormService
+  ) {}
 }
