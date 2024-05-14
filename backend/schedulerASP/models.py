@@ -5,18 +5,18 @@ from django.db import models
 
 class Turn(models.Model):
     day = models.CharField(max_length=70, blank=False, default='')
-    start_time = models.CharField(max_length=70, blank=False, default='')
+    startTime = models.CharField(max_length=70, blank=False, default='')
     is_free_time = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.day} at {self.start_time} (Free time: {self.is_free_time})"
+        return f"{self.day} at {self.startTime} (Free time: {self.is_free_time})"
 
 class Worker(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')
-    worker_restrictions = models.ManyToManyField(Turn, related_name='workers')
+    restrictionsWorker = models.ManyToManyField(Turn, related_name='workers')
 
     def __str__(self):
-        return self.name, self.worker_restrictions
+        return self.name, self.restrictionsWorker
     
     
 class WorkerTurn(models.Model):

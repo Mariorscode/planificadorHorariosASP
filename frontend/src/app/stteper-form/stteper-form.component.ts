@@ -596,6 +596,17 @@ export class StteperFormComponent {
     );
   }
 
+  createWorkers() {
+    this.stteperFormService.createWorker(this.workers).subscribe(
+      (data) => {
+        console.log('Turnos creados:', data);
+      },
+      (error) => {
+        console.error('Error al crear los turnos:', error);
+      }
+    );
+  }
+
   constructor(
     private _formBuilder: FormBuilder,
     public dialog: MatDialog,

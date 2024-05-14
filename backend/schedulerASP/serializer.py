@@ -4,29 +4,29 @@ from .models import Turn, Worker, Space, Tag, ScheduableTask
 class TurnSerializer(serializers.ModelSerializer):
     class Meta:
         model = Turn
-        fields = ['id', 'day', 'start_time', 'is_free_time']
+        fields = ['id', 'day', 'startTime', 'is_free_time']
 
 class WorkerSerializer(serializers.ModelSerializer):
-    worker_restrictions = TurnSerializer(many=True, read_only=True)
-    worker_restrictions_ids = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=Turn.objects.all(), write_only=True
+    restrictionsWorker = TurnSerializer(many=True, read_only=True)
+    restrictionsWorker_ids = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Turn.objects.all(), write_only=True, required=False
     )
 
     class Meta:
         model = Worker
-        fields = ['id', 'name', 'worker_restrictions', 'worker_restrictions_ids']
+        fields = ['id', 'name', 'restrictionsWorker', 'restrictionsWorker_ids']
 
     def create(self, validated_data):
-        worker_restrictions = validated_data.pop('worker_restrictions_ids', [])
+        turns_data = validated_data.pop('restrictionsWorker_ids', [])
         worker = Worker.objects.create(**validated_data)
-        worker.worker_restrictions.set(worker_restrictions)
+        worker.restrictionsWorker.add(*turns_data)
         return worker
 
     def update(self, instance, validated_data):
-        worker_restrictions = validated_data.pop('worker_restrictions_ids', [])
+        restrictionsWorker = validated_data.pop('restrictionsWorker_ids', [])
         instance.name = validated_data.get('name', instance.name)
         instance.save()
-        instance.worker_restrictions.set(worker_restrictions)
+        instance.restrictionsWorker.set(restrictionsWorker)
         return instance
 
 class SpaceSerializer(serializers.ModelSerializer):

@@ -13,4 +13,8 @@ export class StteperFormService {
   createTurns(data: any): Observable<any> {
     return this.http.post(this.apiUrl + 'turns/create_multiple/', data);
   }
+
+  createWorker(data: any): Observable<any> {
+    return this.http.post(this.apiUrl + 'workers/create_multiple/', data);
+  }
 }
