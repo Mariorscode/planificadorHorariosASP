@@ -115,9 +115,8 @@ class Terms:
         
     class Tags(Predicate):
         taskname = ConstantField
-        tag1 = ConstantField
-        tag2 = ConstantField
-        tag3 = ConstantField
+        tag = ConstantField
+      
 
     class TaskUnknownSpace(Predicate):
         taskname = ConstantField

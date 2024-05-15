@@ -511,7 +511,7 @@ class TestSchedule(TestCase, ClingoTest):
             self.assertEqual(len(query),1)
 
 
-    # two schedules with same time can't have the same tags
+    # two schedules with same time can't have the same tags    
     def test_two_schedule_same_time_not_same_tags(self):
         
         self.load_knowledge(FactBase([
@@ -531,8 +531,12 @@ class TestSchedule(TestCase, ClingoTest):
             Terms.Worker(name="jane"),
             Terms.Space(name="space1"),
             Terms.Space(name="space2"),
-            Terms.Tags(taskname="task1", tag1="groupA", tag2="theory",tag3="1"),
-            Terms.Tags(taskname="task2", tag1="groupA", tag2="theory",tag3="1"),
+            Terms.Tags(taskname="task1", tag="groupA"),
+            Terms.Tags(taskname="task1", tag="theory"),
+            Terms.Tags(taskname="task1", tag="1"),
+            Terms.Tags(taskname="task2", tag="theory"),
+            Terms.Tags(taskname="task2", tag="groupA"),
+            Terms.Tags(taskname="task2", tag="1"),
             Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
             Terms.SchedulableTask(taskname="task2", worker="jane", space="space2"),
             
@@ -572,73 +576,79 @@ class TestSchedule(TestCase, ClingoTest):
             Terms.Worker(name="jane"),
             Terms.Space(name="space1"),
             Terms.Space(name="space2"),
-            Terms.Tags(taskname="task1", tag1="groupA", tag2="theory",tag3="1"),
-            Terms.Tags(taskname="task2", tag1="groupA", tag2="practice",tag3="1"),
+            Terms.Tags(taskname="task1",tag = "groupA"),
+            Terms.Tags(taskname="task1",tag = "theory"),
+            Terms.Tags(taskname="task1",tag = "1"),
+            Terms.Tags(taskname="task2",tag = "groupA"),
+            Terms.Tags(taskname="task2",tag = "practice"),
+            Terms.Tags(taskname="task2",tag = "1"),
             Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
             Terms.SchedulableTask(taskname="task2", worker="jane", space="space2"),
             
         ]))
         
         expected = [
-            Terms.Schedule(day="monday", number=2, taskname="task1", worker="john", space="space1"),
-            Terms.Schedule(day="monday", number=2, taskname="task2", worker="jane", space="space2")
+            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1"),
+            Terms.Schedule(day="monday", number=1, taskname="task2", worker="jane", space="space2")
         ]
         
-               
+        
         solutions = list(self.get_solutions())
-        for solution in solutions:
-            query = list(solution.facts(atoms=True)
-                .query(Terms.Schedule)
-                .where(Terms.Schedule.number == 2)
-                .all()
-            )
-      
-            self.assertCountEqual(query, expected)
-    
-      # two schedules with same time can't have the same tags (different order)
-      
-      # (no funciona el bucle)
-    # def test_two_schedule_same_time_not_same_tags_different_order(self):
+        self.assertEqual(len(solutions), 1)
         
-    #     self.load_knowledge(FactBase([
-    #         Terms.TurnsPerDay(2),
-    #         Terms.UnavailableDay(day="tuesday"),
-    #         Terms.UnavailableDay(day="wednesday"),
-    #         Terms.UnavailableDay(day="thursday"),
-    #         Terms.UnavailableDay(day="friday"),
-    #         Terms.UnavailableDay(day="saturday"),
-    #         Terms.UnavailableDay(day="sunday"),
-    #         Terms.Tag(name="groupA"),
-    #         Terms.Tag(name="theory"),
-    #         Terms.Tag(name="1"),
-    #         Terms.TaskName(name="task1"),
-    #         Terms.TaskName(name="task2"),
-    #         Terms.Worker(name="john"),
-    #         Terms.Worker(name="jane"),
-    #         Terms.Space(name="space1"),
-    #         Terms.Space(name="space2"),
-    #         Terms.Tags(taskname="task1", tag1="theory", tag2="groupA",tag3="1"),
-    #         Terms.Tags(taskname="task2", tag1="groupA", tag2="theory",tag3="1"),
-    #         Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
-    #         Terms.SchedulableTask(taskname="task2", worker="jane", space="space2"),
+        solution = solutions[0]
+                
+        query = solution.facts(atoms=True).query(Terms.Schedule).all()
+        
+        self.assertCountEqual(query, expected)
+    
+    
+    def test_two_schedule_atleast_one_tag_different_can_same_time_with_unknown_space_and_worker(self):
+        
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(1),
+            Terms.UnavailableDay(day="tuesday"),
+            Terms.UnavailableDay(day="wednesday"),
+            Terms.UnavailableDay(day="thursday"),
+            Terms.UnavailableDay(day="friday"),
+            Terms.UnavailableDay(day="saturday"),
+            Terms.UnavailableDay(day="sunday"),
+            Terms.Tag(name="groupA"),
+            Terms.Tag(name="theory"),
+            Terms.Tag(name="practice"),
+            Terms.Tag(name="1"),
+            Terms.TaskName(name="task1"),
+            Terms.TaskName(name="task2"),
+            Terms.Worker(name="john"),
+            Terms.Worker(name="jane"),
+            Terms.Space(name="space1"),
+            Terms.Space(name="space2"),
+            Terms.Tags(taskname="task1",tag = "groupA"),
+            Terms.Tags(taskname="task1",tag = "theory"),
+            Terms.Tags(taskname="task1",tag = "1"),
+            Terms.Tags(taskname="task2",tag = "groupA"),
+            Terms.Tags(taskname="task2",tag = "practice"),
+            Terms.Tags(taskname="task2",tag = "1"),
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            Terms.TaskUnknownWorkerAndSpace(taskname="task2"),
             
-    #     ]))
-               
+        ]))
         
-    #     solutions = list(self.get_solutions())
-    #     print(solutions)
-    #     for solution in solutions:
-    #         query1 = list(solution.facts(atoms=True)
-    #             .query(Terms.Schedule)
-    #             .where(Terms.Schedule.number == 1)
-    #             .all()
-    #         )
-    #         print(query1)
-    #         print(solution)
-    #         self.assertEqual(len(query1),2)
+        expected = [
+            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1"),
+            Terms.Schedule(day="monday", number=1, taskname="task2", worker="jane", space="space2")
+        ]
         
+        
+        solutions = list(self.get_solutions())
+        self.assertEqual(len(solutions), 1)
+        
+        solution = solutions[0]
+                
+        query = solution.facts(atoms=True).query(Terms.Schedule).all()
+        
+        self.assertCountEqual(query, expected)
     
-
 
     # ToDo: Add more tests
     # You have the base facts in self.facts, but other facts can be
