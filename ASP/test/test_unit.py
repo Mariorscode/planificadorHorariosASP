@@ -649,6 +649,87 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.assertCountEqual(query, expected)
     
+    def test_there_cannot_be_schedule_in_freeTimeTurn(self):
+            
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(2),
+            Terms.UnavailableDay(day="tuesday"),
+            Terms.UnavailableDay(day="wednesday"),
+            Terms.UnavailableDay(day="thursday"),
+            Terms.UnavailableDay(day="friday"),
+            Terms.UnavailableDay(day="saturday"),
+            Terms.UnavailableDay(day="sunday"),
+            Terms.TaskName(name="task1"),
+            Terms.Worker(name="john"),
+            Terms.Space(name="space1"),
+            Terms.FreeTimeTurn(day="monday", number=2),
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            
+        ]))
+        
+        expected = [
+            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1"),
+        
+        ]
+        
+        solutions = list(self.get_solutions())
+        self.assertEqual(len(solutions), 1)
+        
+        solution = solutions[0]
+                
+        query = solution.facts(atoms=True).query(Terms.Schedule).all()
+        
+        self.assertCountEqual(query, expected)
+        
+        
+    def test_two_schedule_atleast_one_tag_different_can_same_time_with_unknown_space_and_worker_with_free_time(self):
+        
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(2),
+            Terms.UnavailableDay(day="tuesday"),
+            Terms.UnavailableDay(day="wednesday"),
+            Terms.UnavailableDay(day="thursday"),
+            Terms.UnavailableDay(day="friday"),
+            Terms.UnavailableDay(day="saturday"),
+            Terms.UnavailableDay(day="sunday"),
+            Terms.Tag(name="groupA"),
+            Terms.Tag(name="theory"),
+            Terms.Tag(name="practice"),
+            Terms.Tag(name="1"),
+            Terms.TaskName(name="task1"),
+            Terms.TaskName(name="task2"),
+            Terms.Worker(name="john"),
+            Terms.Worker(name="jane"),
+            Terms.Space(name="space1"),
+            Terms.Space(name="space2"),
+            Terms.Tags(taskname="task1",tag = "groupA"),
+            Terms.Tags(taskname="task1",tag = "theory"),
+            Terms.Tags(taskname="task1",tag = "1"),
+            Terms.Tags(taskname="task2",tag = "groupA"),
+            Terms.Tags(taskname="task2",tag = "practice"),
+            Terms.Tags(taskname="task2",tag = "1"),
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            Terms.TaskUnknownWorkerAndSpace(taskname="task2"),
+            Terms.FreeTimeTurn(day="monday", number=2),
+            
+        ]))
+        
+        expected = [
+            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1"),
+            Terms.Schedule(day="monday", number=1, taskname="task2", worker="jane", space="space2")
+        ]
+        
+        
+        solutions = list(self.get_solutions())
+        self.assertEqual(len(solutions), 1)
+        
+        solution = solutions[0]
+                
+        query = solution.facts(atoms=True).query(Terms.Schedule).all()
+        
+        self.assertCountEqual(query, expected)
+            
+            
 
     # ToDo: Add more tests
     # You have the base facts in self.facts, but other facts can be

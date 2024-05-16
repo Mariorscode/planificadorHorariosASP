@@ -41,6 +41,9 @@ D1 == D2, To1 == To2.
    schedule(D2,To2,T2,W2,_),
    T1!=T2,W1 == W2,D1 == D2, To1 == To2.
 
+% There cannot be a schedule in a free time turn
+:- schedule(D,To,_,_,_), freeTimeTurn(D,To).
+
 % there cannot be a schedule on a turn in which that worker has restrictions
 :- schedule(D,To,T,W,S),restrictionworker(W2,D,To2),W == W2, D == D2, To == To2.
 

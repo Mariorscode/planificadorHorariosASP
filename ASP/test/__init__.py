@@ -26,6 +26,7 @@ class ClingoTest:
             Terms.TaskUnknownSpace,
             Terms.TaskUnknownWorker,
             Terms.TaskUnknownWorkerAndSpace,
+            Terms.FreeTimeTurn,
             # ...
         ])
 
@@ -128,3 +129,7 @@ class Terms:
         
     class TaskUnknownWorkerAndSpace(Predicate):
         taskname = ConstantField
+        
+    class FreeTimeTurn(Predicate):
+        day = ConstantField
+        number = IntegerField
