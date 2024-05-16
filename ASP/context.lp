@@ -55,7 +55,7 @@ taskName(fisica_1_practice_groupC).
 % tag(taskName,tag,tag..).
 tag(theory).
 tag(practice).
-tag(group;groupA;groupB;groupC). 
+tag(group;groupA;groupB;groupC).
 tag(1..4).
 
 tags(calculo_1_theory1,theory,1,group).
@@ -101,31 +101,28 @@ turnsPerDay(6).
 % ---------/turn------
 
 
-% -------availableDay------
-availableDay(monday).
-availableDay(tuesday).
-availableDay(wednesday).
-availableDay(thursday).
-availableDay(friday).
-% -------/availableDay------
+% -------unavailableDay------
+unavailableDay(saturday).
+unavailableDay(sunday).
+% -------/unavailableDay------
 
 
 % -------spaceCapacity------
 % spaceCapacity(c,size). :- space(c).
 
-spaceCapacity("1.4",60). 
-spaceCapacity("14-15",20). 
-spaceCapacity("1.1.1",20). 
-spaceCapacity("17-18",20). 
+spaceCapacity("1.4",60).
+spaceCapacity("14-15",20).
+spaceCapacity("1.1.1",20).
+spaceCapacity("17-18",20).
 % -------/spaceCapacity------
 
 % -------groupSize------
 % groupSize(group,size). :- group(group).
 
-groupSize(group,60). 
-groupSize(groupA,20). 
-groupSize(groupB,20). 
-groupSize(groupC,20). 
+groupSize(group,60).
+groupSize(groupA,20).
+groupSize(groupB,20).
+groupSize(groupC,20).
 % -------/groupSize------
 
 % ---------schedulableTask------
@@ -170,9 +167,9 @@ schedulableTask(fisica_1_practice_groupC,fernandoGalvez,"17-18").
 % ---------/schedulableTask------
 % restrictionworker(T,D,TO). :- turn(TO).,day(D).,worker(T).
 
-restrictionworker(philipp,monday,4). 
-restrictionworker(juanCarlos,tuesday,4). 
-restrictionworker(philipp,friday,0). 
+restrictionworker(philipp,monday,4).
+restrictionworker(juanCarlos,tuesday,4).
+restrictionworker(philipp,friday,0).
 
 
 
@@ -180,5 +177,3 @@ restrictionworker(philipp,friday,0).
 
 restrictionspace("14-15",monday,4).
 restrictionspace("1.4",monday,5).
-
-
