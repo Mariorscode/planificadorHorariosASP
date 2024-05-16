@@ -1,4 +1,8 @@
-turnsPerDay(1).
+turnsPerDay(3).
+
+freeTimeTurn(monday,2).
+freeTimeTurn(monday,3).
+
 
 unavailableDay(tuesday).
 unavailableDay(wednesday).
