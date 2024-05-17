@@ -8,6 +8,7 @@ class TestTurns(TestCase, ClingoTest):
     def setUp(self):
         self.clingo_setup()
 
+    # If there are no turnsPerDay, there should be no turns
     def test_no_turnsPerDay_no_turns(self):
         self.load_knowledge(FactBase([]))
 
@@ -22,6 +23,7 @@ class TestTurns(TestCase, ClingoTest):
 
         self.assertEqual(len(query), 0)
 
+    # If there is one unavailableDay and no turns per day there should be no turns
     def test_no_turnsPerDay_with_an_unavailableDay_no_turns(self):
         self.load_knowledge(FactBase([
             Terms.UnavailableDay(day="monday")
@@ -38,6 +40,7 @@ class TestTurns(TestCase, ClingoTest):
 
         self.assertEqual(len(query), 0)
 
+    # If there is one turnPerDay and no unavailableDays there should be 7 turns
     def test_1_turnPerDay_and_no_unavailableDays_7_turns(self):
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(1)
@@ -64,6 +67,7 @@ class TestTurns(TestCase, ClingoTest):
 
         self.assertCountEqual(query, expected)
 
+    #If there is one turnPerDay and 7 un available days there should be no turns
     def test_1_turnPerDay_and_7_unavailableDays_no_turns(self):
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(1),
@@ -87,6 +91,7 @@ class TestTurns(TestCase, ClingoTest):
 
         self.assertEqual(len(query), 0)
 
+    # If there are 2 turnsPerDay and 2 unavailableDays there should be 10 turns
     def test_2_turnPerDay_and_2_unavailableDays_10_turns(self):
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(2),
@@ -118,7 +123,7 @@ class TestTurns(TestCase, ClingoTest):
 
         self.assertCountEqual(query, expected)
 
-
+# Test for schedule
 class TestSchedule(TestCase, ClingoTest):
     def setUp(self):
         self.clingo_setup()
@@ -126,7 +131,7 @@ class TestSchedule(TestCase, ClingoTest):
         
     # a task with an X size can't be scheduled in a space with a smaller capacity
     # task with space 5, space with capacity 10
-    def test_task_placed_in_bigger_space(self): # hacer el contrario
+    def test_task_placed_in_bigger_space(self):
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(1),
@@ -276,6 +281,7 @@ class TestSchedule(TestCase, ClingoTest):
 
 
     # only schedule numer of task, no more no less
+    # three available spaces and two tasks
     def test_onlyschedule_scheduabletask(self):
             
         self.load_knowledge(FactBase([
@@ -303,6 +309,31 @@ class TestSchedule(TestCase, ClingoTest):
             
             self.assertEqual(len(query),2)  
         
+    
+    # only schedule numer of task, no more no less
+    # one available spaces and two tasks, unsatisfiable
+    def test_onlyschedule_scheduabletask(self):
+            
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(1),
+            Terms.UnavailableDay(day="tuesday"),
+            Terms.UnavailableDay(day="wednesday"),
+            Terms.UnavailableDay(day="thursday"),
+            Terms.UnavailableDay(day="friday"),
+            Terms.UnavailableDay(day="saturday"),
+            Terms.UnavailableDay(day="sunday"),
+            Terms.TaskName(name="task1"),
+            Terms.TaskName(name="task2"),
+            Terms.Worker(name="john"),
+            Terms.Space(name="space1"),
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            Terms.SchedulableTask(taskname="task2", worker="john", space="space1")
+            
+        ]))
+        
+        solutions = list(self.get_solutions())
+        
+        self.assertEqual(len(solutions), 0)
         
     # two tasks with same space can't be scheduled at the same time
     def test_same_space_not_same_time(self):
