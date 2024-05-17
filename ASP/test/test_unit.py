@@ -438,7 +438,7 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.assertCountEqual(query, expected)
         
-        # task with unknown worker should get a worker and acompplish restrictions
+    # task with unknown worker should get a worker and acompplish restrictions
     def test_task_unknonw_worker_with_restrictions(self):
         
         self.load_knowledge(FactBase([
@@ -467,8 +467,8 @@ class TestSchedule(TestCase, ClingoTest):
             Terms.Schedule(day="monday", number=2, taskname="task2", worker="jane", space="space2"),
         ]
         
+        # the two solutions are the same, but in different order
         solutions = list(self.get_solutions())
-        # self.assertEqual(len(solutions), 1)
         
         solution = solutions[0]
         query = solution.facts(atoms=True).query(Terms.Schedule).all()
@@ -502,6 +502,7 @@ class TestSchedule(TestCase, ClingoTest):
             Terms.Schedule(day="monday", number=2, taskname="task2", worker="john", space="space1"),
         ]
         
+        # the two solutions are the same, but in different order
         solutions = list(self.get_solutions())
         # self.assertEqual(len(solutions), 1)
         
