@@ -490,8 +490,6 @@ class TestSchedule(TestCase, ClingoTest):
             Terms.TaskName(name="task2"),
             Terms.Worker(name="john"),
             Terms.Space(name="space1"),
-            Terms.TaskSize(taskname="task1", size=3),
-            Terms.TaskSize(taskname="task2", size=7),
             Terms.TaskUnknownWorkerAndSpace(taskname="task2"),
             Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
             
@@ -634,7 +632,7 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.assertCountEqual(query, expected)
     
-    
+    # two shedules can be at the same time if they have at least one tag different, and one of them has unknown space and worker
     def test_two_schedule_atleast_one_tag_different_can_same_time_with_unknown_space_and_worker(self):
         
         self.load_knowledge(FactBase([
@@ -681,6 +679,7 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.assertCountEqual(query, expected)
     
+    # test if there can be a schedule in a free time turn
     def test_there_cannot_be_schedule_in_freeTimeTurn(self):
             
         self.load_knowledge(FactBase([
@@ -713,7 +712,8 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.assertCountEqual(query, expected)
         
-        
+    
+    # two shedules can be at the same time if they have at least one tag different, and one of them has unknown space and worker, using also free time turn
     def test_two_schedule_atleast_one_tag_different_can_same_time_with_unknown_space_and_worker_with_free_time(self):
         
         self.load_knowledge(FactBase([
@@ -761,9 +761,3 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.assertCountEqual(query, expected)
             
-            
-
-    # ToDo: Add more tests
-    # You have the base facts in self.facts, but other facts can be
-    # added later en each test with self.facts.add([fact1, fact2, ...])
-    # Remember to call self.load_knowledge(self.facts) afterwords
