@@ -10,6 +10,10 @@ export class StteperFormService {
 
   constructor(private http: HttpClient) {}
 
+  createTimeTable(data: any): Observable<any> {
+    return this.http.post(this.apiUrl + 'timetables/', data);
+  }
+
   createTurns(data: any): Observable<any> {
     return this.http.post(this.apiUrl + 'turns/create_multiple/', data);
   }

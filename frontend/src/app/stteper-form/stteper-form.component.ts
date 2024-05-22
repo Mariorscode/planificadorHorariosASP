@@ -39,6 +39,13 @@ export interface ScheduableTask {
   taskSpace: Space[];
   taskTags: Tag[];
 }
+interface apiTimeTable {
+  id: number;
+  name: string;
+  turnsDuration: number;
+  turnsPerDay: number;
+}
+
 @Component({
   selector: 'app-stteper-form',
   templateUrl: './stteper-form.component.html',
@@ -58,9 +65,12 @@ export class StteperFormComponent {
     'Domingo',
   ];
   weekDays = new FormControl();
+  numberOfTurns: number = 0;
   weekDaysRestriction = new FormControl();
   turns: Turn[] = [];
   selectedTurns: Turn[] = [];
+
+  apiTimeTable: apiTimeTable[] = [];
 
   turnsPrueba: Turn[] = [{ day: 'Lunes', startTime: '17:00' }];
 
@@ -154,6 +164,7 @@ export class StteperFormComponent {
     lastTurnTime: ['', Validators.required],
     weekDaysRestriction: this.weekDaysRestriction,
     dayTimerestriction: ['', Validators.required],
+    numberOfTurns: this.numberOfTurns,
   });
   // Second formStep
   secondFormGroup = this._formBuilder.group({
@@ -245,17 +256,16 @@ export class StteperFormComponent {
     const selectedDays = this.weekDays.value;
     for (const day of selectedDays) {
       // get the number of turns per day
-      const numberOfTurns = this.calculateTurnsPerDay();
-
+      this.numberOfTurns = this.calculateTurnsPerDay();
       // Check if the number of turns caculation was successful
-      if (numberOfTurns === -1) {
+      if (this.numberOfTurns === -1) {
         console.error('No se pudieron calcular los turnos para el día:', day);
         return;
       }
 
       // Cast the firstTurnTimeStr string to a Date object
       const startTime = new Date(`2022-01-01T${firstTurnTimeStr}`);
-      for (let i = 0; i < numberOfTurns; i++) {
+      for (let i = 0; i < this.numberOfTurns; i++) {
         // Create a turn object
         const turno: Turn = {
           day: day,
@@ -585,24 +595,25 @@ export class StteperFormComponent {
     // Reload the worker cards
     this.loadTaskCards();
   }
-  createTurns() {
-    this.stteperFormService.createTurns(this.turnsPrueba).subscribe(
-      (data) => {
-        console.log('Turnos creados:', data);
-      },
-      (error) => {
-        console.error('Error al crear los turnos:', error);
-      }
-    );
-  }
 
-  createWorkers() {
-    this.stteperFormService.createWorker(this.workers).subscribe(
-      (data) => {
-        console.log('Turnos creados:', data);
+  createTimeTable() {
+    const data = {
+      name: this.firstFormGroup.get('scheduleName')?.value,
+      turnsDuration: this.firstFormGroup.get('turnDuration')?.value,
+      turnsPerDay: this.firstFormGroup.get('numberOfTurns')?.value,
+    };
+
+    console.log('data sent timetable:', data);
+
+    this.stteperFormService.createTimeTable(data).subscribe(
+      (response) => {
+        console.log('Response:', response);
+        this.apiTimeTable.push(response);
+        console.log('apiTimeTable:', this.apiTimeTable);
+        console.log('apiTimeTable:', this.apiTimeTable[0].id);
       },
       (error) => {
-        console.error('Error al crear los turnos:', error);
+        console.error('Error:', error);
       }
     );
   }
