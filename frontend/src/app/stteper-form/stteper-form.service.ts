@@ -10,15 +10,25 @@ export class StteperFormService {
 
   constructor(private http: HttpClient) {}
 
+  // ---------Timetable
   createTimeTable(data: any): Observable<any> {
     return this.http.post(this.apiUrl + 'timetables/', data);
   }
 
-  createTurns(data: any): Observable<any> {
+  getAllTimetables(): Observable<any> {
+    return this.http.get(this.apiUrl + 'timetables/');
+  }
+  // ---------/Timetable
+
+  // ---------Turns
+  createAllTurns(data: any): Observable<any> {
     return this.http.post(this.apiUrl + 'turns/create_multiple/', data);
   }
+  // ---------/Turns
 
+  // ---------Workers
   createWorker(data: any): Observable<any> {
     return this.http.post(this.apiUrl + 'workers/create_multiple/', data);
   }
+  // ---------/Workers
 }

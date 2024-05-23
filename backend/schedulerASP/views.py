@@ -5,9 +5,9 @@ from rest_framework.decorators import action
 # from .models import Turn, Worker, Space, Tag, ScheduableTask
 # from .serializer import TurnSerializer, WorkerSerializer, SpaceSerializer, TagSerializer, ScheduableTaskSerializer, TimeTableSerializer, TimeTable, Space
 
-from .models import Turn, Worker, Space, Tag, ScheduableTask, TimeTable, schedule   
+from .models import Turn, Worker, Space, Tag, ScheduableTask, TimeTable, Schedule, User   
 
-from .serializer import TurnSerializer, WorkerSerializer, SpaceSerializer, TagSerializer, ScheduableTaskSerializer, TimeTableSerializer, scheduleSerializer
+from .serializer import TurnSerializer, WorkerSerializer, SpaceSerializer, TagSerializer, ScheduableTaskSerializer, TimeTableSerializer, ScheduleSerializer, UserSerializer
 
 class TurnViewSet(ModelViewSet):
     serializer_class = TurnSerializer
@@ -56,6 +56,10 @@ class ScheduableTaskViewSet(ModelViewSet):
     serializer_class = ScheduableTaskSerializer
     
 class scheduleViewSet(ModelViewSet):
-    queryset = schedule.objects.all()
-    serializer_class = scheduleSerializer
+    queryset = Schedule.objects.all()
+    serializer_class = ScheduleSerializer
+    
+class userViewSet(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 

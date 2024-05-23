@@ -8,12 +8,13 @@ class TimeTable(models.Model):
     turnsPerDay = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.name + " " + str(self.turnsDuration) + " " + str(self.turnsPerDay) + " " + self.unavailableDay 
+        return self.name + " " + str(self.turnsDuration) + " " + str(self.turnsPerDay)
 
 class Turn(models.Model):
     day = models.CharField(max_length=70, blank=False, default='')
     startTime = models.CharField(max_length=70, blank=False, default='')
     is_free_time = models.BooleanField(default=False)
+    timeTable_id = models.ForeignKey(TimeTable, related_name='turns', on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.day} at {self.startTime} (Free time: {self.is_free_time})"
@@ -29,6 +30,7 @@ class Space(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')
     space_capacity = models.IntegerField(default=0)
     restrictionsSpace = models.ManyToManyField(Turn, related_name='spaces')
+    user_id = models.ForeignKey('user', related_name='spaces', on_delete=models.CASCADE, null=True)
     
     def __str__(self):
         return self.name + " " + str(self.space_capacity) + " " + str(self.restrictionsSpace)
@@ -57,11 +59,19 @@ class ScheduableTask(models.Model):
 #     worker_schedule = models.ForeignKey(Worker, related_name='worker_schedule', on_delete=models.CASCADE)
 #     timeTable_schedule = models.ForeignKey(TimeTable, related_name='timeTable_schedule', on_delete=models.CASCADE)
     
-class schedule(models.Model):
+class Schedule(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')
     day = models.CharField(max_length=70, blank=False, default='')
     number = models.IntegerField(default=0)
     schedule_space = models.CharField(max_length=70, blank=False, default='')
     schedule_worker = models.CharField(max_length=70, blank=False, default='')
     timeTable_schedule = models.ForeignKey(TimeTable, related_name='timeTable_schedule', on_delete=models.CASCADE)
+    
+class User(models.Model):
+    name = models.CharField(max_length=70, blank=False, default='')
+    password = models.CharField(max_length=70, blank=False, default='')
+    email = models.CharField(max_length=70, blank=False, default='')
+    
+    def __str__(self):
+        return self.name
     

@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter 
-from .views import TurnViewSet, WorkerViewSet, TimeTableViewSet, SpaceViewSet, TagViewSet, ScheduableTaskViewSet, scheduleViewSet
+from .views import TurnViewSet, WorkerViewSet, TimeTableViewSet, SpaceViewSet, TagViewSet, ScheduableTaskViewSet, scheduleViewSet, userViewSet
 
 router = DefaultRouter()
 
@@ -10,4 +10,5 @@ router.register(prefix='spaces', basename='spaces', viewset=SpaceViewSet)
 router.register(prefix='tags', basename='tags', viewset=TagViewSet)
 router.register(prefix='scheduabletasks', basename='scheduabletasks', viewset=ScheduableTaskViewSet)
 router.register(prefix='schedules', basename='schedules', viewset=scheduleViewSet)
+router.register(prefix='users', basename='users', viewset=userViewSet)
 

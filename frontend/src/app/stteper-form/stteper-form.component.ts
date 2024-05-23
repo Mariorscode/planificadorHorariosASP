@@ -11,8 +11,9 @@ import { SpaceDialogComponent } from '../dialog/spaceDialog/spaceDialog/spaceDia
 import { WorkerDialogComponent } from '../dialog/workerDialog/workerDialog/workerDialog.component';
 import { TagsDialogComponent } from '../dialog/tagsDialog/tagsDialog/tagsDialog.component';
 import { ScheduableTaskDialogComponent } from '../dialog/scheduableTaskDialog/scheduableTaskDialog/scheduableTaskDialog.component';
-import { s } from '@fullcalendar/core/internal-common';
+import { co, s } from '@fullcalendar/core/internal-common';
 import { StteperFormService } from './stteper-form.service';
+import { empty } from 'rxjs';
 export interface Turn {
   day: String;
   startTime: String;
@@ -39,11 +40,18 @@ export interface ScheduableTask {
   taskSpace: Space[];
   taskTags: Tag[];
 }
-interface apiTimeTable {
+interface ApiTimeTable {
   id: number;
   name: string;
   turnsDuration: number;
   turnsPerDay: number;
+}
+
+interface ApiTurns {
+  id: number;
+  day: string;
+  startTime: string;
+  is_free_time: boolean;
 }
 
 @Component({
@@ -70,7 +78,13 @@ export class StteperFormComponent {
   turns: Turn[] = [];
   selectedTurns: Turn[] = [];
 
-  apiTimeTable: apiTimeTable[] = [];
+  apiTimeTable: ApiTimeTable = {
+    id: 0,
+    name: '',
+    turnsDuration: 0,
+    turnsPerDay: 0,
+  };
+  apiTurns: ApiTurns[] = [];
 
   turnsPrueba: Turn[] = [{ day: 'Lunes', startTime: '17:00' }];
 
@@ -168,7 +182,8 @@ export class StteperFormComponent {
   });
   // Second formStep
   secondFormGroup = this._formBuilder.group({
-    selectedTurns: [this.selectedTurns, Validators.required],
+    turns: [this.turns, Validators.required],
+    // selectedTurns: [this.selectedTurns, Validators.required],
   });
   // Third formStep
   thirdFormGroup = this._formBuilder.group({
@@ -191,6 +206,8 @@ export class StteperFormComponent {
   // excute at the load of the component
   ngOnInit(): void {
     // load the space cards
+
+    this.getAllTimetables();
     this.loadSpaceCards();
     this.loadWorkerCards();
     this.loadTaskCards();
@@ -281,27 +298,28 @@ export class StteperFormComponent {
         startTime.setMinutes(startTime.getMinutes() + turnDuration);
       }
     }
-    console.log('turnperday:', this.numberOfTurns);
-    this.createTimeTable(this.numberOfTurns);
+    this.firstFormGroup.patchValue({ numberOfTurns: this.numberOfTurns });
+    this.secondFormGroup.patchValue({ turns: this.turns });
+    this.createTimeTable();
     console.log('Turnos llenados:', this.turns);
   }
 
   // Function to handle the selection of a turn
   onSelectionChange(turn: Turn) {
     // Verify if the turn is already selected
-    const index = this.selectedTurns.findIndex(
+    console.log('Turn:', turn);
+    const index = this.turns.findIndex(
       (t) => t.day === turn.day && t.startTime === turn.startTime
     );
 
-    if (index === -1) {
-      // if it is not selected, add it to the list
-      this.selectedTurns.push(turn);
+    if (index !== -1) {
+      // Toggle the is_free_time property
+      this.turns[index].is_free_time = !this.turns[index].is_free_time;
     } else {
-      // if it is selected, remove it from the list
-      this.selectedTurns.splice(index, 1);
+      console.error('Turno no encontrado:', turn);
     }
-
-    console.log('Selected turns:', this.selectedTurns);
+    this.secondFormGroup.patchValue({ turns: this.turns });
+    console.log('Selected turns:', this.turns);
   }
 
   spaceCards: Space[] = [];
@@ -310,7 +328,7 @@ export class StteperFormComponent {
   // Function to open the space dialog
   openSpaceDialog(space?: Space) {
     let spaceName: string;
-
+    console.log('AAAAAAAAAAAA', this.secondFormGroup.get('turns')?.value);
     let dialogRef;
     if (space) {
       spaceName = space.name;
@@ -597,27 +615,69 @@ export class StteperFormComponent {
     this.loadTaskCards();
   }
 
-  createTimeTable(numberOfTurns: number) {
+  // --------Api calls methods----------
+  createTimeTable() {
     const data = {
       name: this.firstFormGroup.get('scheduleName')?.value,
       turnsDuration: this.firstFormGroup.get('turnDuration')?.value,
-      turnsPerDay: numberOfTurns,
+      turnsPerDay: this.firstFormGroup.get('numberOfTurns')?.value,
     };
 
     console.log('data sent timetable:', data);
 
     this.stteperFormService.createTimeTable(data).subscribe(
       (response) => {
-        console.log('Response:', response);
-        this.apiTimeTable.push(response);
-        console.log('apiTimeTable:', this.apiTimeTable);
-        console.log('apiTimeTable:', this.apiTimeTable[0].id);
+        console.log('Response Timetable:', response);
+        this.apiTimeTable = response;
       },
       (error) => {
         console.error('Error:', error);
       }
     );
   }
+
+  getAllTimetables() {
+    this.stteperFormService.getAllTimetables().subscribe(
+      (response) => {
+        console.log('Response all timetables:', response);
+        this.apiTimeTable = response;
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  createAllTurns() {
+    console.log('turns:', this.secondFormGroup.get('turns')?.value);
+
+    // const data: Turn[] | null | undefined =
+    //   this.secondFormGroup.get('turns')?.value;
+
+    const auxTurn = this.secondFormGroup.get('turns')?.value ?? [];
+
+    const data = auxTurn.map((turn: Turn) => {
+      return {
+        day: turn.day,
+        startTime: turn.startTime,
+        is_free_time: turn.is_free_time,
+        timeTable_id: this.apiTimeTable.id,
+      };
+    });
+
+    console.log('data sent turns:', data);
+
+    this.stteperFormService.createAllTurns(data).subscribe(
+      (response) => {
+        console.log('Response:', response);
+        this.apiTurns = response;
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+  // --------/Api calls methods----------
 
   constructor(
     private _formBuilder: FormBuilder,
