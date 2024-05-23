@@ -281,7 +281,8 @@ export class StteperFormComponent {
         startTime.setMinutes(startTime.getMinutes() + turnDuration);
       }
     }
-
+    console.log('turnperday:', this.numberOfTurns);
+    this.createTimeTable(this.numberOfTurns);
     console.log('Turnos llenados:', this.turns);
   }
 
@@ -596,11 +597,11 @@ export class StteperFormComponent {
     this.loadTaskCards();
   }
 
-  createTimeTable() {
+  createTimeTable(numberOfTurns: number) {
     const data = {
       name: this.firstFormGroup.get('scheduleName')?.value,
       turnsDuration: this.firstFormGroup.get('turnDuration')?.value,
-      turnsPerDay: this.firstFormGroup.get('numberOfTurns')?.value,
+      turnsPerDay: numberOfTurns,
     };
 
     console.log('data sent timetable:', data);
