@@ -31,4 +31,30 @@ export class StteperFormService {
     return this.http.post(this.apiUrl + 'workers/create_multiple/', data);
   }
   // ---------/Workers
+
+  // --------- Space
+
+  createAllSpace(data: any): Observable<any> {
+    return this.http.post(this.apiUrl + 'spaces/create_multiple/', data);
+  }
+
+  getAllSpaces(): Observable<any> {
+    return this.http.get(this.apiUrl + 'spaces/');
+  }
+
+  // getSpacesByUserId(userId: number): Observable<any> {
+  //   return this.http.get(this.apiUrl + 'spaces/?user_id=' + userId);
+  // }
+
+  // ---------/Space
+
+  // ---------CommonSpace
+  getAllCommonSpaces(): Observable<any> {
+    return this.http.get(this.apiUrl + 'commonspaces/');
+  }
+
+  createAllCommonSpace(data: any): Observable<any> {
+    return this.http.post(this.apiUrl + 'commonspaces/create_multiple/', data);
+  }
+  // ---------/CommonSpace
 }

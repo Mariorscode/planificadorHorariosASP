@@ -1,7 +1,13 @@
 from django.db import models
 
 # Create your models here.
-
+class User(models.Model):
+    name = models.CharField(max_length=70, blank=False, default='')
+    password = models.CharField(max_length=70, blank=False, default='')
+    email = models.CharField(max_length=70, blank=False, default='')
+    
+    def __str__(self):
+        return self.name
 class TimeTable(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')
     turnsDuration = models.IntegerField(default=0)
@@ -30,10 +36,19 @@ class Space(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')
     space_capacity = models.IntegerField(default=0)
     restrictionsSpace = models.ManyToManyField(Turn, related_name='spaces')
-    user_id = models.ForeignKey('user', related_name='spaces', on_delete=models.CASCADE, null=True)
+    timeTable_id = models.ForeignKey(TimeTable, related_name='spaces', on_delete=models.CASCADE, null=True)
     
     def __str__(self):
         return self.name + " " + str(self.space_capacity) + " " + str(self.restrictionsSpace)
+    
+class CommonSpace(models.Model):
+    name = models.CharField(max_length=70, blank=False, default='')
+    space_capacity = models.IntegerField(default=0)
+    user_id = models.ForeignKey(User, related_name='spaces', on_delete=models.CASCADE, null=True)
+    
+    def __str__(self):
+        return self.name + " " + str(self.space_capacity) + " " + str(self.restrictionsSpace)
+  
         
 class Tag(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')
@@ -67,11 +82,5 @@ class Schedule(models.Model):
     schedule_worker = models.CharField(max_length=70, blank=False, default='')
     timeTable_schedule = models.ForeignKey(TimeTable, related_name='timeTable_schedule', on_delete=models.CASCADE)
     
-class User(models.Model):
-    name = models.CharField(max_length=70, blank=False, default='')
-    password = models.CharField(max_length=70, blank=False, default='')
-    email = models.CharField(max_length=70, blank=False, default='')
-    
-    def __str__(self):
-        return self.name
+
     

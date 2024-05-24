@@ -54,6 +54,14 @@ interface ApiTurns {
   is_free_time: boolean;
 }
 
+interface ApiSpaces {
+  id: number;
+  name: string;
+  space_capacity: number;
+  restrictionsSpace: number[];
+  user_id: number;
+}
+
 @Component({
   selector: 'app-stteper-form',
   templateUrl: './stteper-form.component.html',
@@ -63,6 +71,10 @@ export class StteperFormComponent {
   isLast(item: any, array: any[]): boolean {
     return item === array[array.length - 1];
   }
+
+  // Variables
+  userid: number = 1;
+
   daysOfWeek: string[] = [
     'Lunes',
     'Martes',
@@ -85,21 +97,24 @@ export class StteperFormComponent {
     turnsPerDay: 0,
   };
   apiTurns: ApiTurns[] = [];
+  apiSpaces: ApiSpaces[] = [];
 
   turnsPrueba: Turn[] = [{ day: 'Lunes', startTime: '17:00' }];
 
-  spaces: Space[] = [
-    {
-      name: 'Space 1',
-      spaceCapacity: 10,
-      restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
-    },
-    {
-      name: 'Space 2',
-      spaceCapacity: 10,
-      restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
-    },
-  ];
+  // spaces: Space[] = [
+  //   {
+  //     name: 'Space 1',
+  //     spaceCapacity: 10,
+  //     restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
+  //   },
+  //   {
+  //     name: 'Space 2',
+  //     spaceCapacity: 10,
+  //     restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
+  //   },
+  // ];
+
+  spaces: Space[] = [];
 
   workers: Worker[] = [
     {
@@ -208,7 +223,7 @@ export class StteperFormComponent {
     // load the space cards
 
     this.getAllTimetables();
-    this.loadSpaceCards();
+    this.getAllCommonSpaces();
     this.loadWorkerCards();
     this.loadTaskCards();
   }
@@ -677,6 +692,130 @@ export class StteperFormComponent {
       }
     );
   }
+
+  // getAllSpaces() {
+  //   this.stteperFormService.getAllSpaces().subscribe(
+  //     (response) => {
+  //       console.log('Response all spaces:', response);
+
+  //       this.apiSpaces = response;
+  //       console.log('API SPACES:', this.apiSpaces);
+
+  //       this.apiSpaces.forEach((apiSspace) => {
+  //         let auxIds: number[] = [];
+
+  //         auxIds = apiSspace.restrictionsSpace;
+  //         console.log('AUX IDS:', auxIds);
+
+  //         let auxRestrictionSpace: Turn[] = [];
+  //         auxIds.forEach((id) => {
+  //           const turn = this.apiTurns.find((apiTurn) => apiTurn.id === id);
+  //           console.log('API TURN:', turn);
+  //           if (turn) {
+  //             console.log('TURN:', turn);
+  //             auxRestrictionSpace.push(turn);
+  //           }
+  //         });
+
+  //         const newSpace: Space = {
+  //           name: apiSspace.name,
+  //           spaceCapacity: apiSspace.space_capacity,
+  //           restrictionsSpace: auxRestrictionSpace,
+  //         };
+  //         console.log('NEW SPACE:', newSpace);
+  //         this.spaces.push(newSpace);
+  //       });
+  //     },
+  //     (error) => {
+  //       console.error('Error:', error);
+  //     }
+  //   );
+  // }
+
+  getAllCommonSpaces() {
+    this.stteperFormService.getAllCommonSpaces().subscribe(
+      (response) => {
+        console.log('Response all common spaces:', response);
+        this.apiSpaces = response;
+        this.apiSpaces.forEach((apiSpace) => {
+          let auxIds: number[] = [];
+
+          auxIds = apiSpace.restrictionsSpace;
+          console.log('AUX IDS:', auxIds);
+
+          const newSpace: Space = {
+            name: apiSpace.name,
+            spaceCapacity: apiSpace.space_capacity,
+            restrictionsSpace: [],
+          };
+          console.log('NEW SPACE:', newSpace);
+          this.spaces.push(newSpace);
+        });
+        this.loadSpaceCards();
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  createAllSpacesAndCommonSpace() {
+    console.log('turns:', this.secondFormGroup.get('turns')?.value);
+
+    // const data: Turn[] | null | undefined =
+    //   this.secondFormGroup.get('turns')?.value;
+
+    const auxSpace = this.thirdFormGroup.get('spaces')?.value ?? [];
+
+    const differentSpaces = auxSpace.filter((space: Space) => {
+      return !this.apiSpaces.some((apiSpace) => apiSpace.name === space.name);
+    });
+    console.log('Different Spaces:', differentSpaces);
+
+    const data = auxSpace.map((space: Space) => {
+      console.log('EEEEEEEEEEE:', space.restrictionsSpace);
+      return {
+        name: space.name,
+        space_capacity: space.spaceCapacity,
+        restrictionsSpace: space.restrictionsSpace.map((turn) => {
+          return this.apiTurns.find(
+            (apiTurn) =>
+              apiTurn.day === turn.day && apiTurn.startTime === turn.startTime
+          )?.id;
+        }),
+        timeTable_id: this.apiTimeTable.id,
+      };
+    });
+
+    const data2 = differentSpaces.map((space: Space) => {
+      return {
+        name: space.name,
+        space_capacity: space.spaceCapacity,
+        user_id: this.userid,
+      };
+    });
+
+    console.log('data sent sapce:', data);
+
+    this.stteperFormService.createAllCommonSpace(data2).subscribe(
+      (response) => {
+        console.log('Response:', response);
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+
+    this.stteperFormService.createAllSpace(data).subscribe(
+      (response) => {
+        console.log('Response:', response);
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
   // --------/Api calls methods----------
 
   constructor(
