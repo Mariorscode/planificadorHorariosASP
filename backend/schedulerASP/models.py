@@ -27,7 +27,7 @@ class Turn(models.Model):
 
 class Worker(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')
-    restrictionsWorker = models.ManyToManyField(Turn, related_name='workers')
+    restrictionsWorker = models.ManyToManyField(Turn, related_name='workers', blank=True, null=True)
     timtable_id = models.ForeignKey(TimeTable, related_name='workers', on_delete=models.CASCADE, null=True)
 
     def __str__(self):

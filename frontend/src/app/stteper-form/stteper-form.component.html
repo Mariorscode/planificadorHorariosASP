@@ -235,7 +235,12 @@
       </div>
     </form>
     <div class="button-container">
-      <button mat-raised-button color="primary" matStepperNext>
+      <button
+        mat-raised-button
+        color="primary"
+        matStepperNext
+        (click)="createAllWorkersAndCommonWorkers()"
+      >
         Siguiente
       </button>
     </div>

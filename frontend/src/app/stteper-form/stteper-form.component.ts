@@ -104,6 +104,7 @@ export class StteperFormComponent {
   };
   apiTurns: ApiTurns[] = [];
   apiSpaces: ApiSpaces[] = [];
+  apiWorkers: ApiWorkers[] = [];
 
   turnsPrueba: Turn[] = [{ day: 'Lunes', startTime: '17:00' }];
 
@@ -121,17 +122,17 @@ export class StteperFormComponent {
   // ];
 
   spaces: Space[] = [];
-
-  workers: Worker[] = [
-    {
-      name: 'John Doe',
-      restrictionsWorker: [{ day: 'Lunes', startTime: '08:00' }],
-    },
-    {
-      name: 'Jane Doe',
-      restrictionsWorker: [{ day: 'Lunes', startTime: '10:00' }],
-    },
-  ];
+  workers: Worker[] = [];
+  // workers: Worker[] = [
+  //   {
+  //     name: 'John Doe',
+  //     restrictionsWorker: [{ day: 'Lunes', startTime: '08:00' }],
+  //   },
+  //   {
+  //     name: 'Jane Doe',
+  //     restrictionsWorker: [{ day: 'Lunes', startTime: '10:00' }],
+  //   },
+  // ];
 
   availableTags: Tag[] = [
     {
@@ -230,7 +231,7 @@ export class StteperFormComponent {
 
     this.getAllTimetables();
     this.getAllCommonSpaces();
-    this.loadWorkerCards();
+    this.getAllCommonWorkers();
     this.loadTaskCards();
   }
 
@@ -407,9 +408,8 @@ export class StteperFormComponent {
       workerName = worker.name;
       dialogRef = this.dialog.open(WorkerDialogComponent, {
         data: {
-          workers: this.workers,
+          workerName: worker.name,
           turns: this.turns,
-
           eliminate: this.deleteWorker.bind(this),
         },
       });
@@ -699,45 +699,6 @@ export class StteperFormComponent {
     );
   }
 
-  // getAllSpaces() {
-  //   this.stteperFormService.getAllSpaces().subscribe(
-  //     (response) => {
-  //       console.log('Response all spaces:', response);
-
-  //       this.apiSpaces = response;
-  //       console.log('API SPACES:', this.apiSpaces);
-
-  //       this.apiSpaces.forEach((apiSspace) => {
-  //         let auxIds: number[] = [];
-
-  //         auxIds = apiSspace.restrictionsSpace;
-  //         console.log('AUX IDS:', auxIds);
-
-  //         let auxRestrictionSpace: Turn[] = [];
-  //         auxIds.forEach((id) => {
-  //           const turn = this.apiTurns.find((apiTurn) => apiTurn.id === id);
-  //           console.log('API TURN:', turn);
-  //           if (turn) {
-  //             console.log('TURN:', turn);
-  //             auxRestrictionSpace.push(turn);
-  //           }
-  //         });
-
-  //         const newSpace: Space = {
-  //           name: apiSspace.name,
-  //           spaceCapacity: apiSspace.space_capacity,
-  //           restrictionsSpace: auxRestrictionSpace,
-  //         };
-  //         console.log('NEW SPACE:', newSpace);
-  //         this.spaces.push(newSpace);
-  //       });
-  //     },
-  //     (error) => {
-  //       console.error('Error:', error);
-  //     }
-  //   );
-  // }
-
   getAllCommonSpaces() {
     this.stteperFormService.getAllCommonSpaces().subscribe(
       (response) => {
@@ -821,6 +782,148 @@ export class StteperFormComponent {
       }
     );
   }
+
+  getAllCommonWorkers() {
+    this.stteperFormService.getAllCommonWorkers().subscribe(
+      (response) => {
+        console.log('Response all common workers:', response);
+        this.apiWorkers = response;
+        this.apiWorkers.forEach((apiWorker) => {
+          let auxIds: number[] = [];
+
+          auxIds = apiWorker.restrictionsWorker;
+          console.log('AUX IDS:', auxIds);
+
+          const newWorker: Worker = {
+            name: apiWorker.name,
+            restrictionsWorker: [],
+          };
+          console.log('NEW SPACE:', newWorker);
+          this.workers.push(newWorker);
+        });
+        this.loadWorkerCards();
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  createAllWorkersAndCommonWorkers() {
+    const auxWorker = this.fourthFormGroup.get('workers')?.value ?? [];
+
+    const differentWorkers = auxWorker.filter((worker: Worker) => {
+      return !this.apiWorkers.some(
+        (apiWorker) => apiWorker.name === worker.name
+      );
+    });
+
+    // console.log('ssss:', this.apiTurns);
+    // console.log('SSSSSSSSSSS', this.apiTurns[0].id);
+    // console.log('SSSSSSSSSSS', this.apiTurns[1].day);
+    // console.log('SSSSSSSSSSS', this.apiTurns[0].startTime);
+
+    const data = auxWorker.map((worker: Worker) => {
+      console.log('TTT:', worker.restrictionsWorker);
+      return {
+        name: worker.name,
+        restrictionsWorker: worker.restrictionsWorker.map((turn) => {
+          return this.apiTurns.find(
+            (apiTurn) =>
+              apiTurn.day === turn.day && apiTurn.startTime === turn.startTime
+          )?.id;
+        }),
+        timeTable_id: this.apiTimeTable.id,
+      };
+    });
+
+    console.log('DATA:', data);
+    console.log('DATA:', data[0].restrictionsWorker);
+
+    const data2 = differentWorkers.map((worker: Worker) => {
+      return {
+        name: worker.name,
+        user_id: this.userid,
+      };
+    });
+
+    console.log('data sent worker:', data);
+
+    this.stteperFormService.createAllCommonWorkers(data2).subscribe(
+      (response) => {
+        console.log('Response:', response);
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+
+    this.stteperFormService.createAllWorker(data).subscribe(
+      (response) => {
+        console.log('Response:', response);
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+  // createAllWorkersAndCommonWorkers() {
+  //   console.log('turns:', this.secondFormGroup.get('turns')?.value);
+
+  //   // const data: Turn[] | null | undefined =
+  //   //   this.secondFormGroup.get('turns')?.value;
+
+  //   const auxWorker = this.fourthFormGroup.get('workers')?.value ?? [];
+
+  //   const differentWorkers = auxWorker.filter((worker: Worker) => {
+  //     return !this.apiWorkers.some(
+  //       (apiWorker) => apiWorker.name === worker.name
+  //     );
+  //   });
+  //   console.log('Different Workers:', differentWorkers);
+
+  //   const data = auxWorker.map((worker: Worker) => {
+  //     console.log('TTTTTTTTT:', worker.restrictionsWorker);
+  //     return {
+  //       name: worker.name,
+  //       restrictionsWorker: worker.restrictionsWorker.map((turn) => {
+  //         return this.apiTurns.find(
+  //           (apiTurn) =>
+  //             apiTurn.day === turn.day && apiTurn.startTime === turn.startTime
+  //         )?.id;
+  //       }),
+  //       timeTable_id: this.apiTimeTable.id,
+  //     };
+  //   });
+  //   console.log('DATA:', data);
+  //   console.log('DATA:', data[0].restrictionsWorker);
+  //   const data2 = differentWorkers.map((worker: Worker) => {
+  //     return {
+  //       name: worker.name,
+  //       user_id: this.userid,
+  //     };
+  //   });
+
+  //   console.log('data sent worker:', data);
+
+  //   this.stteperFormService.createAllCommonWorkers(data2).subscribe(
+  //     (response) => {
+  //       console.log('Response:', response);
+  //     },
+  //     (error) => {
+  //       console.error('Error:', error);
+  //     }
+  //   );
+
+  //   this.stteperFormService.createWorker(data).subscribe(
+  //     (response) => {
+  //       console.log('Response:', response);
+  //     },
+  //     (error) => {
+  //       console.error('Error:', error);
+  //     }
+  //   );
+  // }
 
   // --------/Api calls methods----------
 
