@@ -32,6 +32,18 @@ export class StteperFormService {
   }
   // ---------/Workers
 
+  // ---------CommonWorkers
+
+  createAllCommonWorkers(data: any): Observable<any> {
+    return this.http.post(this.apiUrl + 'commonworkers/create_multiple/', data);
+  }
+
+  getAllCommonWorkers(): Observable<any> {
+    return this.http.get(this.apiUrl + 'commonworkers/');
+  }
+
+  // ---------/CommonWorkers
+
   // --------- Space
 
   createAllSpace(data: any): Observable<any> {

@@ -28,14 +28,22 @@ class Turn(models.Model):
 class Worker(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')
     restrictionsWorker = models.ManyToManyField(Turn, related_name='workers')
+    timtable_id = models.ForeignKey(TimeTable, related_name='workers', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name + " " + str(self.restrictionsWorker)
+    
+class CommonWorker(models.Model):
+    name = models.CharField(max_length=70, blank=False, default='')
+    user_id = models.ForeignKey(User, related_name='workers', on_delete=models.CASCADE, null=True)
+    
+    def __str__(self):
+        return self.name 
 
 class Space(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')
-    space_capacity = models.IntegerField(default=0)
-    restrictionsSpace = models.ManyToManyField(Turn, related_name='spaces')
+    space_capacity = models.IntegerField(default=0, blank=True, null=True)
+    restrictionsSpace = models.ManyToManyField(Turn, related_name='spaces', blank=True, null=True)
     timeTable_id = models.ForeignKey(TimeTable, related_name='spaces', on_delete=models.CASCADE, null=True)
     
     def __str__(self):
@@ -43,7 +51,7 @@ class Space(models.Model):
     
 class CommonSpace(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')
-    space_capacity = models.IntegerField(default=0)
+    space_capacity = models.IntegerField(default=0,blank=True, null=True)
     user_id = models.ForeignKey(User, related_name='spaces', on_delete=models.CASCADE, null=True)
     
     def __str__(self):

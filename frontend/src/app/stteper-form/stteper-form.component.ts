@@ -62,6 +62,12 @@ interface ApiSpaces {
   user_id: number;
 }
 
+interface ApiWorkers {
+  id: number;
+  name: string;
+  restrictionsWorker: number[];
+}
+
 @Component({
   selector: 'app-stteper-form',
   templateUrl: './stteper-form.component.html',

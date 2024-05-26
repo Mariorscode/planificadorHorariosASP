@@ -16,7 +16,7 @@ export class SpaceDialogComponent {
 
   spaceForm = this.fb.group({
     name: [this.data.spaceName || '', Validators.required],
-    spaceCapacity: ['', Validators.required],
+    spaceCapacity: [0, Validators.required],
     restrictionsSpace: [this.restrictionsSpace, Validators.required],
   });
 

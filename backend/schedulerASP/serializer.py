@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Turn, Worker, Space,CommonSpace , Tag, ScheduableTask, TimeTable, Schedule, User
+from .models import Turn, Worker, CommonWorker, Space,CommonSpace , Tag, ScheduableTask, TimeTable, Schedule, User
 
 class TimeTableSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,6 +17,13 @@ class WorkerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Worker
         fields = ['id', 'name', 'restrictionsWorker']
+        
+class CommonWorkerSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = CommonWorker
+        fields = ['id', 'name', 'user_id']
+
 
 class SpaceSerializer(serializers.ModelSerializer):
     # restrictionsSpace = TurnSerializer(many=True, read_only=True)
