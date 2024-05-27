@@ -35,11 +35,22 @@ export interface Tag {
 export interface ScheduableTask {
   name: string;
   size: number;
-  restrictions: Turn[];
-  taskWorker: Worker[];
-  taskSpace: Space[];
-  taskTags: Tag[];
+  restrictions?: Turn[];
+  taskWorker?: Worker[];
+  taskSpace?: Space[];
+  taskTags?: Tag[];
 }
+
+interface apiScheduableTask {
+  name: string;
+  task_size: number;
+  task_restrictions: number[];
+  task_tags: number[];
+  task_worker: number;
+  task_spaces: number;
+  timetable_id: number;
+}
+
 interface ApiTimeTable {
   id: number;
   name: string;
@@ -105,6 +116,7 @@ export class StteperFormComponent {
   apiTurns: ApiTurns[] = [];
   apiSpaces: ApiSpaces[] = [];
   apiWorkers: ApiWorkers[] = [];
+  apiScheduableTasks: apiScheduableTask[] = [];
 
   turnsPrueba: Turn[] = [{ day: 'Lunes', startTime: '17:00' }];
 
@@ -123,6 +135,7 @@ export class StteperFormComponent {
 
   spaces: Space[] = [];
   workers: Worker[] = [];
+  scheduableTasks: ScheduableTask[] = [];
   // workers: Worker[] = [
   //   {
   //     name: 'John Doe',
@@ -146,48 +159,6 @@ export class StteperFormComponent {
     },
   ];
   taskTags: Tag[] = [];
-  scheduableTasks: ScheduableTask[] = [
-    {
-      name: 'Calculo1',
-      size: 10,
-      restrictions: [{ day: 'Lunes', startTime: '08:00' }],
-      taskWorker: [
-        {
-          name: 'John Doe',
-          restrictionsWorker: [{ day: 'Lunes', startTime: '08:00' }],
-        },
-      ],
-      taskSpace: [
-        {
-          name: 'Space 1',
-          spaceCapacity: 10,
-          restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
-        },
-      ],
-
-      taskTags: [{ name: 'Grupo A' }, { name: 'primero' }, { name: 'teoria' }],
-    },
-    {
-      name: 'Calculo2',
-      size: 10,
-      restrictions: [{ day: 'Lunes', startTime: '08:00' }],
-      taskWorker: [
-        {
-          name: 'John Doe',
-          restrictionsWorker: [{ day: 'Lunes', startTime: '08:00' }],
-        },
-      ],
-      taskSpace: [
-        {
-          name: 'Space 1',
-          spaceCapacity: 10,
-          restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
-        },
-      ],
-
-      taskTags: [{ name: 'Grupo A' }, { name: 'primero' }, { name: 'teoria' }],
-    },
-  ];
 
   //-------------------- Form Steps --------------------
 
@@ -228,11 +199,10 @@ export class StteperFormComponent {
   // excute at the load of the component
   ngOnInit(): void {
     // load the space cards
-
     this.getAllTimetables();
     this.getAllCommonSpaces();
     this.getAllCommonWorkers();
-    this.loadTaskCards();
+    this.getAllCommonTasks();
   }
 
   // calculate the number of turns per day given the first and last turn time and the turn duration
@@ -776,6 +746,7 @@ export class StteperFormComponent {
     this.stteperFormService.createAllSpace(data).subscribe(
       (response) => {
         console.log('Response:', response);
+        this.apiSpaces = response;
       },
       (error) => {
         console.error('Error:', error);
@@ -817,12 +788,6 @@ export class StteperFormComponent {
         (apiWorker) => apiWorker.name === worker.name
       );
     });
-
-    // console.log('ssss:', this.apiTurns);
-    // console.log('SSSSSSSSSSS', this.apiTurns[0].id);
-    // console.log('SSSSSSSSSSS', this.apiTurns[1].day);
-    // console.log('SSSSSSSSSSS', this.apiTurns[0].startTime);
-
     const data = auxWorker.map((worker: Worker) => {
       console.log('TTT:', worker.restrictionsWorker);
       return {
@@ -836,9 +801,6 @@ export class StteperFormComponent {
         timeTable_id: this.apiTimeTable.id,
       };
     });
-
-    console.log('DATA:', data);
-    console.log('DATA:', data[0].restrictionsWorker);
 
     const data2 = differentWorkers.map((worker: Worker) => {
       return {
@@ -861,71 +823,101 @@ export class StteperFormComponent {
     this.stteperFormService.createAllWorker(data).subscribe(
       (response) => {
         console.log('Response:', response);
+        this.apiWorkers = response;
+        console.log('API WORKERS:', this.apiWorkers);
       },
       (error) => {
         console.error('Error:', error);
       }
     );
   }
-  // createAllWorkersAndCommonWorkers() {
-  //   console.log('turns:', this.secondFormGroup.get('turns')?.value);
 
-  //   // const data: Turn[] | null | undefined =
-  //   //   this.secondFormGroup.get('turns')?.value;
+  getAllCommonTasks() {
+    this.stteperFormService.getAllCommonTasks().subscribe(
+      (response) => {
+        console.log('Response all common task:', response);
+        this.apiScheduableTasks = response;
+        this.apiScheduableTasks.forEach((apiTask) => {
+          const newTask: ScheduableTask = {
+            name: apiTask.name,
+            size: apiTask.task_size,
+          };
+          console.log('NEW SPACE:', newTask);
+          this.scheduableTasks.push(newTask);
+        });
+        this.loadTaskCards();
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
 
-  //   const auxWorker = this.fourthFormGroup.get('workers')?.value ?? [];
+  createAllTasksAndCommonTasks() {
+    const auxTask = this.fithFormGroup.get('scheduableTasks')?.value ?? [];
 
-  //   const differentWorkers = auxWorker.filter((worker: Worker) => {
-  //     return !this.apiWorkers.some(
-  //       (apiWorker) => apiWorker.name === worker.name
-  //     );
-  //   });
-  //   console.log('Different Workers:', differentWorkers);
+    const differentTasks = auxTask.filter((task: ScheduableTask) => {
+      return !this.apiScheduableTasks.some(
+        (apiTask) => apiTask.name === task.name
+      );
+    });
 
-  //   const data = auxWorker.map((worker: Worker) => {
-  //     console.log('TTTTTTTTT:', worker.restrictionsWorker);
-  //     return {
-  //       name: worker.name,
-  //       restrictionsWorker: worker.restrictionsWorker.map((turn) => {
-  //         return this.apiTurns.find(
-  //           (apiTurn) =>
-  //             apiTurn.day === turn.day && apiTurn.startTime === turn.startTime
-  //         )?.id;
-  //       }),
-  //       timeTable_id: this.apiTimeTable.id,
-  //     };
-  //   });
-  //   console.log('DATA:', data);
-  //   console.log('DATA:', data[0].restrictionsWorker);
-  //   const data2 = differentWorkers.map((worker: Worker) => {
-  //     return {
-  //       name: worker.name,
-  //       user_id: this.userid,
-  //     };
-  //   });
+    const task_worker = this.apiWorkers?.map((worker) => {
+      return this.apiWorkers.find((apiWorker) => apiWorker.name === worker.name)
+        ?.id;
+    });
 
-  //   console.log('data sent worker:', data);
+    console.log('Api WorkrsSSSSSSSS:', this.apiSpaces);
+    const data = auxTask.map((task: ScheduableTask) => {
+      return {
+        name: task.name,
+        task_size: task.size,
+        task_restrictions: task.restrictions?.map((turn) => {
+          return this.apiTurns.find(
+            (apiTurn) =>
+              apiTurn.day === turn.day && apiTurn.startTime === turn.startTime
+          )?.id;
+        }),
+        task_tags: task.taskTags,
+        task_worker: this.apiWorkers.find(
+          (apiWorker) => apiWorker.name === (task.taskWorker?.[0]?.name ?? null)
+        )?.id,
+        task_spaces: this.apiWorkers.find(
+          (apiWorker) => apiWorker.name === (task.taskWorker?.[0]?.name ?? null)
+        )?.id,
+        timetable_id: this.apiTimeTable.id,
+      };
+    });
 
-  //   this.stteperFormService.createAllCommonWorkers(data2).subscribe(
-  //     (response) => {
-  //       console.log('Response:', response);
-  //     },
-  //     (error) => {
-  //       console.error('Error:', error);
-  //     }
-  //   );
+    const data2 = differentTasks.map((task: ScheduableTask) => {
+      return {
+        name: task.name,
+        user_id: this.userid,
+      };
+    });
 
-  //   this.stteperFormService.createWorker(data).subscribe(
-  //     (response) => {
-  //       console.log('Response:', response);
-  //     },
-  //     (error) => {
-  //       console.error('Error:', error);
-  //     }
-  //   );
-  // }
+    console.log('data sent task:', data);
 
-  // --------/Api calls methods----------
+    this.stteperFormService.createAllCommonTasks(data2).subscribe(
+      (response) => {
+        console.log('Response:', response);
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+
+    this.stteperFormService.createAllscheduableTasks(data).subscribe(
+      (response) => {
+        console.log('Response:', response);
+        this.apiScheduableTasks = response;
+        console.log('API TASKS:', this.apiScheduableTasks);
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
 
   constructor(
     private _formBuilder: FormBuilder,

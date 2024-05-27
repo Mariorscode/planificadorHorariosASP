@@ -69,4 +69,34 @@ export class StteperFormService {
     return this.http.post(this.apiUrl + 'commonspaces/create_multiple/', data);
   }
   // ---------/CommonSpace
+
+  // ---------Tasks
+
+  getAllscheduableTasks(): Observable<any> {
+    return this.http.get(this.apiUrl + 'scheduabletasks/');
+  }
+
+  createAllscheduableTasks(data: any): Observable<any> {
+    return this.http.post(
+      this.apiUrl + 'scheduabletasks/create_multiple/',
+      data
+    );
+  }
+
+  // ---------/Tasks
+
+  // ---------CommonTasks
+
+  getAllCommonTasks(): Observable<any> {
+    return this.http.get(this.apiUrl + 'commonscheduabletasks/');
+  }
+
+  createAllCommonTasks(data: any): Observable<any> {
+    return this.http.post(
+      this.apiUrl + 'commonscheduabletasks/create_multiple/',
+      data
+    );
+  }
+
+  // ---------/CommonTasks
 }

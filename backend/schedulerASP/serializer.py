@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Turn, Worker, CommonWorker, Space,CommonSpace , Tag, ScheduableTask, TimeTable, Schedule, User
+from .models import Turn, Worker, CommonWorker, Space,CommonSpace , Tag, ScheduableTask, CommonScheduableTask, TimeTable, Schedule, User
 
 class TimeTableSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,7 +16,7 @@ class WorkerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Worker
-        fields = ['id', 'name', 'restrictionsWorker']
+        fields = ['id', 'name', 'restrictionsWorker', 'timtable_id']
         
 class CommonWorkerSerializer(serializers.ModelSerializer):
     
@@ -46,21 +46,19 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 class ScheduableTaskSerializer(serializers.ModelSerializer):
-    # task_restrictions = TurnSerializer(many=True, read_only=True)
-    # task_tags = TagSerializer(many=True, read_only=True)
-    # task_worker = WorkerSerializer(read_only=True)
-    # task_spaces = SpaceSerializer(read_only=True)
+
 
     class Meta:
         model = ScheduableTask
-        fields = ['id', 'name', 'task_size', 'task_restrictions', 'task_tags', 'task_worker', 'task_spaces']
+        fields = ['id', 'name', 'task_size', 'task_restrictions', 'task_tags', 'task_worker', 'task_spaces', 'timeTable_id']
+        
+class CommonScheduableTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommonScheduableTask
+        fields = ['id', 'name','task_size', 'user_id']
         
 
 class ScheduleSerializer(serializers.ModelSerializer):
-    # turn_schedule = TurnSerializer(read_only=True)
-    # space_schedule = SpaceSerializer(read_only=True)
-    # worker_schedule = WorkerSerializer(read_only=True)
-    # timeTable_schedule = TimeTableSerializer(read_only=True)
 
     class Meta:
         model = Schedule

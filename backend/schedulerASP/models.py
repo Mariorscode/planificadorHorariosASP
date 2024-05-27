@@ -61,19 +61,35 @@ class CommonSpace(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')
     
+    
     def __str__(self):
         return self.name
     
 class ScheduableTask(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')
-    task_size = models.IntegerField(default=0)
-    task_restrictions = models.ManyToManyField(Turn,related_name='task_restrictions', blank=True)
-    task_tags = models.ManyToManyField(Tag, blank=True, related_name='task_tags')
+    task_size = models.IntegerField(default=0, blank=True, null=True)
+    task_restrictions = models.ManyToManyField(Turn,related_name='task_restrictions', blank=True, null=True)
+    # task_tags = models.ManyToManyField(Tag, blank=True, null=True, related_name='task_tags')
+    # task_tags = models.CharField(max_length=70, blank=False, default='')
+    task_tags = models.JSONField(default=list)
     task_worker = models.ForeignKey(Worker, blank=True, null=True, related_name='scheduable_tasks', on_delete=models.SET_NULL)
     task_spaces = models.ForeignKey(Space, blank=True, null=True, related_name='scheduable_tasks', on_delete=models.SET_NULL)
+    timeTable_id = models.ForeignKey(TimeTable, related_name='scheduable_tasks', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name
+    
+class CommonScheduableTask(models.Model):
+    
+    name = models.CharField(max_length=70, blank=False, default='')
+    task_size = models.IntegerField(default=0, blank=True, null=True)
+    user_id = models.ForeignKey(User, related_name='scheduable_tasks', on_delete=models.CASCADE, null=True)
+    
+    def __str__(self):
+        return self.name
+    
+    
+    
 #quizas no dejar con restricciones para que no afecte al alterar los otros elementos a los schedule, unica restriccion con timetable
 # class schedule(models.Model):
 #     name  =  models.CharField(max_length=70, blank=False, default='')
