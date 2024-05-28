@@ -39,10 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders', 
     'rest_framework',
-    'horarios1',
-    'horariosASP',
-    'eventos',
-    'assigmentsASP',
     'schedulerASP',
 ]
 

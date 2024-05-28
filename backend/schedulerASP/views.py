@@ -7,6 +7,12 @@ from .models import Turn, Worker, CommonWorker, Space, CommonSpace, Tag, Schedua
 
 from .serializer import TurnSerializer, WorkerSerializer, CommonWorkerSerializer, SpaceSerializer,CommonSpaceSerializer, TagSerializer, ScheduableTaskSerializer, CommonScheduableTaskSerializer, TimeTableSerializer, ScheduleSerializer, UserSerializer
 
+from clorm import FactBase
+
+from . import Clingo
+from . import Terms
+
+
 class TurnViewSet(ModelViewSet):
     serializer_class = TurnSerializer
     queryset = Turn.objects.all()
@@ -54,9 +60,42 @@ class CommonWorkerViewSet(ModelViewSet):
             return Response({'error': 'Expected a list of items'}, status=status.HTTP_400_BAD_REQUEST)        
         
 
-class TimeTableViewSet(ModelViewSet):
+class TimeTableViewSet(ModelViewSet,Clingo):
     queryset = TimeTable.objects.all()
     serializer_class = TimeTableSerializer
+    
+    
+    @action(detail=False, methods=['get'])
+    def generateTimetable(self, request):
+        
+        self.clingo_setup()
+            
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(1),
+            Terms.UnavailableDay(day="tuesday"),
+            Terms.UnavailableDay(day="wednesday"),
+            Terms.UnavailableDay(day="thursday"),
+            Terms.UnavailableDay(day="friday"),
+            Terms.UnavailableDay(day="saturday"),
+            Terms.UnavailableDay(day="sunday"),
+            Terms.TaskName(name="task1"),
+            Terms.Worker(name="john"),
+            Terms.Space(name="space1"),
+            Terms.SpaceCapacity(space="space1", capacity=10),
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            Terms.TaskSize(taskname="task1", size=5)
+        
+        ]))
+        
+        solutions = list(self.get_solutions())
+        solution = solutions[0]
+      
+        
+        query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
+        
+        print(query)
+        
+        return Response({"query": query}, status=status.HTTP_200_OK)
 
 class SpaceViewSet(ModelViewSet):
     queryset = Space.objects.all()
@@ -132,4 +171,7 @@ class scheduleViewSet(ModelViewSet):
 class userViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    
+    
+    
 
