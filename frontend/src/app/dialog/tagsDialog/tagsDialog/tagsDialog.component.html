@@ -4,24 +4,29 @@
     <mat-label>Nombre de la tag</mat-label>
     <input matInput [(ngModel)]="name" placeholder="" />
   </mat-form-field>
-  <button
+  <!-- <button
     mat-raised-button
     style="margin: 5px"
     (click)="addTag(name)"
     color="accent"
   >
     Añadir
-  </button>
+  </button> -->
   <br />
 </div>
-<div style="display: flex; flex-wrap: wrap">
+<!-- <div style="display: flex; flex-wrap: wrap">
   <mat-chip style="margin: 5px" *ngFor="let tag of tagsToAdd">{{
     tag.name
   }}</mat-chip>
-</div>
+</div> -->
 <div mat-dialog-actions>
   <button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>
-  <button mat-raised-button color="primary" (click)="saveTags()">
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="addTag(name)"
+    (click)="saveTags()"
+  >
     Guardar
   </button>
 </div>

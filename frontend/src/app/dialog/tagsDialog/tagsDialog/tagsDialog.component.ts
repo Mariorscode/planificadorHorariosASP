@@ -39,7 +39,6 @@ export class TagsDialogComponent {
     if (index === -1) {
       this.tagsToAdd.push(auxTag);
     }
-    console.log('TAGS', this.tagsToAdd);
   }
 
   saveTags(): void {

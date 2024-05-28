@@ -118,46 +118,11 @@ export class StteperFormComponent {
   apiWorkers: ApiWorkers[] = [];
   apiScheduableTasks: apiScheduableTask[] = [];
 
-  turnsPrueba: Turn[] = [{ day: 'Lunes', startTime: '17:00' }];
-
-  // spaces: Space[] = [
-  //   {
-  //     name: 'Space 1',
-  //     spaceCapacity: 10,
-  //     restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
-  //   },
-  //   {
-  //     name: 'Space 2',
-  //     spaceCapacity: 10,
-  //     restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
-  //   },
-  // ];
-
   spaces: Space[] = [];
   workers: Worker[] = [];
   scheduableTasks: ScheduableTask[] = [];
-  // workers: Worker[] = [
-  //   {
-  //     name: 'John Doe',
-  //     restrictionsWorker: [{ day: 'Lunes', startTime: '08:00' }],
-  //   },
-  //   {
-  //     name: 'Jane Doe',
-  //     restrictionsWorker: [{ day: 'Lunes', startTime: '10:00' }],
-  //   },
-  // ];
 
-  availableTags: Tag[] = [
-    {
-      name: 'Tag 1',
-    },
-    {
-      name: 'Tag 2',
-    },
-    {
-      name: 'Tag 3',
-    },
-  ];
+  availableTags: Tag[] = [];
   taskTags: Tag[] = [];
 
   //-------------------- Form Steps --------------------
@@ -205,6 +170,13 @@ export class StteperFormComponent {
     this.getAllCommonTasks();
   }
 
+  remove(tag: Tag): void {
+    const index = this.availableTags.indexOf(tag);
+
+    if (index >= 0) {
+      this.availableTags.splice(index, 1);
+    }
+  }
   // calculate the number of turns per day given the first and last turn time and the turn duration
   calculateTurnsPerDay(): number {
     const firstTurnTimeStr = this.firstFormGroup.get('firstTurnTime')?.value;
@@ -231,10 +203,6 @@ export class StteperFormComponent {
     // Calculate the number of turns
     const numberOfTurns = Math.floor(differenceInMinutes / turnDuration);
 
-    // Imprimir el resultado
-    console.log(
-      `Entre las ${firstTurnTimeStr} y ${lastTurnTimeStr} hay ${numberOfTurns} turnos de ${turnDuration} minutos.`
-    );
     return numberOfTurns;
   }
 
@@ -252,9 +220,6 @@ export class StteperFormComponent {
       !firstTurnTimeStr ||
       !lastTurnTimeStr
     ) {
-      console.error(
-        'Los valores del formulario no son válidos para llenar los turnos.'
-      );
       return;
     }
 
@@ -299,7 +264,6 @@ export class StteperFormComponent {
   // Function to handle the selection of a turn
   onSelectionChange(turn: Turn) {
     // Verify if the turn is already selected
-    console.log('Turn:', turn);
     const index = this.turns.findIndex(
       (t) => t.day === turn.day && t.startTime === turn.startTime
     );
@@ -311,7 +275,6 @@ export class StteperFormComponent {
       console.error('Turno no encontrado:', turn);
     }
     this.secondFormGroup.patchValue({ turns: this.turns });
-    console.log('Selected turns:', this.turns);
   }
 
   spaceCards: Space[] = [];
@@ -320,7 +283,6 @@ export class StteperFormComponent {
   // Function to open the space dialog
   openSpaceDialog(space?: Space) {
     let spaceName: string;
-    console.log('AAAAAAAAAAAA', this.secondFormGroup.get('turns')?.value);
     let dialogRef;
     if (space) {
       spaceName = space.name;
@@ -342,8 +304,6 @@ export class StteperFormComponent {
     }
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-
       if (result) {
         // Create a new space object with the dialog result
         const newSpace: Space = {
@@ -366,7 +326,6 @@ export class StteperFormComponent {
         }
         this.loadSpaceCards();
       }
-      console.log('Todas las spaces:', this.spaces);
     });
   }
 
@@ -394,8 +353,6 @@ export class StteperFormComponent {
     }
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-
       if (result) {
         // Create a new worker object with the dialog result
         const newWorker: Worker = {
@@ -417,7 +374,6 @@ export class StteperFormComponent {
         }
         this.loadWorkerCards();
       }
-      console.log('Todas las workers:', this.workers);
     });
   }
 
@@ -430,7 +386,6 @@ export class StteperFormComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('RESULTADO TAGS', result);
       this.loadTags(result);
       // console.log('Todas las tags:', this.tags);
     });
@@ -462,7 +417,6 @@ export class StteperFormComponent {
     }
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('RESULTADO ', result);
       if (result) {
         const newTask: ScheduableTask = {
           name: result.name,
@@ -482,14 +436,12 @@ export class StteperFormComponent {
         if (existingTaskIndex !== -1) {
           //in case the space already exists, update the space
           this.scheduableTasks[existingTaskIndex] = newTask;
-          console.log('44444444444444:', this.scheduableTasks);
         } else {
           // if the space does not exist, add it to the spaces array
           this.scheduableTasks.push(newTask);
         }
         this.loadTaskCards();
       }
-      console.log('Todas las task:', this.scheduableTasks);
     });
   }
 
@@ -509,7 +461,6 @@ export class StteperFormComponent {
 
       // Add the card to the spaceCards array
       this.spaceCards.push(newCard);
-      console.log('todas Space cards:', this.spaceCards);
     });
   }
 
@@ -527,7 +478,6 @@ export class StteperFormComponent {
 
       // Add the card to the workerCards array
       this.workerCards.push(newCard);
-      console.log('todas Worker cards:', this.workerCards);
     });
   }
 
@@ -542,7 +492,6 @@ export class StteperFormComponent {
       // Add the card to the workerCards array
       this.taskTags.push(newTag);
       this.availableTags.push(newTag);
-      console.log('todas TAGS', this.taskTags);
     });
   }
 
@@ -564,7 +513,6 @@ export class StteperFormComponent {
 
       // Add the card to the spaceCards array
       this.taskCards.push(newCard);
-      console.log('todas task cards:', this.taskCards);
     });
   }
 
@@ -618,7 +566,6 @@ export class StteperFormComponent {
 
     this.stteperFormService.createTimeTable(data).subscribe(
       (response) => {
-        console.log('Response Timetable:', response);
         this.apiTimeTable = response;
       },
       (error) => {
@@ -630,7 +577,6 @@ export class StteperFormComponent {
   getAllTimetables() {
     this.stteperFormService.getAllTimetables().subscribe(
       (response) => {
-        console.log('Response all timetables:', response);
         this.apiTimeTable = response;
       },
       (error) => {
@@ -640,11 +586,6 @@ export class StteperFormComponent {
   }
 
   createAllTurns() {
-    console.log('turns:', this.secondFormGroup.get('turns')?.value);
-
-    // const data: Turn[] | null | undefined =
-    //   this.secondFormGroup.get('turns')?.value;
-
     const auxTurn = this.secondFormGroup.get('turns')?.value ?? [];
 
     const data = auxTurn.map((turn: Turn) => {
@@ -655,8 +596,6 @@ export class StteperFormComponent {
         timeTable_id: this.apiTimeTable.id,
       };
     });
-
-    console.log('data sent turns:', data);
 
     this.stteperFormService.createAllTurns(data).subscribe(
       (response) => {
@@ -672,20 +611,17 @@ export class StteperFormComponent {
   getAllCommonSpaces() {
     this.stteperFormService.getAllCommonSpaces().subscribe(
       (response) => {
-        console.log('Response all common spaces:', response);
         this.apiSpaces = response;
         this.apiSpaces.forEach((apiSpace) => {
           let auxIds: number[] = [];
 
           auxIds = apiSpace.restrictionsSpace;
-          console.log('AUX IDS:', auxIds);
 
           const newSpace: Space = {
             name: apiSpace.name,
             spaceCapacity: apiSpace.space_capacity,
             restrictionsSpace: [],
           };
-          console.log('NEW SPACE:', newSpace);
           this.spaces.push(newSpace);
         });
         this.loadSpaceCards();
@@ -697,20 +633,13 @@ export class StteperFormComponent {
   }
 
   createAllSpacesAndCommonSpace() {
-    console.log('turns:', this.secondFormGroup.get('turns')?.value);
-
-    // const data: Turn[] | null | undefined =
-    //   this.secondFormGroup.get('turns')?.value;
-
     const auxSpace = this.thirdFormGroup.get('spaces')?.value ?? [];
 
     const differentSpaces = auxSpace.filter((space: Space) => {
       return !this.apiSpaces.some((apiSpace) => apiSpace.name === space.name);
     });
-    console.log('Different Spaces:', differentSpaces);
 
     const data = auxSpace.map((space: Space) => {
-      console.log('EEEEEEEEEEE:', space.restrictionsSpace);
       return {
         name: space.name,
         space_capacity: space.spaceCapacity,
@@ -731,8 +660,6 @@ export class StteperFormComponent {
         user_id: this.userid,
       };
     });
-
-    console.log('data sent sapce:', data);
 
     this.stteperFormService.createAllCommonSpace(data2).subscribe(
       (response) => {
@@ -763,13 +690,11 @@ export class StteperFormComponent {
           let auxIds: number[] = [];
 
           auxIds = apiWorker.restrictionsWorker;
-          console.log('AUX IDS:', auxIds);
 
           const newWorker: Worker = {
             name: apiWorker.name,
             restrictionsWorker: [],
           };
-          console.log('NEW SPACE:', newWorker);
           this.workers.push(newWorker);
         });
         this.loadWorkerCards();
@@ -789,7 +714,6 @@ export class StteperFormComponent {
       );
     });
     const data = auxWorker.map((worker: Worker) => {
-      console.log('TTT:', worker.restrictionsWorker);
       return {
         name: worker.name,
         restrictionsWorker: worker.restrictionsWorker.map((turn) => {
@@ -809,8 +733,6 @@ export class StteperFormComponent {
       };
     });
 
-    console.log('data sent worker:', data);
-
     this.stteperFormService.createAllCommonWorkers(data2).subscribe(
       (response) => {
         console.log('Response:', response);
@@ -824,7 +746,6 @@ export class StteperFormComponent {
       (response) => {
         console.log('Response:', response);
         this.apiWorkers = response;
-        console.log('API WORKERS:', this.apiWorkers);
       },
       (error) => {
         console.error('Error:', error);
@@ -842,7 +763,6 @@ export class StteperFormComponent {
             name: apiTask.name,
             size: apiTask.task_size,
           };
-          console.log('NEW SPACE:', newTask);
           this.scheduableTasks.push(newTask);
         });
         this.loadTaskCards();
@@ -867,7 +787,6 @@ export class StteperFormComponent {
         ?.id;
     });
 
-    console.log('Api WorkrsSSSSSSSS:', this.apiSpaces);
     const data = auxTask.map((task: ScheduableTask) => {
       return {
         name: task.name,
@@ -896,8 +815,6 @@ export class StteperFormComponent {
       };
     });
 
-    console.log('data sent task:', data);
-
     this.stteperFormService.createAllCommonTasks(data2).subscribe(
       (response) => {
         console.log('Response:', response);
@@ -911,7 +828,6 @@ export class StteperFormComponent {
       (response) => {
         console.log('Response:', response);
         this.apiScheduableTasks = response;
-        console.log('API TASKS:', this.apiScheduableTasks);
       },
       (error) => {
         console.error('Error:', error);

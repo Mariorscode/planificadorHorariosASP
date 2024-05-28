@@ -256,6 +256,7 @@
           style="align-self: center; margin: 5px"
           color="primary"
           (click)="openTagsDialog()"
+          [disabled]="availableTags.length >= 3"
         >
           Añadir tag
           <mat-icon
@@ -268,9 +269,15 @@
       <div>
         <!-- Div para los tags disponibles -->
         <div style="display: flex; flex-wrap: wrap">
-          <mat-chip style="margin: 5px" *ngFor="let tag of availableTags">{{
-            tag.name
-          }}</mat-chip>
+          <mat-chip
+            style="margin: 5px"
+            *ngFor="let tag of availableTags"
+            (removed)="remove(tag)"
+            >{{ tag.name }}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button></mat-chip
+          >
         </div>
         <mat-divider style="margin: 5px"></mat-divider>
         <h2>Tareas programables</h2>
