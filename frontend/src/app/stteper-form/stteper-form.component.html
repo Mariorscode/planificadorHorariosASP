@@ -104,7 +104,12 @@
         </div>
       </div>
       <div class="button-container">
-        <button mat-raised-button color="primary" matStepperNext>
+        <button
+          mat-raised-button
+          color="primary"
+          matStepperNext
+          (click)="createAllTurns()"
+        >
           Siguiente
         </button>
       </div>
@@ -167,7 +172,12 @@
       </div>
     </form>
     <div class="button-container">
-      <button mat-raised-button color="primary" matStepperNext>
+      <button
+        mat-raised-button
+        color="primary"
+        matStepperNext
+        (click)="createAllSpacesAndCommonSpace()"
+      >
         Siguiente
       </button>
     </div>
@@ -225,7 +235,12 @@
       </div>
     </form>
     <div class="button-container">
-      <button mat-raised-button color="primary" matStepperNext>
+      <button
+        mat-raised-button
+        color="primary"
+        matStepperNext
+        (click)="createAllWorkersAndCommonWorkers()"
+      >
         Siguiente
       </button>
     </div>
@@ -241,6 +256,7 @@
           style="align-self: center; margin: 5px"
           color="primary"
           (click)="openTagsDialog()"
+          [disabled]="availableTags.length >= 3"
         >
           Añadir tag
           <mat-icon
@@ -253,9 +269,15 @@
       <div>
         <!-- Div para los tags disponibles -->
         <div style="display: flex; flex-wrap: wrap">
-          <mat-chip style="margin: 5px" *ngFor="let tag of availableTags">{{
-            tag.name
-          }}</mat-chip>
+          <mat-chip
+            style="margin: 5px"
+            *ngFor="let tag of availableTags"
+            (removed)="remove(tag)"
+            >{{ tag.name }}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button></mat-chip
+          >
         </div>
         <mat-divider style="margin: 5px"></mat-divider>
         <h2>Tareas programables</h2>
@@ -335,7 +357,12 @@
       </div>
     </form>
     <div class="button-container">
-      <button mat-raised-button color="primary" matStepperNext>
+      <button
+        mat-raised-button
+        color="primary"
+        matStepperNext
+        (click)="createAllTasksAndCommonTasks()"
+      >
         Siguiente
       </button>
     </div>

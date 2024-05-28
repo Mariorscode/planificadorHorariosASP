@@ -17,12 +17,19 @@ turn(D, 1..NUM_TURNS) :- day(D),  not unavailableDay(D), turnsPerDay(NUM_TURNS).
 1 {coincidence(T1,T2,Ta1): taskName(T1),taskName(T2),tag(Ta1)} 1 :- taskName(T1),taskName(T2),tag(Ta1),tag(Ta2)
 ,tags(T1,Ta1),tags(T2,Ta2),T1!=T2,Ta1==Ta2.
 
+% comprobar que tipo de schedulable hay si tiene asignado espacio o no 
+% y si tiene asignado trabajador, hacer combinatorias distintas en cada caso
+% --> problema, cuando algunos schedule tienen espacio y otros no (lo mismo para trabajador)
+
+
 % Generate the schedules for the tasks that are schedulable
+
 1 {schedule(D,To,T,W,S):turn(D,To),taskName(T),worker(W),space(S)} 1 :- schedulableTask(T,W,S).
 
 % there cannot be a schedule in an unavailable day
 :- schedule(D, _, _, _, _), unavailableDay(D).
 %
+
 
 % Two schedules cannot have the same tags and be in the same day and turn
 count(T1,T2,X) :- coincidence(T1,T2,_), #count{Ta1: coincidence(T1,T2,Ta1)} = X.

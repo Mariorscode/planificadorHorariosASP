@@ -43,8 +43,6 @@ export class WorkerDialogComponent {
   saveSpace(): void {
     // If the name of the space is the same, do not eliminate it
     this.dialogRef.close(this.workerForm.value);
-
-    // console.log('DATA dentro dialogo', this.data);
   }
 
   onSelectionChange(turn: Turn) {
@@ -60,7 +58,5 @@ export class WorkerDialogComponent {
       // if it is selected, remove it from the list
       this.restrictionsWorker.splice(index, 1);
     }
-
-    console.log('Selected Space turns:', this.restrictionsWorker);
   }
 }

@@ -16,7 +16,7 @@ export class SpaceDialogComponent {
 
   spaceForm = this.fb.group({
     name: [this.data.spaceName || '', Validators.required],
-    spaceCapacity: ['', Validators.required],
+    spaceCapacity: [0, Validators.required],
     restrictionsSpace: [this.restrictionsSpace, Validators.required],
   });
 
@@ -34,7 +34,6 @@ export class SpaceDialogComponent {
   ngOnInit(): void {
     // Set the form value based on data.space
     this.spaceForm.get('name')?.setValue(this.data.spaceName);
-    console.log('NOMBREEE', this.data.spaceName);
   }
 
   onNoClick(): void {
@@ -42,12 +41,7 @@ export class SpaceDialogComponent {
   }
 
   saveSpace(): void {
-    // If the name of the space is the same, do not eliminate it
-    // if (this.data.spaceName == this.spaceForm.get('name')?.value) {
-    // }
     this.dialogRef.close(this.spaceForm.value);
-
-    // console.log('DATA dentro dialogo', this.data);
   }
 
   onSelectionChange(turn: Turn) {
@@ -63,7 +57,5 @@ export class SpaceDialogComponent {
       // if it is selected, remove it from the list
       this.restrictionsSpace.splice(index, 1);
     }
-
-    console.log('Selected Space turns:', this.restrictionsSpace);
   }
 }

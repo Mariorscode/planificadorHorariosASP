@@ -30,11 +30,15 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 
+import { StteperFormService } from './stteper-form/stteper-form.service';
+import { HttpClientModule } from '@angular/common/http';
+
 import {
   MatDialog,
   MAT_DIALOG_DATA,
   MatDialogModule,
 } from '@angular/material/dialog';
+import { s } from '@fullcalendar/core/internal-common';
 @NgModule({
   declarations: [
     AppComponent,
@@ -65,8 +69,9 @@ import {
     MatDialogModule,
     MatChipsModule,
     MatIconModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [StteperFormService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -47,7 +47,6 @@ export class ScheduableTaskDialogComponent {
   ngOnInit(): void {
     // Set the form value based on data
     this.scheduableTaskForm.get('name')?.setValue(this.data.taskName);
-    // console.log('NOMBREEE', this.data.taskName);
   }
 
   onSelectionTurn(turn: Turn) {
@@ -102,10 +101,8 @@ export class ScheduableTaskDialogComponent {
       // if it is selected, remove it from the list
       this.tags.splice(index, 1);
     }
-    console.log('Selected tags:', this.tags);
   }
   saveScheduableTask(): void {
-    console.log('DATA dentro dialogo', this.scheduableTaskForm.value);
     this.dialogRef.close(this.scheduableTaskForm.value);
   }
 

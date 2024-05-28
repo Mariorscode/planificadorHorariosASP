@@ -11,10 +11,13 @@ import { SpaceDialogComponent } from '../dialog/spaceDialog/spaceDialog/spaceDia
 import { WorkerDialogComponent } from '../dialog/workerDialog/workerDialog/workerDialog.component';
 import { TagsDialogComponent } from '../dialog/tagsDialog/tagsDialog/tagsDialog.component';
 import { ScheduableTaskDialogComponent } from '../dialog/scheduableTaskDialog/scheduableTaskDialog/scheduableTaskDialog.component';
-import { s } from '@fullcalendar/core/internal-common';
+import { co, s } from '@fullcalendar/core/internal-common';
+import { StteperFormService } from './stteper-form.service';
+import { empty } from 'rxjs';
 export interface Turn {
   day: String;
   startTime: String;
+  is_free_time?: boolean;
 }
 
 export interface Space {
@@ -32,11 +35,50 @@ export interface Tag {
 export interface ScheduableTask {
   name: string;
   size: number;
-  restrictions: Turn[];
-  taskWorker: Worker[];
-  taskSpace: Space[];
-  taskTags: Tag[];
+  restrictions?: Turn[];
+  taskWorker?: Worker[];
+  taskSpace?: Space[];
+  taskTags?: Tag[];
 }
+
+interface apiScheduableTask {
+  name: string;
+  task_size: number;
+  task_restrictions: number[];
+  task_tags: number[];
+  task_worker: number;
+  task_spaces: number;
+  timetable_id: number;
+}
+
+interface ApiTimeTable {
+  id: number;
+  name: string;
+  turnsDuration: number;
+  turnsPerDay: number;
+}
+
+interface ApiTurns {
+  id: number;
+  day: string;
+  startTime: string;
+  is_free_time: boolean;
+}
+
+interface ApiSpaces {
+  id: number;
+  name: string;
+  space_capacity: number;
+  restrictionsSpace: number[];
+  user_id: number;
+}
+
+interface ApiWorkers {
+  id: number;
+  name: string;
+  restrictionsWorker: number[];
+}
+
 @Component({
   selector: 'app-stteper-form',
   templateUrl: './stteper-form.component.html',
@@ -46,6 +88,10 @@ export class StteperFormComponent {
   isLast(item: any, array: any[]): boolean {
     return item === array[array.length - 1];
   }
+
+  // Variables
+  userid: number = 1;
+
   daysOfWeek: string[] = [
     'Lunes',
     'Martes',
@@ -56,87 +102,28 @@ export class StteperFormComponent {
     'Domingo',
   ];
   weekDays = new FormControl();
+  numberOfTurns: number = 0;
   weekDaysRestriction = new FormControl();
   turns: Turn[] = [];
   selectedTurns: Turn[] = [];
-  spaces: Space[] = [
-    {
-      name: 'Space 1',
-      spaceCapacity: 10,
-      restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
-    },
-    {
-      name: 'Space 2',
-      spaceCapacity: 10,
-      restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
-    },
-  ];
 
-  workers: Worker[] = [
-    {
-      name: 'John Doe',
-      restrictionsWorker: [{ day: 'Lunes', startTime: '08:00' }],
-    },
-    {
-      name: 'Jane Doe',
-      restrictionsWorker: [{ day: 'Lunes', startTime: '10:00' }],
-    },
-  ];
+  apiTimeTable: ApiTimeTable = {
+    id: 0,
+    name: '',
+    turnsDuration: 0,
+    turnsPerDay: 0,
+  };
+  apiTurns: ApiTurns[] = [];
+  apiSpaces: ApiSpaces[] = [];
+  apiWorkers: ApiWorkers[] = [];
+  apiScheduableTasks: apiScheduableTask[] = [];
 
-  availableTags: Tag[] = [
-    {
-      name: 'Tag 1',
-    },
-    {
-      name: 'Tag 2',
-    },
-    {
-      name: 'Tag 3',
-    },
-  ];
+  spaces: Space[] = [];
+  workers: Worker[] = [];
+  scheduableTasks: ScheduableTask[] = [];
+
+  availableTags: Tag[] = [];
   taskTags: Tag[] = [];
-  scheduableTasks: ScheduableTask[] = [
-    {
-      name: 'Calculo1',
-      size: 10,
-      restrictions: [{ day: 'Lunes', startTime: '08:00' }],
-      taskWorker: [
-        {
-          name: 'John Doe',
-          restrictionsWorker: [{ day: 'Lunes', startTime: '08:00' }],
-        },
-      ],
-      taskSpace: [
-        {
-          name: 'Space 1',
-          spaceCapacity: 10,
-          restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
-        },
-      ],
-
-      taskTags: [{ name: 'Grupo A' }, { name: 'primero' }, { name: 'teoria' }],
-    },
-    {
-      name: 'Calculo2',
-      size: 10,
-      restrictions: [{ day: 'Lunes', startTime: '08:00' }],
-      taskWorker: [
-        {
-          name: 'John Doe',
-          restrictionsWorker: [{ day: 'Lunes', startTime: '08:00' }],
-        },
-      ],
-      taskSpace: [
-        {
-          name: 'Space 1',
-          spaceCapacity: 10,
-          restrictionsSpace: [{ day: 'Lunes', startTime: '08:00' }],
-        },
-      ],
-
-      taskTags: [{ name: 'Grupo A' }, { name: 'primero' }, { name: 'teoria' }],
-    },
-  ];
 
   //-------------------- Form Steps --------------------
 
@@ -149,10 +136,12 @@ export class StteperFormComponent {
     lastTurnTime: ['', Validators.required],
     weekDaysRestriction: this.weekDaysRestriction,
     dayTimerestriction: ['', Validators.required],
+    numberOfTurns: this.numberOfTurns,
   });
   // Second formStep
   secondFormGroup = this._formBuilder.group({
-    selectedTurns: [this.selectedTurns, Validators.required],
+    turns: [this.turns, Validators.required],
+    // selectedTurns: [this.selectedTurns, Validators.required],
   });
   // Third formStep
   thirdFormGroup = this._formBuilder.group({
@@ -175,11 +164,19 @@ export class StteperFormComponent {
   // excute at the load of the component
   ngOnInit(): void {
     // load the space cards
-    this.loadSpaceCards();
-    this.loadWorkerCards();
-    this.loadTaskCards();
+    this.getAllTimetables();
+    this.getAllCommonSpaces();
+    this.getAllCommonWorkers();
+    this.getAllCommonTasks();
   }
 
+  remove(tag: Tag): void {
+    const index = this.availableTags.indexOf(tag);
+
+    if (index >= 0) {
+      this.availableTags.splice(index, 1);
+    }
+  }
   // calculate the number of turns per day given the first and last turn time and the turn duration
   calculateTurnsPerDay(): number {
     const firstTurnTimeStr = this.firstFormGroup.get('firstTurnTime')?.value;
@@ -206,10 +203,6 @@ export class StteperFormComponent {
     // Calculate the number of turns
     const numberOfTurns = Math.floor(differenceInMinutes / turnDuration);
 
-    // Imprimir el resultado
-    console.log(
-      `Entre las ${firstTurnTimeStr} y ${lastTurnTimeStr} hay ${numberOfTurns} turnos de ${turnDuration} minutos.`
-    );
     return numberOfTurns;
   }
 
@@ -227,9 +220,6 @@ export class StteperFormComponent {
       !firstTurnTimeStr ||
       !lastTurnTimeStr
     ) {
-      console.error(
-        'Los valores del formulario no son válidos para llenar los turnos.'
-      );
       return;
     }
 
@@ -240,17 +230,16 @@ export class StteperFormComponent {
     const selectedDays = this.weekDays.value;
     for (const day of selectedDays) {
       // get the number of turns per day
-      const numberOfTurns = this.calculateTurnsPerDay();
-
+      this.numberOfTurns = this.calculateTurnsPerDay();
       // Check if the number of turns caculation was successful
-      if (numberOfTurns === -1) {
+      if (this.numberOfTurns === -1) {
         console.error('No se pudieron calcular los turnos para el día:', day);
         return;
       }
 
       // Cast the firstTurnTimeStr string to a Date object
       const startTime = new Date(`2022-01-01T${firstTurnTimeStr}`);
-      for (let i = 0; i < numberOfTurns; i++) {
+      for (let i = 0; i < this.numberOfTurns; i++) {
         // Create a turn object
         const turno: Turn = {
           day: day,
@@ -266,26 +255,26 @@ export class StteperFormComponent {
         startTime.setMinutes(startTime.getMinutes() + turnDuration);
       }
     }
-
+    this.firstFormGroup.patchValue({ numberOfTurns: this.numberOfTurns });
+    this.secondFormGroup.patchValue({ turns: this.turns });
+    this.createTimeTable();
     console.log('Turnos llenados:', this.turns);
   }
 
   // Function to handle the selection of a turn
   onSelectionChange(turn: Turn) {
     // Verify if the turn is already selected
-    const index = this.selectedTurns.findIndex(
+    const index = this.turns.findIndex(
       (t) => t.day === turn.day && t.startTime === turn.startTime
     );
 
-    if (index === -1) {
-      // if it is not selected, add it to the list
-      this.selectedTurns.push(turn);
+    if (index !== -1) {
+      // Toggle the is_free_time property
+      this.turns[index].is_free_time = !this.turns[index].is_free_time;
     } else {
-      // if it is selected, remove it from the list
-      this.selectedTurns.splice(index, 1);
+      console.error('Turno no encontrado:', turn);
     }
-
-    console.log('Selected turns:', this.selectedTurns);
+    this.secondFormGroup.patchValue({ turns: this.turns });
   }
 
   spaceCards: Space[] = [];
@@ -294,7 +283,6 @@ export class StteperFormComponent {
   // Function to open the space dialog
   openSpaceDialog(space?: Space) {
     let spaceName: string;
-
     let dialogRef;
     if (space) {
       spaceName = space.name;
@@ -316,8 +304,6 @@ export class StteperFormComponent {
     }
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-
       if (result) {
         // Create a new space object with the dialog result
         const newSpace: Space = {
@@ -340,7 +326,6 @@ export class StteperFormComponent {
         }
         this.loadSpaceCards();
       }
-      console.log('Todas las spaces:', this.spaces);
     });
   }
 
@@ -352,9 +337,8 @@ export class StteperFormComponent {
       workerName = worker.name;
       dialogRef = this.dialog.open(WorkerDialogComponent, {
         data: {
-          workers: this.workers,
+          workerName: worker.name,
           turns: this.turns,
-
           eliminate: this.deleteWorker.bind(this),
         },
       });
@@ -369,8 +353,6 @@ export class StteperFormComponent {
     }
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-
       if (result) {
         // Create a new worker object with the dialog result
         const newWorker: Worker = {
@@ -392,7 +374,6 @@ export class StteperFormComponent {
         }
         this.loadWorkerCards();
       }
-      console.log('Todas las workers:', this.workers);
     });
   }
 
@@ -405,7 +386,6 @@ export class StteperFormComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('RESULTADO TAGS', result);
       this.loadTags(result);
       // console.log('Todas las tags:', this.tags);
     });
@@ -437,7 +417,6 @@ export class StteperFormComponent {
     }
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('RESULTADO ', result);
       if (result) {
         const newTask: ScheduableTask = {
           name: result.name,
@@ -457,14 +436,12 @@ export class StteperFormComponent {
         if (existingTaskIndex !== -1) {
           //in case the space already exists, update the space
           this.scheduableTasks[existingTaskIndex] = newTask;
-          console.log('44444444444444:', this.scheduableTasks);
         } else {
           // if the space does not exist, add it to the spaces array
           this.scheduableTasks.push(newTask);
         }
         this.loadTaskCards();
       }
-      console.log('Todas las task:', this.scheduableTasks);
     });
   }
 
@@ -484,7 +461,6 @@ export class StteperFormComponent {
 
       // Add the card to the spaceCards array
       this.spaceCards.push(newCard);
-      console.log('todas Space cards:', this.spaceCards);
     });
   }
 
@@ -502,7 +478,6 @@ export class StteperFormComponent {
 
       // Add the card to the workerCards array
       this.workerCards.push(newCard);
-      console.log('todas Worker cards:', this.workerCards);
     });
   }
 
@@ -517,7 +492,6 @@ export class StteperFormComponent {
       // Add the card to the workerCards array
       this.taskTags.push(newTag);
       this.availableTags.push(newTag);
-      console.log('todas TAGS', this.taskTags);
     });
   }
 
@@ -539,7 +513,6 @@ export class StteperFormComponent {
 
       // Add the card to the spaceCards array
       this.taskCards.push(newCard);
-      console.log('todas task cards:', this.taskCards);
     });
   }
 
@@ -581,5 +554,290 @@ export class StteperFormComponent {
     this.loadTaskCards();
   }
 
-  constructor(private _formBuilder: FormBuilder, public dialog: MatDialog) {}
+  // --------Api calls methods----------
+  createTimeTable() {
+    const data = {
+      name: this.firstFormGroup.get('scheduleName')?.value,
+      turnsDuration: this.firstFormGroup.get('turnDuration')?.value,
+      turnsPerDay: this.firstFormGroup.get('numberOfTurns')?.value,
+    };
+
+    console.log('data sent timetable:', data);
+
+    this.stteperFormService.createTimeTable(data).subscribe(
+      (response) => {
+        this.apiTimeTable = response;
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  getAllTimetables() {
+    this.stteperFormService.getAllTimetables().subscribe(
+      (response) => {
+        this.apiTimeTable = response;
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  createAllTurns() {
+    const auxTurn = this.secondFormGroup.get('turns')?.value ?? [];
+
+    const data = auxTurn.map((turn: Turn) => {
+      return {
+        day: turn.day,
+        startTime: turn.startTime,
+        is_free_time: turn.is_free_time,
+        timeTable_id: this.apiTimeTable.id,
+      };
+    });
+
+    this.stteperFormService.createAllTurns(data).subscribe(
+      (response) => {
+        console.log('Response:', response);
+        this.apiTurns = response;
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  getAllCommonSpaces() {
+    this.stteperFormService.getAllCommonSpaces().subscribe(
+      (response) => {
+        this.apiSpaces = response;
+        this.apiSpaces.forEach((apiSpace) => {
+          let auxIds: number[] = [];
+
+          auxIds = apiSpace.restrictionsSpace;
+
+          const newSpace: Space = {
+            name: apiSpace.name,
+            spaceCapacity: apiSpace.space_capacity,
+            restrictionsSpace: [],
+          };
+          this.spaces.push(newSpace);
+        });
+        this.loadSpaceCards();
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  createAllSpacesAndCommonSpace() {
+    const auxSpace = this.thirdFormGroup.get('spaces')?.value ?? [];
+
+    const differentSpaces = auxSpace.filter((space: Space) => {
+      return !this.apiSpaces.some((apiSpace) => apiSpace.name === space.name);
+    });
+
+    const data = auxSpace.map((space: Space) => {
+      return {
+        name: space.name,
+        space_capacity: space.spaceCapacity,
+        restrictionsSpace: space.restrictionsSpace.map((turn) => {
+          return this.apiTurns.find(
+            (apiTurn) =>
+              apiTurn.day === turn.day && apiTurn.startTime === turn.startTime
+          )?.id;
+        }),
+        timeTable_id: this.apiTimeTable.id,
+      };
+    });
+
+    const data2 = differentSpaces.map((space: Space) => {
+      return {
+        name: space.name,
+        space_capacity: space.spaceCapacity,
+        user_id: this.userid,
+      };
+    });
+
+    this.stteperFormService.createAllCommonSpace(data2).subscribe(
+      (response) => {
+        console.log('Response:', response);
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+
+    this.stteperFormService.createAllSpace(data).subscribe(
+      (response) => {
+        console.log('Response:', response);
+        this.apiSpaces = response;
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  getAllCommonWorkers() {
+    this.stteperFormService.getAllCommonWorkers().subscribe(
+      (response) => {
+        console.log('Response all common workers:', response);
+        this.apiWorkers = response;
+        this.apiWorkers.forEach((apiWorker) => {
+          let auxIds: number[] = [];
+
+          auxIds = apiWorker.restrictionsWorker;
+
+          const newWorker: Worker = {
+            name: apiWorker.name,
+            restrictionsWorker: [],
+          };
+          this.workers.push(newWorker);
+        });
+        this.loadWorkerCards();
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  createAllWorkersAndCommonWorkers() {
+    const auxWorker = this.fourthFormGroup.get('workers')?.value ?? [];
+
+    const differentWorkers = auxWorker.filter((worker: Worker) => {
+      return !this.apiWorkers.some(
+        (apiWorker) => apiWorker.name === worker.name
+      );
+    });
+    const data = auxWorker.map((worker: Worker) => {
+      return {
+        name: worker.name,
+        restrictionsWorker: worker.restrictionsWorker.map((turn) => {
+          return this.apiTurns.find(
+            (apiTurn) =>
+              apiTurn.day === turn.day && apiTurn.startTime === turn.startTime
+          )?.id;
+        }),
+        timeTable_id: this.apiTimeTable.id,
+      };
+    });
+
+    const data2 = differentWorkers.map((worker: Worker) => {
+      return {
+        name: worker.name,
+        user_id: this.userid,
+      };
+    });
+
+    this.stteperFormService.createAllCommonWorkers(data2).subscribe(
+      (response) => {
+        console.log('Response:', response);
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+
+    this.stteperFormService.createAllWorker(data).subscribe(
+      (response) => {
+        console.log('Response:', response);
+        this.apiWorkers = response;
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  getAllCommonTasks() {
+    this.stteperFormService.getAllCommonTasks().subscribe(
+      (response) => {
+        console.log('Response all common task:', response);
+        this.apiScheduableTasks = response;
+        this.apiScheduableTasks.forEach((apiTask) => {
+          const newTask: ScheduableTask = {
+            name: apiTask.name,
+            size: apiTask.task_size,
+          };
+          this.scheduableTasks.push(newTask);
+        });
+        this.loadTaskCards();
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  createAllTasksAndCommonTasks() {
+    const auxTask = this.fithFormGroup.get('scheduableTasks')?.value ?? [];
+
+    const differentTasks = auxTask.filter((task: ScheduableTask) => {
+      return !this.apiScheduableTasks.some(
+        (apiTask) => apiTask.name === task.name
+      );
+    });
+
+    const task_worker = this.apiWorkers?.map((worker) => {
+      return this.apiWorkers.find((apiWorker) => apiWorker.name === worker.name)
+        ?.id;
+    });
+
+    const data = auxTask.map((task: ScheduableTask) => {
+      return {
+        name: task.name,
+        task_size: task.size,
+        task_restrictions: task.restrictions?.map((turn) => {
+          return this.apiTurns.find(
+            (apiTurn) =>
+              apiTurn.day === turn.day && apiTurn.startTime === turn.startTime
+          )?.id;
+        }),
+        task_tags: task.taskTags,
+        task_worker: this.apiWorkers.find(
+          (apiWorker) => apiWorker.name === (task.taskWorker?.[0]?.name ?? null)
+        )?.id,
+        task_spaces: this.apiWorkers.find(
+          (apiWorker) => apiWorker.name === (task.taskWorker?.[0]?.name ?? null)
+        )?.id,
+        timetable_id: this.apiTimeTable.id,
+      };
+    });
+
+    const data2 = differentTasks.map((task: ScheduableTask) => {
+      return {
+        name: task.name,
+        user_id: this.userid,
+      };
+    });
+
+    this.stteperFormService.createAllCommonTasks(data2).subscribe(
+      (response) => {
+        console.log('Response:', response);
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+
+    this.stteperFormService.createAllscheduableTasks(data).subscribe(
+      (response) => {
+        console.log('Response:', response);
+        this.apiScheduableTasks = response;
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  constructor(
+    private _formBuilder: FormBuilder,
+    public dialog: MatDialog,
+    private stteperFormService: StteperFormService
+  ) {}
 }

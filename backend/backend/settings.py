@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'horariosASP',
     'eventos',
     'assigmentsASP',
+    'schedulerASP',
 ]
 
 MIDDLEWARE = [
@@ -134,4 +135,9 @@ CORS_ALLOWED_ORIGINS = ['http://localhost:4200']
 # CORS_ALLOW_ALL_ORIGINS = True
 
 # ALLOWED_HOSTS = ['*']
+
+# CORS_ORIGIN_ALLOW_ALL = False
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:8081',
+# )
 

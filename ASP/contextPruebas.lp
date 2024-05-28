@@ -90,9 +90,11 @@ schedulableTask(pruebaName,juanCarlos, "14-15").
 % ---------/schedulableTask------
 % restrictionworker(T,D,TO). :- turn(TO).,day(D).,worker(T).
 
+
 restrictionworker(philipp,monday,4).
 restrictionworker(juanCarlos,tuesday,4).
 restrictionworker(philipp,friday,0).
+
 
 
 restrictionspace("1.4",monday,4).
