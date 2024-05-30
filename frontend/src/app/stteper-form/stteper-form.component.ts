@@ -12,7 +12,7 @@ import { WorkerDialogComponent } from '../dialog/workerDialog/workerDialog/worke
 import { TagsDialogComponent } from '../dialog/tagsDialog/tagsDialog/tagsDialog.component';
 import { ScheduableTaskDialogComponent } from '../dialog/scheduableTaskDialog/scheduableTaskDialog/scheduableTaskDialog.component';
 import { co, s } from '@fullcalendar/core/internal-common';
-import { StteperFormService } from './stteper-form.service';
+import { StteperFormService } from '../schedulerASP.service';
 import { empty } from 'rxjs';
 export interface Turn {
   day: String;

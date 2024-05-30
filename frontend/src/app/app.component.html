@@ -1,1 +1,43 @@
-<router-outlet></router-outlet>
+<!-- <mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav mode="side" opened>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/home-page" (click)="sidenav.close()"
+        >Home Page</a
+      >
+      <a mat-list-item routerLink="/workers" (click)="sidenav.close()"
+        >Workers</a
+      >
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>My App</span>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container> -->
+<mat-sidenav-container class="example-container">
+  <mat-sidenav *ngIf="showSidenav" #sidenav mode="side" opened>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/home-page" (click)="sidenav.close()"
+        >Home Page</a
+      >
+      <mat-divider></mat-divider>
+      <a mat-list-item routerLink="/workers" (click)="sidenav.close()"
+        >Workers</a
+      >
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button *ngIf="showSidenav" mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>Scheduler ASP</span>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

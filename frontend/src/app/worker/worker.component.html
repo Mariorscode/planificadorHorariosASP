@@ -1,0 +1,58 @@
+<h2>Trabajadores disponibles</h2>
+<div style="display: flex">
+  <div class="column">
+    <div class="card-container">
+      <div *ngFor="let worker of workerCards">
+        <mat-card class="card">
+          <mat-card-header>
+            <mat-card-title>{{ worker.name }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <!-- <ul>
+              <li *ngFor="let restriction of worker.restrictionsWorker">
+                Día: {{ restriction.day }}, Hora:
+                {{ restriction.startTime }}
+              </li>
+            </ul> -->
+          </mat-card-content>
+          <mat-card-actions>
+            <button
+              mat-raised-button
+              color="accent"
+              (click)="openWorkerDialog(worker)"
+              style="margin: 5px"
+            >
+              Modificar
+            </button>
+            <button
+              mat-raised-button
+              color="warn"
+              (click)="deleteWorker(worker.name)"
+              style="margin: 5px"
+            >
+              Eliminar
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="openWorkerDialog()"
+      style="margin: 5px"
+    >
+      Añadir Trabajor
+    </button>
+  </div>
+</div>
+<div class="button-container">
+  <button
+    mat-raised-button
+    color="primary"
+    matStepperNext
+    (click)="createAllWorkersAndCommonWorkers()"
+  >
+    Siguiente
+  </button>
+</div>

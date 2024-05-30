@@ -29,9 +29,13 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
-import { StteperFormService } from './stteper-form/stteper-form.service';
+import { StteperFormService } from './schedulerASP.service';
 import { HttpClientModule } from '@angular/common/http';
+import { HomePageComponent } from './home-page/home-page.component';
+import { WorkerComponent } from './worker/worker.component';
 
 import {
   MatDialog,
@@ -48,6 +52,8 @@ import { s } from '@fullcalendar/core/internal-common';
     WorkerDialogComponent,
     TagsDialogComponent,
     ScheduableTaskDialogComponent,
+    HomePageComponent,
+    WorkerComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,6 +76,8 @@ import { s } from '@fullcalendar/core/internal-common';
     MatChipsModule,
     MatIconModule,
     HttpClientModule,
+    MatSidenavModule,
+    MatToolbarModule,
   ],
   providers: [StteperFormService],
   bootstrap: [AppComponent],

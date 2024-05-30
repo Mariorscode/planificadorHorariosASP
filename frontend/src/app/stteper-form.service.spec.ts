@@ -1,16 +1,19 @@
 /* tslint:disable:no-unused-variable */
 
 import { TestBed, async, inject } from '@angular/core/testing';
-import { StteperFormService } from './stteper-form.service';
+import { StteperFormService } from './schedulerASP.service';
 
 describe('Service: StteperForm', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [StteperFormService]
+      providers: [StteperFormService],
     });
   });
 
-  it('should ...', inject([StteperFormService], (service: StteperFormService) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should ...', inject(
+    [StteperFormService],
+    (service: StteperFormService) => {
+      expect(service).toBeTruthy();
+    }
+  ));
 });
