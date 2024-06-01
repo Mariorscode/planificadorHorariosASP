@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'eventos',
     'assigmentsASP',
     'schedulerASP',
+    'django_filters',
 ]
 
 MIDDLEWARE = [

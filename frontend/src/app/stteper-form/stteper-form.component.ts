@@ -12,7 +12,7 @@ import { WorkerDialogComponent } from '../dialog/workerDialog/workerDialog/worke
 import { TagsDialogComponent } from '../dialog/tagsDialog/tagsDialog/tagsDialog.component';
 import { ScheduableTaskDialogComponent } from '../dialog/scheduableTaskDialog/scheduableTaskDialog/scheduableTaskDialog.component';
 import { co, s } from '@fullcalendar/core/internal-common';
-import { StteperFormService } from '../schedulerASP.service';
+import { schedulerASP } from '../schedulerASP.service';
 import { empty } from 'rxjs';
 export interface Turn {
   day: String;
@@ -564,7 +564,7 @@ export class StteperFormComponent {
 
     console.log('data sent timetable:', data);
 
-    this.stteperFormService.createTimeTable(data).subscribe(
+    this.schedulerASP.createTimeTable(data).subscribe(
       (response) => {
         this.apiTimeTable = response;
       },
@@ -575,7 +575,7 @@ export class StteperFormComponent {
   }
 
   getAllTimetables() {
-    this.stteperFormService.getAllTimetables().subscribe(
+    this.schedulerASP.getAllTimetables().subscribe(
       (response) => {
         this.apiTimeTable = response;
       },
@@ -597,7 +597,7 @@ export class StteperFormComponent {
       };
     });
 
-    this.stteperFormService.createAllTurns(data).subscribe(
+    this.schedulerASP.createAllTurns(data).subscribe(
       (response) => {
         console.log('Response:', response);
         this.apiTurns = response;
@@ -609,7 +609,7 @@ export class StteperFormComponent {
   }
 
   getAllCommonSpaces() {
-    this.stteperFormService.getAllCommonSpaces().subscribe(
+    this.schedulerASP.getAllCommonSpaces().subscribe(
       (response) => {
         this.apiSpaces = response;
         this.apiSpaces.forEach((apiSpace) => {
@@ -661,7 +661,7 @@ export class StteperFormComponent {
       };
     });
 
-    this.stteperFormService.createAllCommonSpace(data2).subscribe(
+    this.schedulerASP.createAllCommonSpace(data2).subscribe(
       (response) => {
         console.log('Response:', response);
       },
@@ -670,7 +670,7 @@ export class StteperFormComponent {
       }
     );
 
-    this.stteperFormService.createAllSpace(data).subscribe(
+    this.schedulerASP.createAllSpace(data).subscribe(
       (response) => {
         console.log('Response:', response);
         this.apiSpaces = response;
@@ -682,7 +682,7 @@ export class StteperFormComponent {
   }
 
   getAllCommonWorkers() {
-    this.stteperFormService.getAllCommonWorkers().subscribe(
+    this.schedulerASP.getAllCommonWorkers().subscribe(
       (response) => {
         console.log('Response all common workers:', response);
         this.apiWorkers = response;
@@ -733,7 +733,7 @@ export class StteperFormComponent {
       };
     });
 
-    this.stteperFormService.createAllCommonWorkers(data2).subscribe(
+    this.schedulerASP.createAllCommonWorkers(data2).subscribe(
       (response) => {
         console.log('Response:', response);
       },
@@ -742,7 +742,7 @@ export class StteperFormComponent {
       }
     );
 
-    this.stteperFormService.createAllWorker(data).subscribe(
+    this.schedulerASP.createAllWorker(data).subscribe(
       (response) => {
         console.log('Response:', response);
         this.apiWorkers = response;
@@ -754,7 +754,7 @@ export class StteperFormComponent {
   }
 
   getAllCommonTasks() {
-    this.stteperFormService.getAllCommonTasks().subscribe(
+    this.schedulerASP.getAllCommonTasks().subscribe(
       (response) => {
         console.log('Response all common task:', response);
         this.apiScheduableTasks = response;
@@ -815,7 +815,7 @@ export class StteperFormComponent {
       };
     });
 
-    this.stteperFormService.createAllCommonTasks(data2).subscribe(
+    this.schedulerASP.createAllCommonTasks(data2).subscribe(
       (response) => {
         console.log('Response:', response);
       },
@@ -824,7 +824,7 @@ export class StteperFormComponent {
       }
     );
 
-    this.stteperFormService.createAllscheduableTasks(data).subscribe(
+    this.schedulerASP.createAllscheduableTasks(data).subscribe(
       (response) => {
         console.log('Response:', response);
         this.apiScheduableTasks = response;
@@ -838,6 +838,6 @@ export class StteperFormComponent {
   constructor(
     private _formBuilder: FormBuilder,
     public dialog: MatDialog,
-    private stteperFormService: StteperFormService
+    private schedulerASP: schedulerASP
   ) {}
 }

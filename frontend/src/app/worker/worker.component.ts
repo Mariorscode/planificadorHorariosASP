@@ -1,10 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { StteperFormService } from '../schedulerASP.service';
 import { WorkerDialogComponent } from '../dialog/workerDialog/workerDialog/workerDialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { schedulerASP } from '../schedulerASP.service';
 
 interface Worker {
   name: string;
+}
+
+interface ApiWorkers {
+  id: number;
+  name: string;
+  restrictionsWorker: number[];
 }
 @Component({
   selector: 'app-worker',
@@ -13,21 +19,24 @@ interface Worker {
 })
 export class WorkerComponent {
   workerCards: Worker[] = [];
-  //--
   workers: Worker[] = [];
+  apiWorkers: ApiWorkers[] = [];
+  hasChanges = false;
 
-  ngOnInit() {}
+  userid = 1;
+
+  ngOnInit() {
+    // this.loadWorkerCards();
+    this.getCommonWorkersbyID(this.userid);
+  }
 
   openWorkerDialog(worker?: Worker) {
-    let workerName: string;
-
     let dialogRef;
+
     if (worker) {
-      workerName = worker.name;
       dialogRef = this.dialog.open(WorkerDialogComponent, {
         data: {
           workerName: worker.name,
-          // turns: this.turns,
           eliminate: this.deleteWorker.bind(this),
         },
       });
@@ -35,7 +44,6 @@ export class WorkerComponent {
       dialogRef = this.dialog.open(WorkerDialogComponent, {
         data: {
           workerName: null,
-          // turns: this.turns,
           eliminate: this.deleteWorker.bind(this),
         },
       });
@@ -43,25 +51,34 @@ export class WorkerComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        // Create a new worker object with the dialog result
-        const newWorker: Worker = {
+        const newWorker: Worker = { name: result.name };
+        const newWorkerApi: any = {
           name: result.name,
-          // restrictionsWorker: result.restrictionsWorker,
+          user_id: this.userid,
         };
 
-        // check if the worker already exists
-        const existingWorkerIndex = this.workerCards.findIndex(
-          (workerCards) => workerCards.name === newWorker.name
-        );
+        if (worker) {
+          // If the worker was provided (modification case), find its index
+          const existingWorkerIndex = this.workers.findIndex(
+            (w) => w.name === worker.name
+          );
 
-        if (existingWorkerIndex !== -1) {
-          //in case the worker already exists, update the worker
-          this.workers[existingWorkerIndex] = newWorker;
+          if (existingWorkerIndex !== -1) {
+            // Update the existing worker
+            this.workers[existingWorkerIndex] = newWorker;
+            this.updateCommonWorker(
+              this.apiWorkers[existingWorkerIndex].id,
+              newWorkerApi
+            );
+          }
         } else {
-          // if the worker does not exist, add it to the workers array
+          // If no worker was provided (creation case), add the new worker
           this.workers.push(newWorker);
+          this.createCommonWorker(newWorkerApi);
         }
+
         this.loadWorkerCards();
+        this.hasChanges = true;
       }
     });
   }
@@ -72,8 +89,20 @@ export class WorkerComponent {
       (worker) => worker.name === deleteWorker
     );
 
+    const apiIndex = this.apiWorkers.findIndex(
+      (worker) => worker.name === deleteWorker
+    );
+
     // Delete the worker from the workers array
     this.workers.splice(index, 1);
+
+    this.hasChanges = true;
+
+    this.schedulerASP
+      .deleteCommonWorkerById(this.apiWorkers[apiIndex].id)
+      .subscribe((response) => {
+        console.log('Response:', response);
+      });
 
     // Reload the worker cards
     this.loadWorkerCards();
@@ -95,49 +124,61 @@ export class WorkerComponent {
       this.workerCards.push(newCard);
     });
   }
-  createAllWorkersAndCommonWorkers() {
-    // // const auxWorker = this.fourthFormGroup.get('workers')?.value ?? [];
-    // const differentWorkers = auxWorker.filter((worker: Worker) => {
-    //   return !this.apiWorkers.some(
-    //     (apiWorker) => apiWorker.name === worker.name
-    //   );
-    // });
-    // const data = auxWorker.map((worker: Worker) => {
-    //   return {
-    //     name: worker.name,
-    //     restrictionsWorker: worker.restrictionsWorker.map((turn) => {
-    //       return this.apiTurns.find(
-    //         (apiTurn) =>
-    //           apiTurn.day === turn.day && apiTurn.startTime === turn.startTime
-    //       )?.id;
-    //     }),
-    //     timeTable_id: this.apiTimeTable.id,
-    //   };
-    // });
-    // const data2 = differentWorkers.map((worker: Worker) => {
-    //   return {
-    //     name: worker.name,
-    //     user_id: this.userid,
-    //   };
-    // });
-    // this.stteperFormService.createAllCommonWorkers(data2).subscribe(
-    //   (response) => {
-    //     console.log('Response:', response);
-    //   },
-    //   (error) => {
-    //     console.error('Error:', error);
-    //   }
-    // );
-    // this.stteperFormService.createAllWorker(data).subscribe(
-    //   (response) => {
-    //     console.log('Response:', response);
-    //     this.apiWorkers = response;
-    //   },
-    //   (error) => {
-    //     console.error('Error:', error);
-    //   }
-    // );
+
+  // saveChanges() {
+  //   // Aquí iría la lógica para guardar los cambios
+  //   // Por ejemplo, enviar los cambios al servidor
+
+  //   console.log('Guardando cambios:', this.workers);
+
+  //   // Resetear la bandera después de guardar
+  //   this.hasChanges = false;
+  // }
+
+  createCommonWorker(data: any) {
+    this.schedulerASP.createCommonWorker(data).subscribe(
+      (response) => {
+        console.log('Response:', response);
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
   }
 
-  constructor(public dialog: MatDialog) {}
+  updateCommonWorker(workerId: number, data: any) {
+    this.schedulerASP.updateCommonWorker(workerId, data).subscribe(
+      (response) => {
+        console.log('Response:', response);
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  getCommonWorkersbyID(user_id: number) {
+    this.schedulerASP.getCommonWorkersByUserId(user_id).subscribe(
+      (response) => {
+        console.log('Response all common workers:', response);
+        this.apiWorkers = response;
+        this.apiWorkers.forEach((apiWorker) => {
+          let auxIds: number[] = [];
+
+          auxIds = apiWorker.restrictionsWorker;
+
+          const newWorker: Worker = {
+            name: apiWorker.name,
+          };
+          this.workers.push(newWorker);
+        });
+        this.loadWorkerCards();
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  constructor(public dialog: MatDialog, private schedulerASP: schedulerASP) {}
 }

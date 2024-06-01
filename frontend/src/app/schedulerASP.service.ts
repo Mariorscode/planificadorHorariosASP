@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class StteperFormService {
+export class schedulerASP {
   private apiUrl = 'http://localhost:8000/schedulerASP/';
 
   constructor(private http: HttpClient) {}
@@ -38,10 +38,25 @@ export class StteperFormService {
     return this.http.post(this.apiUrl + 'commonworkers/create_multiple/', data);
   }
 
+  createCommonWorker(data: any): Observable<any> {
+    return this.http.post(this.apiUrl + 'commonworkers/', data);
+  }
+
+  updateCommonWorker(workerId: number, data: any): Observable<any> {
+    return this.http.put(this.apiUrl + 'commonworkers/' + workerId + '/', data);
+  }
+
   getAllCommonWorkers(): Observable<any> {
     return this.http.get(this.apiUrl + 'commonworkers/');
   }
 
+  getCommonWorkersByUserId(userId: number): Observable<any> {
+    return this.http.get(this.apiUrl + 'commonworkers/?user_id=' + userId);
+  }
+
+  deleteCommonWorkerById(workerId: number): Observable<any> {
+    return this.http.delete(this.apiUrl + 'commonworkers/' + workerId + '/');
+  }
   // ---------/CommonWorkers
 
   // --------- Space

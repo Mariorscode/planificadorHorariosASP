@@ -1,4 +1,4 @@
-<h2>Trabajadores disponibles</h2>
+<h2>Trabajadores guardados</h2>
 <div style="display: flex">
   <div class="column">
     <div class="card-container">
@@ -7,14 +7,7 @@
           <mat-card-header>
             <mat-card-title>{{ worker.name }}</mat-card-title>
           </mat-card-header>
-          <mat-card-content>
-            <!-- <ul>
-              <li *ngFor="let restriction of worker.restrictionsWorker">
-                Día: {{ restriction.day }}, Hora:
-                {{ restriction.startTime }}
-              </li>
-            </ul> -->
-          </mat-card-content>
+          <mat-card-content> </mat-card-content>
           <mat-card-actions>
             <button
               mat-raised-button
@@ -46,13 +39,4 @@
     </button>
   </div>
 </div>
-<div class="button-container">
-  <button
-    mat-raised-button
-    color="primary"
-    matStepperNext
-    (click)="createAllWorkersAndCommonWorkers()"
-  >
-    Siguiente
-  </button>
-</div>
+<div class="button-container"></div>

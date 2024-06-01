@@ -32,7 +32,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
-import { StteperFormService } from './schedulerASP.service';
+import { schedulerASP } from './schedulerASP.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HomePageComponent } from './home-page/home-page.component';
 import { WorkerComponent } from './worker/worker.component';
@@ -79,7 +79,7 @@ import { s } from '@fullcalendar/core/internal-common';
     MatSidenavModule,
     MatToolbarModule,
   ],
-  providers: [StteperFormService],
+  providers: [schedulerASP],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
