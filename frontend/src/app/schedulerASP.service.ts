@@ -126,5 +126,28 @@ export class schedulerASP {
     );
   }
 
+  createCommonTasks(data: any): Observable<any> {
+    return this.http.post(this.apiUrl + 'commonscheduabletasks/', data);
+  }
+
+  updateCommonTasks(taskId: number, data: any): Observable<any> {
+    return this.http.put(
+      this.apiUrl + 'commonscheduabletasks/' + taskId + '/',
+      data
+    );
+  }
+
+  getCommonTasksByUserId(userId: number): Observable<any> {
+    return this.http.get(
+      this.apiUrl + 'commonscheduabletasks/?user_id=' + userId
+    );
+  }
+
+  deleteCommonTasksById(taskId: number): Observable<any> {
+    return this.http.delete(
+      this.apiUrl + 'commonscheduabletasks/' + taskId + '/'
+    );
+  }
+
   // ---------/CommonTasks
 }

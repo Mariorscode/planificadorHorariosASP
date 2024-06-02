@@ -1,0 +1,60 @@
+.mat-stepper-horizontal {
+    margin-top: 8px;
+}
+  
+.mat-mdc-form-field {
+  /* margin-top: 16px; */
+  padding: 5px;
+}
+
+.card {
+  margin: 10px;
+}
+   
+.mat-grid-tile {
+  background: lightblue;
+}
+
+.example-section {
+  margin: 12px 0;
+}
+
+.restrictionList{
+  border:1px solid #000000;
+  border-radius: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  
+}
+
+.column {
+  flex: 1;
+  align-items: left;
+  /* background-color: aliceblue; */
+  border: 2px solid rgb(71, 71, 76); 
+  border-radius: 10px; 
+  padding: 10px; 
+  margin: 5px;
+}
+
+.card-container {
+  flex-wrap: wrap;
+  justify-content: center;
+  max-height: 60vh; 
+  overflow-y: auto; 
+  /* background-color: rgb(0, 116, 217);  */
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.buttonForm {
+  margin: 5px;
+}
+
+ul {
+  list-style-type: none;
+  margin-top: 4px;
+}

@@ -21,7 +21,6 @@ export class WorkerComponent {
   workerCards: Worker[] = [];
   workers: Worker[] = [];
   apiWorkers: ApiWorkers[] = [];
-  hasChanges = false;
 
   userid = 1;
 
@@ -78,7 +77,6 @@ export class WorkerComponent {
         }
 
         this.loadWorkerCards();
-        this.hasChanges = true;
       }
     });
   }
@@ -95,8 +93,6 @@ export class WorkerComponent {
 
     // Delete the worker from the workers array
     this.workers.splice(index, 1);
-
-    this.hasChanges = true;
 
     this.schedulerASP
       .deleteCommonWorkerById(this.apiWorkers[apiIndex].id)

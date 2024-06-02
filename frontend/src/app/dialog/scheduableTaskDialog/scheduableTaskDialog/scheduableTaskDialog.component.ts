@@ -23,7 +23,7 @@ export class ScheduableTaskDialogComponent {
 
   scheduableTaskForm = this.fb.group({
     name: [this.data.taskName || '', Validators.required],
-    taskSize: ['', Validators.required],
+    taskSize: [0, Validators.required],
     restrictions: [this.restrictions, Validators.required],
     workers: [this.workers, Validators.required],
     spaces: [this.spaces, Validators.required],

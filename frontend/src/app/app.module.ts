@@ -36,6 +36,8 @@ import { schedulerASP } from './schedulerASP.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HomePageComponent } from './home-page/home-page.component';
 import { WorkerComponent } from './worker/worker.component';
+import { SpaceComponent } from './space/space.component';
+import { TaskComponent } from './task/task.component';
 
 import {
   MatDialog,
@@ -43,9 +45,9 @@ import {
   MatDialogModule,
 } from '@angular/material/dialog';
 import { s } from '@fullcalendar/core/internal-common';
-import { SpaceComponent } from './space/space.component';
+
 @NgModule({
-  declarations: [	
+  declarations: [
     AppComponent,
     CalendarComponent,
     StteperFormComponent,
@@ -55,8 +57,9 @@ import { SpaceComponent } from './space/space.component';
     ScheduableTaskDialogComponent,
     HomePageComponent,
     WorkerComponent,
-      SpaceComponent
-   ],
+    SpaceComponent,
+    TaskComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

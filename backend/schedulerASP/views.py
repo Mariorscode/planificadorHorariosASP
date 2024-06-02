@@ -115,9 +115,18 @@ class TagViewSet(ModelViewSet):
     serializer_class = TagSerializer
 
 
+class CommonScheduableTaskFilter(filters.FilterSet):
+    user_id = filters.NumberFilter(field_name='user_id')
+    class Meta:
+        model = CommonScheduableTask
+        fields = ['user_id']
+                  
 class CommonScheduableTaskViewSet(ModelViewSet):
     queryset = CommonScheduableTask.objects.all()
     serializer_class = CommonScheduableTaskSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = CommonScheduableTaskFilter
+    
     
     @action(detail=False, methods=['post'])
     def create_multiple(self, request, *args, **kwargs):
@@ -129,7 +138,7 @@ class CommonScheduableTaskViewSet(ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         else:
             return Response({'error': 'Expected a list of items'}, status=status.HTTP_400_BAD_REQUEST)
-
+        
 class ScheduableTaskViewSet(ModelViewSet):
     queryset = ScheduableTask.objects.all()
     serializer_class = ScheduableTaskSerializer
