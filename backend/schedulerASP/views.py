@@ -83,9 +83,19 @@ class SpaceViewSet(ModelViewSet):
         else:
             return Response({'error': 'Expected a list of items'}, status=status.HTTP_400_BAD_REQUEST)
     
+
+class CommonSpaceFilter(filters.FilterSet):
+    user_id = filters.NumberFilter(field_name='user_id')
+
+    class Meta:
+        model = CommonSpace
+        fields = ['user_id']
+
 class CommonSpaceViewSet(ModelViewSet):
     queryset = CommonSpace.objects.all()
     serializer_class = CommonSpaceSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = CommonSpaceFilter
     
     @action(detail=False, methods=['post'])
     def create_multiple(self, request, *args, **kwargs):
@@ -99,6 +109,7 @@ class CommonSpaceViewSet(ModelViewSet):
             return Response({'error': 'Expected a list of items'}, status=status.HTTP_400_BAD_REQUEST)
     
 
+        
 class TagViewSet(ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer

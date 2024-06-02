@@ -1,0 +1,42 @@
+<h2>Espacios guardados</h2>
+<div style="display: flex">
+  <div class="column">
+    <div class="card-container">
+      <div *ngFor="let space of spaceCards">
+        <mat-card class="card">
+          <mat-card-header>
+            <mat-card-title>{{ space.name }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content> </mat-card-content>
+          <mat-card-actions>
+            <button
+              mat-raised-button
+              color="accent"
+              (click)="openSpaceDialog(space)"
+              style="margin: 5px"
+            >
+              Modificar
+            </button>
+            <button
+              mat-raised-button
+              color="warn"
+              (click)="deleteSpace(space.name)"
+              style="margin: 5px"
+            >
+              Eliminar
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="openSpaceDialog()"
+      style="margin: 5px"
+    >
+      Añadir espacio
+    </button>
+  </div>
+</div>
+<div class="button-container"></div>

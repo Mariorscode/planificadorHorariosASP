@@ -69,10 +69,6 @@ export class schedulerASP {
     return this.http.get(this.apiUrl + 'spaces/');
   }
 
-  // getSpacesByUserId(userId: number): Observable<any> {
-  //   return this.http.get(this.apiUrl + 'spaces/?user_id=' + userId);
-  // }
-
   // ---------/Space
 
   // ---------CommonSpace
@@ -83,6 +79,23 @@ export class schedulerASP {
   createAllCommonSpace(data: any): Observable<any> {
     return this.http.post(this.apiUrl + 'commonspaces/create_multiple/', data);
   }
+
+  createCommonSpace(data: any): Observable<any> {
+    return this.http.post(this.apiUrl + 'commonspaces/', data);
+  }
+
+  updateCommonSpace(spaceId: number, data: any): Observable<any> {
+    return this.http.put(this.apiUrl + 'commonspaces/' + spaceId + '/', data);
+  }
+
+  getCommonSpacesByUserId(userId: number): Observable<any> {
+    return this.http.get(this.apiUrl + 'commonspaces/?user_id=' + userId);
+  }
+
+  deleteCommonSpaceById(spaceId: number): Observable<any> {
+    return this.http.delete(this.apiUrl + 'commonspaces/' + spaceId + '/');
+  }
+
   // ---------/CommonSpace
 
   // ---------Tasks

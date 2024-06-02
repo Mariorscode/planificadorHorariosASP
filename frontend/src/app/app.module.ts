@@ -43,8 +43,9 @@ import {
   MatDialogModule,
 } from '@angular/material/dialog';
 import { s } from '@fullcalendar/core/internal-common';
+import { SpaceComponent } from './space/space.component';
 @NgModule({
-  declarations: [
+  declarations: [	
     AppComponent,
     CalendarComponent,
     StteperFormComponent,
@@ -54,7 +55,8 @@ import { s } from '@fullcalendar/core/internal-common';
     ScheduableTaskDialogComponent,
     HomePageComponent,
     WorkerComponent,
-  ],
+      SpaceComponent
+   ],
   imports: [
     BrowserModule,
     AppRoutingModule,

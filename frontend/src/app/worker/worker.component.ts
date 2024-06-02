@@ -125,16 +125,6 @@ export class WorkerComponent {
     });
   }
 
-  // saveChanges() {
-  //   // Aquí iría la lógica para guardar los cambios
-  //   // Por ejemplo, enviar los cambios al servidor
-
-  //   console.log('Guardando cambios:', this.workers);
-
-  //   // Resetear la bandera después de guardar
-  //   this.hasChanges = false;
-  // }
-
   createCommonWorker(data: any) {
     this.schedulerASP.createCommonWorker(data).subscribe(
       (response) => {
@@ -163,9 +153,9 @@ export class WorkerComponent {
         console.log('Response all common workers:', response);
         this.apiWorkers = response;
         this.apiWorkers.forEach((apiWorker) => {
-          let auxIds: number[] = [];
+          // let auxIds: number[] = [];
 
-          auxIds = apiWorker.restrictionsWorker;
+          // auxIds = apiWorker.restrictionsWorker;
 
           const newWorker: Worker = {
             name: apiWorker.name,
