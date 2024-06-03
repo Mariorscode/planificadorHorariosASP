@@ -15,8 +15,12 @@ export class schedulerASP {
     return this.http.post(this.apiUrl + 'timetables/', data);
   }
 
-  getAllTimetables(): Observable<any> {
-    return this.http.get(this.apiUrl + 'timetables/');
+  getAllTimetablesByUserId(userId: number) {
+    return this.http.get(this.apiUrl + 'timetables/?user_id=' + userId);
+  }
+
+  deleteTimetable(timetableId: number): Observable<any> {
+    return this.http.delete(this.apiUrl + 'timetables/' + timetableId + '/');
   }
   // ---------/Timetable
 

@@ -64,9 +64,19 @@ class CommonWorkerViewSet(ModelViewSet):
             return Response({'error': 'Expected a list of items'}, status=status.HTTP_400_BAD_REQUEST)    
         
 
+class TimeTableFilter(filters.FilterSet):
+    user_id = filters.NumberFilter(field_name='user_id')
+
+    class Meta:
+        model = TimeTable
+        fields = ['user_id']
+
 class TimeTableViewSet(ModelViewSet):
     queryset = TimeTable.objects.all()
     serializer_class = TimeTableSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TimeTableFilter
+    
 
 class SpaceViewSet(ModelViewSet):
     queryset = Space.objects.all()

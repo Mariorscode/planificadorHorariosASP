@@ -4,7 +4,7 @@ from .models import Turn, Worker, CommonWorker, Space,CommonSpace , Tag, Schedua
 class TimeTableSerializer(serializers.ModelSerializer):
     class Meta:
         model = TimeTable
-        fields = ['id', 'name', 'turnsDuration', 'turnsPerDay', 'start_time']
+        fields = ['id', 'name', 'turnsDuration', 'turnsPerDay', 'start_time', 'user_id']
 
 class TurnSerializer(serializers.ModelSerializer):
     class Meta:

@@ -14,6 +14,8 @@ import { ScheduableTaskDialogComponent } from '../dialog/scheduableTaskDialog/sc
 import { co, s } from '@fullcalendar/core/internal-common';
 import { schedulerASP } from '../schedulerASP.service';
 import { empty } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+
 export interface Turn {
   day: String;
   startTime: String;
@@ -90,7 +92,7 @@ export class StteperFormComponent {
   }
 
   // Variables
-  userid: number = 1;
+  userid: number = 0;
 
   daysOfWeek: string[] = [
     'Lunes',
@@ -164,7 +166,13 @@ export class StteperFormComponent {
   // excute at the load of the component
   ngOnInit(): void {
     // load the space cards
-    this.getAllTimetables();
+    // this.getAllTimetables();
+    this.route.queryParams.subscribe((params) => {
+      this.userid = +params['user_id'] || 0;
+      console.log('User ID:', this.userid);
+      // Lógica para manejar el user_id
+    });
+
     this.getAllCommonSpaces();
     this.getAllCommonWorkers();
     this.getAllCommonTasks();
@@ -560,6 +568,8 @@ export class StteperFormComponent {
       name: this.firstFormGroup.get('scheduleName')?.value,
       turnsDuration: this.firstFormGroup.get('turnDuration')?.value,
       turnsPerDay: this.firstFormGroup.get('numberOfTurns')?.value,
+      start_time: this.firstFormGroup.get('firstTurnTime')?.value,
+      user_id: this.userid,
     };
 
     console.log('data sent timetable:', data);
@@ -574,16 +584,16 @@ export class StteperFormComponent {
     );
   }
 
-  getAllTimetables() {
-    this.schedulerASP.getAllTimetables().subscribe(
-      (response) => {
-        this.apiTimeTable = response;
-      },
-      (error) => {
-        console.error('Error:', error);
-      }
-    );
-  }
+  // getAllTimetables() {
+  //   this.schedulerASP.getAllTimetables().subscribe(
+  //     (response) => {
+  //       this.apiTimeTable = response;
+  //     },
+  //     (error) => {
+  //       console.error('Error:', error);
+  //     }
+  //   );
+  // }
 
   createAllTurns() {
     const auxTurn = this.secondFormGroup.get('turns')?.value ?? [];
@@ -838,6 +848,7 @@ export class StteperFormComponent {
   constructor(
     private _formBuilder: FormBuilder,
     public dialog: MatDialog,
-    private schedulerASP: schedulerASP
+    private schedulerASP: schedulerASP,
+    private route: ActivatedRoute
   ) {}
 }

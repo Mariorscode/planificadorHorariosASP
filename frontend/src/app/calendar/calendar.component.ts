@@ -17,6 +17,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import { EventInput } from '@fullcalendar/core';
 import { createEventId, INITIAL_EVENTS } from './event-utils';
 import { schedulerASP } from '../schedulerASP.service';
+import { ActivatedRoute } from '@angular/router';
 
 interface apiEvents {
   name: string;
@@ -34,7 +35,7 @@ interface apiEvents {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarComponent implements OnInit {
-  timetable_id = 3;
+  timetable_id = 0;
   timetableStartTime = '10:00';
   timetableDuration = 60;
   apischedules: apiEvents[] = [];
@@ -63,6 +64,11 @@ export class CalendarComponent implements OnInit {
   currentEvents = signal<EventApi[]>([]);
 
   ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      this.timetable_id = +params['timetable_id'];
+      // Lógica para cargar eventos basados en timetable_id
+    });
+
     this.getAllSchedules();
   }
 
@@ -150,6 +156,7 @@ export class CalendarComponent implements OnInit {
 
   constructor(
     private changeDetector: ChangeDetectorRef,
-    private schedulerASP: schedulerASP
+    private schedulerASP: schedulerASP,
+    private route: ActivatedRoute
   ) {}
 }

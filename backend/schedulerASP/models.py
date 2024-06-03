@@ -13,6 +13,7 @@ class TimeTable(models.Model):
     turnsDuration = models.IntegerField(default=0)
     turnsPerDay = models.IntegerField(default=0)
     start_time = models.CharField(max_length=70, blank=False, default='')
+    user_id = models.ForeignKey(User, related_name='timetables', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name + " " + str(self.turnsDuration) + " " + str(self.turnsPerDay)
