@@ -12,6 +12,7 @@ class TimeTable(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')
     turnsDuration = models.IntegerField(default=0)
     turnsPerDay = models.IntegerField(default=0)
+    start_time = models.CharField(max_length=70, blank=False, default='')
 
     def __str__(self):
         return self.name + " " + str(self.turnsDuration) + " " + str(self.turnsPerDay)

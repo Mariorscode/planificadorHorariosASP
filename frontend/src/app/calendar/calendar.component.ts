@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   signal,
+  OnInit,
 } from '@angular/core';
 import {
   CalendarOptions,
@@ -13,93 +14,142 @@ import {
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import { INITIAL_EVENTS, createEventId } from './event-utils';
+import { EventInput } from '@fullcalendar/core';
+import { createEventId, INITIAL_EVENTS } from './event-utils';
+import { schedulerASP } from '../schedulerASP.service';
+
+interface apiEvents {
+  name: string;
+  day: string;
+  number: number;
+  schedule_space: string;
+  schedule_worker: string;
+  timeTable_schedule: number;
+}
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush, // Para mejorar el rendimiento, ya que no se esperan cambios externos en este componente
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CalendarComponent {
+export class CalendarComponent implements OnInit {
+  timetable_id = 3;
+  timetableStartTime = '10:00';
+  timetableDuration = 60;
+  apischedules: apiEvents[] = [];
+  INITIAL_EVENTS: EventInput[] = INITIAL_EVENTS;
+  events: EventInput[] = [];
+
   calendarVisible = signal(true);
   calendarOptions = signal<CalendarOptions>({
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
     headerToolbar: {
-      // left: 'prev,next today',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
     views: {
       dayGridWeek: {
-        // name of view
         dayHeaderFormat: {
           weekday: 'long',
         },
-        // other view-specific options here
       },
     },
     locale: 'es',
     firstDay: 1,
-    initialView: 'dayGridWeek',
-    initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
+    initialView: 'timeGridWeek',
+    initialEvents: this.INITIAL_EVENTS,
     weekends: true,
-    editable: true,
-    selectable: true,
-    selectMirror: true,
-    dayMaxEvents: true,
-    select: this.handleDateSelect.bind(this),
-    eventClick: this.handleEventClick.bind(this),
-    eventsSet: this.handleEvents.bind(this),
-    /* you can update a remote database when these fire:
-    eventAdd:
-    eventChange:
-    eventRemove:
-    */
   });
   currentEvents = signal<EventApi[]>([]);
 
-  constructor(private changeDetector: ChangeDetectorRef) {}
-
-  handleCalendarToggle() {
-    this.calendarVisible.update((bool) => !bool);
+  ngOnInit() {
+    this.getAllSchedules();
   }
 
-  handleWeekendsToggle() {
-    this.calendarOptions.mutate((options) => {
-      options.weekends = !options.weekends;
-    });
-  }
-
-  handleDateSelect(selectInfo: DateSelectArg) {
-    const title = prompt('Please enter a new title for your event');
-    const calendarApi = selectInfo.view.calendar;
-
-    calendarApi.unselect(); // clear date selection
-
-    if (title) {
-      calendarApi.addEvent({
+  eventosNuevos() {
+    const nuevosEventos: EventInput[] = [
+      {
         id: createEventId(),
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay,
-      });
-    }
+        title: 'EVENTO NUEVO',
+        daysOfWeek: [1], // Lunes
+        startTime: '10:00:00',
+        endTime: '14:00:00',
+      },
+    ];
+
+    this.calendarOptions().events = nuevosEventos;
+
+    this.changeDetector.detectChanges();
+  }
+  getDayIndex(day: string): number {
+    const daysOfWeek: { [key: string]: number } = {
+      Domingo: 0,
+      Lunes: 1,
+      Martes: 2,
+      Miércoles: 3,
+      Jueves: 4,
+      Viernes: 5,
+      Sábado: 6,
+    };
+    return daysOfWeek[day] ?? 1;
   }
 
-  handleEventClick(clickInfo: EventClickArg) {
-    if (
-      confirm(
-        `Are you sure you want to delete the event '${clickInfo.event.title}'`
-      )
-    ) {
-      clickInfo.event.remove();
-    }
+  getAllSchedules() {
+    this.schedulerASP.getAllSchedulesByTimeTableId(this.timetable_id).subscribe(
+      (response) => {
+        console.log('Response all schedules:', response);
+        this.apischedules = response;
+        this.events = []; // Reiniciar eventos para evitar duplicados
+
+        this.apischedules.forEach((apiWorker) => {
+          // Convertir timetableStartTime a minutos
+          const [startHour, startMinutes] = this.timetableStartTime
+            .split(':')
+            .map(Number);
+          let startTimeInMinutes = startHour * 60 + startMinutes;
+
+          // Calcular el nuevo startTime y endTime
+          startTimeInMinutes += this.timetableDuration * (apiWorker.number - 1); // -1 porque empieza desde 0
+
+          const endTimeInMinutes = startTimeInMinutes + this.timetableDuration;
+
+          // Convertir minutos de vuelta a hh:mm
+          const newStartHour = Math.floor(startTimeInMinutes / 60)
+            .toString()
+            .padStart(2, '0');
+          const newStartMinutes = (startTimeInMinutes % 60)
+            .toString()
+            .padStart(2, '0');
+          const newEndHour = Math.floor(endTimeInMinutes / 60)
+            .toString()
+            .padStart(2, '0');
+          const newEndMinutes = (endTimeInMinutes % 60)
+            .toString()
+            .padStart(2, '0');
+
+          const apiEvent: EventInput = {
+            id: createEventId(),
+            title: apiWorker.name,
+            daysOfWeek: [this.getDayIndex(apiWorker.day)], // Asignar el día de la semana correctamente
+            startTime: `${newStartHour}:${newStartMinutes}:00`,
+            endTime: `${newEndHour}:${newEndMinutes}:00`,
+          };
+
+          this.events.push(apiEvent);
+        });
+
+        // Actualizar los eventos en el calendario
+        this.calendarOptions().events = this.events;
+        this.changeDetector.detectChanges();
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
   }
 
-  handleEvents(events: EventApi[]) {
-    this.currentEvents.set(events);
-    this;
-  }
+  constructor(
+    private changeDetector: ChangeDetectorRef,
+    private schedulerASP: schedulerASP
+  ) {}
 }

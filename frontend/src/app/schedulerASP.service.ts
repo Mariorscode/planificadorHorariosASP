@@ -150,4 +150,25 @@ export class schedulerASP {
   }
 
   // ---------/CommonTasks
+
+  // ---------Schedule
+
+  createSchedule(data: any): Observable<any> {
+    return this.http.post(this.apiUrl + 'schedules/', data);
+  }
+
+  createAllSchedules(data: any): Observable<any> {
+    return this.http.post(this.apiUrl + 'schedules/create_multiple/', data);
+  }
+
+  getAllSchedulesByTimeTableId(timeTableId: number): Observable<any> {
+    return this.http.get(
+      this.apiUrl + 'schedules/?timeTable_schedule=' + timeTableId
+    );
+  }
+
+  deleteScheduleById(scheduleId: number): Observable<any> {
+    return this.http.delete(this.apiUrl + 'schedules/' + scheduleId + '/');
+  }
+  // ---------/Schedule
 }

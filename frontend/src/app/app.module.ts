@@ -45,6 +45,7 @@ import {
   MatDialogModule,
 } from '@angular/material/dialog';
 import { s } from '@fullcalendar/core/internal-common';
+// import { CalendarWeekComponent } from './calendarWeek/calendarWeek.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { s } from '@fullcalendar/core/internal-common';
     WorkerComponent,
     SpaceComponent,
     TaskComponent,
+    // CalendarWeekComponent,
   ],
   imports: [
     BrowserModule,

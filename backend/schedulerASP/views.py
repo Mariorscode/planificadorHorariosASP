@@ -155,10 +155,28 @@ class ScheduableTaskViewSet(ModelViewSet):
         else:
             return Response({'error': 'Expected a list of items'}, status=status.HTTP_400_BAD_REQUEST)
     
+class ScheduleFilter(filters.FilterSet):
+    timeTable_schedule = filters.NumberFilter(field_name='timeTable_schedule')
+    class Meta:
+        model = Schedule
+        fields = ['timeTable_schedule']
+    
 class scheduleViewSet(ModelViewSet):
     queryset = Schedule.objects.all()
     serializer_class = ScheduleSerializer
-    
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ScheduleFilter
+      
+    @action(detail=False, methods=['post'])
+    def create_multiple(self, request, *args, **kwargs):
+        if isinstance(request.data, list):
+            serializer = self.get_serializer(data=request.data, many=True)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        else:
+            return Response({'error': 'Expected a list of items'}, status=status.HTTP_400_BAD_REQUEST)
 class userViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
