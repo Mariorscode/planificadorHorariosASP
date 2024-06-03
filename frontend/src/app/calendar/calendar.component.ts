@@ -36,8 +36,8 @@ interface apiEvents {
 })
 export class CalendarComponent implements OnInit {
   timetable_id = 0;
-  timetableStartTime = '10:00';
-  timetableDuration = 60;
+  timetableStartTime = '';
+  timetableDuration = 0;
   apischedules: apiEvents[] = [];
   INITIAL_EVENTS: EventInput[] = INITIAL_EVENTS;
   events: EventInput[] = [];

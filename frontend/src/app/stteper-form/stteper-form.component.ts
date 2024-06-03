@@ -320,29 +320,32 @@ export class StteperFormComponent {
           restrictionsSpace: result.restrictionsSpace,
         };
 
-        // check if the space already exists
-        const existingSpaceIndex = this.spaceCards.findIndex(
-          (spaceCards) => spaceCards.name === newSpace.name
-        );
+        if (space) {
+          // If the worker was provided (modification case), find its index
+          const existingSpaceIndex = this.spaces.findIndex(
+            (s) => s.name === space.name
+          );
 
-        if (existingSpaceIndex !== -1) {
-          //in case the space already exists, update the space
-          this.spaces[existingSpaceIndex] = newSpace;
+          if (existingSpaceIndex !== -1) {
+            // Update the existing worker
+            this.spaces[existingSpaceIndex] = newSpace;
+          }
         } else {
-          // if the space does not exist, add it to the spaces array
+          // If no worker was provided (creation case), add the new worker
           this.spaces.push(newSpace);
         }
+
         this.loadSpaceCards();
       }
     });
   }
 
   openWorkerDialog(worker?: Worker) {
-    let workerName: string;
+    // let workerName: string;
 
     let dialogRef;
     if (worker) {
-      workerName = worker.name;
+      // workerName = worker.name;
       dialogRef = this.dialog.open(WorkerDialogComponent, {
         data: {
           workerName: worker.name,
@@ -368,18 +371,21 @@ export class StteperFormComponent {
           restrictionsWorker: result.restrictionsWorker,
         };
 
-        // check if the worker already exists
-        const existingWorkerIndex = this.workerCards.findIndex(
-          (workerCards) => workerCards.name === newWorker.name
-        );
+        if (worker) {
+          // If the worker wa s provided (modification case), find its index
+          const existingWorkerIndex = this.workers.findIndex(
+            (w) => w.name === worker.name
+          );
 
-        if (existingWorkerIndex !== -1) {
-          //in case the worker already exists, update the worker
-          this.workers[existingWorkerIndex] = newWorker;
+          if (existingWorkerIndex !== -1) {
+            // Update the existing worker
+            this.workers[existingWorkerIndex] = newWorker;
+          }
         } else {
-          // if the worker does not exist, add it to the workers array
+          // If no worker was provided (creation case), add the new worker
           this.workers.push(newWorker);
         }
+
         this.loadWorkerCards();
       }
     });
@@ -435,19 +441,21 @@ export class StteperFormComponent {
           taskTags: result.tags,
         };
 
-        // check if the space already exists
-        const existingTaskIndex = this.scheduableTasks.findIndex(
-          (task) => task.name === newTask.name
-        );
-        // this.scheduableTasks.push(newTask);
+        if (scheduableTask) {
+          // If the worker was provided (modification case), find its index
+          const existingtaskIndex = this.scheduableTasks.findIndex(
+            (t) => t.name === scheduableTask.name
+          );
 
-        if (existingTaskIndex !== -1) {
-          //in case the space already exists, update the space
-          this.scheduableTasks[existingTaskIndex] = newTask;
+          if (existingtaskIndex !== -1) {
+            // Update the existing worker
+            this.scheduableTasks[existingtaskIndex] = newTask;
+          }
         } else {
-          // if the space does not exist, add it to the spaces array
+          // If no worker was provided (creation case), add the new worker
           this.scheduableTasks.push(newTask);
         }
+
         this.loadTaskCards();
       }
     });
