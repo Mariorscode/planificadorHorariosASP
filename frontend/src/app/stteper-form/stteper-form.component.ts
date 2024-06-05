@@ -92,7 +92,7 @@ export class StteperFormComponent {
   }
 
   // Variables
-  userid: number = 0;
+  // userid: number = 0;
 
   daysOfWeek: string[] = [
     'Lunes',
@@ -167,11 +167,11 @@ export class StteperFormComponent {
   ngOnInit(): void {
     // load the space cards
     // this.getAllTimetables();
-    this.route.queryParams.subscribe((params) => {
-      this.userid = +params['user_id'] || 0;
-      console.log('User ID:', this.userid);
-      // Lógica para manejar el user_id
-    });
+    // this.route.queryParams.subscribe((params) => {
+    //   this.userid = +params['user_id'] || 0;
+    //   console.log('User ID:', this.userid);
+    //   // Lógica para manejar el user_id
+    // });
 
     this.getAllCommonSpaces();
     this.getAllCommonWorkers();
@@ -577,7 +577,7 @@ export class StteperFormComponent {
       turnsDuration: this.firstFormGroup.get('turnDuration')?.value,
       turnsPerDay: this.firstFormGroup.get('numberOfTurns')?.value,
       start_time: this.firstFormGroup.get('firstTurnTime')?.value,
-      user_id: this.userid,
+      user_id: parseInt(localStorage.getItem('userId') ?? '', 0),
     };
 
     console.log('data sent timetable:', data);
@@ -675,7 +675,7 @@ export class StteperFormComponent {
       return {
         name: space.name,
         space_capacity: space.spaceCapacity,
-        user_id: this.userid,
+        user_id: localStorage.getItem('userId'),
       };
     });
 
@@ -747,7 +747,7 @@ export class StteperFormComponent {
     const data2 = differentWorkers.map((worker: Worker) => {
       return {
         name: worker.name,
-        user_id: this.userid,
+        user_id: localStorage.getItem('userId'),
       };
     });
 
@@ -829,7 +829,7 @@ export class StteperFormComponent {
     const data2 = differentTasks.map((task: ScheduableTask) => {
       return {
         name: task.name,
-        user_id: this.userid,
+        user_id: localStorage.getItem('userId'),
       };
     });
 

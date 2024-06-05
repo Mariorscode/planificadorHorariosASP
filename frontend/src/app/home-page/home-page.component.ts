@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { schedulerASP } from '../schedulerASP.service';
-import { s } from '@fullcalendar/core/internal-common';
+import { er, s } from '@fullcalendar/core/internal-common';
 import { Router } from '@angular/router';
 
 interface Timetable {
@@ -26,15 +26,24 @@ export class HomePageComponent {
   apiTimetables: Timetable[] = [];
   timetableCards: timetableCards[] = [];
 
-  user_id = 1;
+  // user_id = 1;
 
   ngOnInit(): void {
-    console.log('User ID:', this.user_id);
+    // console.log('User ID:', this.user_id);
+    console.log('User ID:', localStorage.getItem('userId'));
     this.getAllTimetables();
+    this.schedulerASP.getAllTimetablesByUserId().subscribe(
+      (data: any) => {
+        console.log('AAAAAAAAA:', data);
+      },
+      (error: any) => {
+        console.error('Error:', error);
+      }
+    );
   }
 
   getAllTimetables() {
-    this.schedulerASP.getAllTimetablesByUserId(this.user_id).subscribe(
+    this.schedulerASP.getAllTimetablesByUserId().subscribe(
       (data: any) => {
         console.log('Data:', data);
         this.apiTimetables = data;
@@ -100,7 +109,7 @@ export class HomePageComponent {
   generateSchedule() {
     // Lógica para generar el horario y llamar al componente StatePerform
     this.router.navigate(['/stteperform'], {
-      queryParams: { user_id: this.user_id },
+      // queryParams: { user_id: this.user_id },
     });
   }
 

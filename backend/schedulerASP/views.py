@@ -236,6 +236,20 @@ class UserViewSet(ModelViewSet):
             return Response(data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    @action(detail=False, methods=['get'])
+    def get_user_by_username(self, request):
+        username = request.query_params.get('username')
+        if username:
+            try:
+                user = User.objects.get(username=username)
+                serializer = self.get_serializer(user)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except User.DoesNotExist:
+                return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({'error': 'Please provide a username'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class Home(APIView):

@@ -40,7 +40,22 @@ export class LoginComponent {
         console.log(data.access);
         // this.token = data.access;
         localStorage.setItem('token', data.access);
-        this.router.navigate(['/homepage']);
+        const username = this.loginForm.get('username')?.value;
+        if (username) {
+          this.schedulerASP.getUserByUserName(username).subscribe(
+            (data) => {
+              console.log(data);
+              localStorage.setItem('userId', data.id);
+              this.router.navigate(['/homepage']);
+            },
+            (error) => {
+              console.log(error);
+              let snackBarRef = this.snackBar.open(
+                'Usuario introducido no válido'
+              );
+            }
+          );
+        }
       },
       (error) => {
         console.log(error);

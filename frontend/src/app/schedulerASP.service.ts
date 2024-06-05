@@ -26,29 +26,47 @@ export class schedulerASP {
     return this.http.get(this.apiUrl + 'users/', { headers });
   }
 
-  postDataWithToken(token: string, postData: any): Observable<any> {
+  postDataWithToken(postData: any): Observable<any> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`, // Prefijo "Bearer " seguido del token
-      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`, // Prefijo "Bearer " seguido del token
     });
     return this.http.post<any>(`${this.apiUrl}timetables/`, postData, {
       headers,
     });
   }
 
-  getDataWithToken(token: string): Observable<any> {
+  getDataWithToken(): Observable<any> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`, // Prefijo "Bearer " seguido del token
+      Authorization: `Bearer ${localStorage.getItem('token')}`, // Prefijo "Bearer " seguido del token
     });
     return this.http.get<any>(`http://127.0.0.1:8000/home/`, { headers });
   }
-  // ---------Timetable
-  createTimeTable(data: any): Observable<any> {
-    return this.http.post(this.apiUrl + 'timetables/', data);
+
+  getUserByUserName(userName: string): Observable<any> {
+    return this.http.get(
+      this.apiUrl + 'users/get_user_by_username/?username=' + userName
+    );
   }
 
-  getAllTimetablesByUserId(userId: number) {
-    return this.http.get(this.apiUrl + 'timetables/?user_id=' + userId);
+  // ---------/User
+
+  // ---------Timetable
+  createTimeTable(data: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`, // Prefijo "Bearer " seguido del token
+    });
+    return this.http.post(this.apiUrl + 'timetables/', data, { headers });
+  }
+
+  getAllTimetablesByUserId() {
+    // localStorage.setItem('userId', userId.toString());
+    const userId = localStorage.getItem('userId');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`, // Prefijo "Bearer " seguido del token
+    });
+    return this.http.get(this.apiUrl + 'timetables/?user_id=' + userId, {
+      headers,
+    });
   }
 
   deleteTimetable(timetableId: number): Observable<any> {

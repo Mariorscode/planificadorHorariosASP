@@ -80,7 +80,7 @@ export class RegisterComponent {
     console.log(data);
     this.schedulerASP.createUser(data).subscribe(
       (data) => {
-        // console.log(data);
+        console.log(data.id);
         localStorage.setItem('userId', data.id);
         this.getToken(); // Obtén el token después del registro exitoso
       },
