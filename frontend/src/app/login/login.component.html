@@ -1,18 +1,23 @@
-<div class="login">
-  <form class="custom-form" method="post">
+<div class="container">
+  <form class="custom-form" [formGroup]="loginForm" (ngSubmit)="login()">
     <h1>Login</h1>
     <mat-form-field appearance="outline" color="primary">
-      <mat-label>Nombre Usuario</mat-label>
-      <input matInput formControlName="username" placeholder="" />
-    </mat-form-field>
-    <mat-form-field appearance="outline" color="primary">
-      <mat-label>Correo</mat-label>
-      <input matInput formControlName="email" placeholder="" />
+      <mat-label>Usuario</mat-label>
+      <input
+        matInput
+        formControlName="username"
+        placeholder="Enter your email"
+      />
     </mat-form-field>
     <mat-form-field appearance="outline" color="primary">
       <mat-label>Contraseña</mat-label>
-      <input matInput formControlName="password" placeholder="" />
+      <input
+        matInput
+        formControlName="password"
+        type="password"
+        placeholder="Enter your password"
+      />
     </mat-form-field>
-    <button type="submit" (click)="login()">Log in</button>
+    <button type="submit" class="btn">Login</button>
   </form>
 </div>

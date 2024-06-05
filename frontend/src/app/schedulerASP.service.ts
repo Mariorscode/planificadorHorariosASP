@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -19,6 +19,29 @@ export class schedulerASP {
     return this.http.post('http://localhost:8000/api/token/', data);
   }
 
+  getAllUsersWithToken(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`, // Prefijo "Bearer " seguido del token
+    });
+    return this.http.get(this.apiUrl + 'users/', { headers });
+  }
+
+  postDataWithToken(token: string, postData: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`, // Prefijo "Bearer " seguido del token
+      'Content-Type': 'application/json',
+    });
+    return this.http.post<any>(`${this.apiUrl}timetables/`, postData, {
+      headers,
+    });
+  }
+
+  getDataWithToken(token: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`, // Prefijo "Bearer " seguido del token
+    });
+    return this.http.get<any>(`http://127.0.0.1:8000/home/`, { headers });
+  }
   // ---------Timetable
   createTimeTable(data: any): Observable<any> {
     return this.http.post(this.apiUrl + 'timetables/', data);

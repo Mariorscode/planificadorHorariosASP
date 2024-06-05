@@ -1,23 +1,31 @@
-<div class="login">
+<div class="container">
   <form class="custom-form" [formGroup]="loginForm" (ngSubmit)="register()">
-    <h1>Register</h1>
+    <h1>Registro</h1>
     <mat-form-field appearance="outline" color="primary">
-      <mat-label>Nombre Usuario</mat-label>
-      <input matInput formControlName="username" placeholder="" />
+      <mat-label>Nombre de usuario</mat-label>
+      <input
+        matInput
+        formControlName="username"
+        placeholder="Ingrese su nombre de usuario"
+      />
     </mat-form-field>
     <mat-form-field appearance="outline" color="primary">
-      <mat-label>Correo</mat-label>
-      <input matInput formControlName="email" placeholder="" />
+      <mat-label>Correo electrónico</mat-label>
+      <input
+        matInput
+        formControlName="email"
+        placeholder="Ingrese su correo electrónico"
+      />
     </mat-form-field>
     <mat-form-field appearance="outline" color="primary">
       <mat-label>Contraseña</mat-label>
       <input
         matInput
         formControlName="password"
-        placeholder=""
+        placeholder="Ingrese su contraseña"
         type="password"
       />
     </mat-form-field>
-    <button type="submit">Registrar</button>
+    <button type="submit" class="btn">Registrar</button>
   </form>
 </div>

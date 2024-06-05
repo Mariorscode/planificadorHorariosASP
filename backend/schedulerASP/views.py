@@ -211,6 +211,7 @@ class scheduleViewSet(ModelViewSet):
 #         extra_kwargs = {'password': {'write_only': True}}
 
 User = get_user_model()
+
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -223,7 +224,16 @@ class UserViewSet(ModelViewSet):
             email = serializer.validated_data.get('email')
             password = serializer.validated_data.get('password')
             user = User.objects.create_user(username=username, password=password, email=email)
-            return Response(serializer.validated_data, status=status.HTTP_201_CREATED)
+            
+            # Modifica la respuesta para incluir el ID del usuario creado
+            data = {
+                'id': user.id,
+                'username': username,
+                'email': email,
+                # Otros campos si es necesario
+            }
+            
+            return Response(data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

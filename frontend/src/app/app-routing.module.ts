@@ -7,6 +7,7 @@ import { WorkerComponent } from './worker/worker.component';
 import { SpaceComponent } from './space/space.component';
 import { TaskComponent } from './task/task.component';
 import { RegisterComponent } from './register/register.component';
+import { LoginComponent } from './login/login.component';
 
 // import { CalendarWeekComponent } from './calendarWeek/calendarWeek.component';
 
@@ -20,6 +21,7 @@ const routes: Routes = [
   // { path: 'calendarWeek', component: CalendarWeekComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: 'register', component: RegisterComponent },
+  { path: 'login', component: LoginComponent },
 ];
 
 @NgModule({

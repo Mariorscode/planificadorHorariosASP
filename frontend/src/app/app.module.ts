@@ -11,6 +11,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
@@ -97,6 +98,7 @@ import { RegisterComponent } from './register/register.component';
     HttpClientModule,
     MatSidenavModule,
     MatToolbarModule,
+    MatSnackBarModule,
   ],
   providers: [schedulerASP],
   bootstrap: [AppComponent],

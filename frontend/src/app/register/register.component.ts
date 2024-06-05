@@ -31,15 +31,44 @@ export class RegisterComponent {
       password: this.loginForm.get('password')?.value,
       username: this.loginForm.get('username')?.value,
     };
+
     this.schedulerASP.createToken(data).subscribe(
       (data) => {
         console.log(data);
+        console.log(data.access);
+        // this.token = data.access;
+        localStorage.setItem('token', data.access);
+        // this.postPrueba(); // Realiza la solicitud después de obtener el token
       },
       (error) => {
         console.log(error);
       }
     );
   }
+
+  // postPrueba() {
+  //   const data = {
+  //     name: 'bbb',
+  //     turnsDuration: 1,
+  //     turnsPerDay: 1,
+  //     start_time: 'bbb',
+  //     user_id: 1,
+  //   };
+  //   console.log('local:', localStorage.getItem('token'));
+  //   const token = localStorage.getItem('token');
+  //   if (token) {
+  //     this.schedulerASP.postDataWithToken(token, data).subscribe(
+  //       (data) => {
+  //         console.log(data);
+  //       },
+  //       (error) => {
+  //         console.log(error);
+  //       }
+  //     );
+  //   } else {
+  //     console.log('Token not found');
+  //   }
+  // }
 
   register() {
     const data = {
@@ -51,8 +80,9 @@ export class RegisterComponent {
     console.log(data);
     this.schedulerASP.createUser(data).subscribe(
       (data) => {
-        console.log(data);
-        this.getToken();
+        // console.log(data);
+        localStorage.setItem('userId', data.id);
+        this.getToken(); // Obtén el token después del registro exitoso
       },
       (error) => {
         console.log(error);
