@@ -1,0 +1,23 @@
+<div class="login">
+  <form class="custom-form" [formGroup]="loginForm" (ngSubmit)="register()">
+    <h1>Register</h1>
+    <mat-form-field appearance="outline" color="primary">
+      <mat-label>Nombre Usuario</mat-label>
+      <input matInput formControlName="username" placeholder="" />
+    </mat-form-field>
+    <mat-form-field appearance="outline" color="primary">
+      <mat-label>Correo</mat-label>
+      <input matInput formControlName="email" placeholder="" />
+    </mat-form-field>
+    <mat-form-field appearance="outline" color="primary">
+      <mat-label>Contraseña</mat-label>
+      <input
+        matInput
+        formControlName="password"
+        placeholder=""
+        type="password"
+      />
+    </mat-form-field>
+    <button type="submit">Registrar</button>
+  </form>
+</div>

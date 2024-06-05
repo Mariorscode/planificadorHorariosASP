@@ -1,0 +1,18 @@
+<div class="login">
+  <form class="custom-form" method="post">
+    <h1>Login</h1>
+    <mat-form-field appearance="outline" color="primary">
+      <mat-label>Nombre Usuario</mat-label>
+      <input matInput formControlName="username" placeholder="" />
+    </mat-form-field>
+    <mat-form-field appearance="outline" color="primary">
+      <mat-label>Correo</mat-label>
+      <input matInput formControlName="email" placeholder="" />
+    </mat-form-field>
+    <mat-form-field appearance="outline" color="primary">
+      <mat-label>Contraseña</mat-label>
+      <input matInput formControlName="password" placeholder="" />
+    </mat-form-field>
+    <button type="submit" (click)="login()">Log in</button>
+  </form>
+</div>

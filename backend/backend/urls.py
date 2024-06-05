@@ -20,6 +20,13 @@ from eventos.api.router import router_evento
 from schedulerASP.router import router
 # from AssigmentsASP import AssigmentsASP
 
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.contrib import admin
+from django.urls import path, include
+
+from django.urls import path
+from schedulerASP .views import Home
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,18 +34,8 @@ urlpatterns = [
     path('eventos/', include(router_evento.urls)),
     path('assigmentsASP/', include('assigmentsASP.urls')),
     path('schedulerASP/', include(router.urls)),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('home/', Home.as_view(), name='home'), 
 ]
-
-# urlpatterns = [
-#     path('turns/', views.TurnList.as_view(), name='turn-list'),
-#     path('turns/<int:pk>/', views.TurnDetail.as_view(), name='turn-detail'),
-#     path('workers/', views.WorkerList.as_view(), name='worker-list'),
-#     path('workers/<int:pk>/', views.WorkerDetail.as_view(), name='worker-detail'),
-#     path('spaces/', views.SpaceList.as_view(), name='space-list'),
-#     path('spaces/<int:pk>/', views.SpaceDetail.as_view(), name='space-detail'),
-#     path('tags/', views.TagList.as_view(), name='tag-list'),
-#     path('tags/<int:pk>/', views.TagDetail.as_view(), name='tag-detail'),
-#     path('scheduable-tasks/', views.ScheduableTaskList.as_view(), name='scheduable-task-list'),
-#     path('scheduable-tasks/<int:pk>/', views.ScheduableTaskDetail.as_view(), name='scheduable-task-detail'),
-# ]
 

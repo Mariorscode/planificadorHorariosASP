@@ -1,13 +1,44 @@
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 
+# class UserManager(BaseUserManager):
+#     def create_user(self, email, password=None, **extra_fields):
+#         if not email:
+#             raise ValueError('El campo Email debe ser definido')
+#         email = self.normalize_email(email)
+#         user = self.model(email=email, **extra_fields)
+#         user.set_password(password)
+#         user.save(using=self._db)
+#         return user
+
+#     def create_superuser(self, email, password=None, **extra_fields):
+#         extra_fields.setdefault('is_staff', True)
+#         extra_fields.setdefault('is_superuser', True)
+
+#         return self.create_user(email, password, **extra_fields)
+
+# class User(AbstractBaseUser, PermissionsMixin):
+#     email = models.EmailField(unique=True)
+#     name = models.CharField(max_length=255)
+#     is_active = models.BooleanField(default=True)
+#     is_staff = models.BooleanField(default=False)
+
+#     objects = UserManager()
+
+#     USERNAME_FIELD = 'email'
+#     REQUIRED_FIELDS = ['name']
+
+#     def __str__(self):
+#         return self.email
 # Create your models here.
 class User(models.Model):
-    name = models.CharField(max_length=70, blank=False, default='')
+    username = models.CharField(max_length=70, blank=False, default='')
     password = models.CharField(max_length=70, blank=False, default='')
     email = models.CharField(max_length=70, blank=False, default='')
     
     def __str__(self):
-        return self.name
+        return self.username
+    
 class TimeTable(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')
     turnsDuration = models.IntegerField(default=0)
@@ -73,7 +104,8 @@ class ScheduableTask(models.Model):
     task_restrictions = models.ManyToManyField(Turn,related_name='task_restrictions', blank=True, null=True)
     # task_tags = models.ManyToManyField(Tag, blank=True, null=True, related_name='task_tags')
     # task_tags = models.CharField(max_length=70, blank=False, default='')
-    task_tags = models.JSONField(default=list)
+    # task_tags = models.JSONField(default=list)
+    tags = models.CharField(max_length=70, blank=False, default='')
     task_worker = models.ForeignKey(Worker, blank=True, null=True, related_name='scheduable_tasks', on_delete=models.SET_NULL)
     task_spaces = models.ForeignKey(Space, blank=True, null=True, related_name='scheduable_tasks', on_delete=models.SET_NULL)
     timeTable_id = models.ForeignKey(TimeTable, related_name='scheduable_tasks', on_delete=models.CASCADE, null=True)
@@ -109,4 +141,3 @@ class Schedule(models.Model):
     timeTable_schedule = models.ForeignKey(TimeTable, related_name='timeTable_schedule', on_delete=models.CASCADE)
     
 
-    

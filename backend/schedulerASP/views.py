@@ -8,9 +8,20 @@ from rest_framework.decorators import action
 from .models import Turn, Worker, CommonWorker, Space, CommonSpace, Tag, ScheduableTask, CommonScheduableTask, TimeTable, Schedule, User
 from .serializer import TurnSerializer, WorkerSerializer, CommonWorkerSerializer, SpaceSerializer, CommonSpaceSerializer, TagSerializer, ScheduableTaskSerializer, CommonScheduableTaskSerializer, TimeTableSerializer, ScheduleSerializer, UserSerializer
 
+from rest_framework.permissions import IsAuthenticated, AllowAny
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
+
+from django.contrib.auth import get_user_model
+
 class TurnViewSet(ModelViewSet):
     serializer_class = TurnSerializer
     queryset = Turn.objects.all()
+    permission_classes = [AllowAny]
     
     @action(detail=False, methods=['post'])
     def create_multiple(self, request, *args, **kwargs):
@@ -41,6 +52,7 @@ class WorkerViewSet(ModelViewSet):
         
 class CommonWorkerFilter(filters.FilterSet):
     user_id = filters.NumberFilter(field_name='user_id')
+    
 
     class Meta:
         model = CommonWorker
@@ -187,7 +199,39 @@ class scheduleViewSet(ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         else:
             return Response({'error': 'Expected a list of items'}, status=status.HTTP_400_BAD_REQUEST)
-class userViewSet(ModelViewSet):
+# class UserViewSet(ModelViewSet):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+#     permission_classes = [AllowAny]
+    
+    
+#     class Meta:
+#         model = User
+#         fields = ['id', 'name', 'email', 'password']
+#         extra_kwargs = {'password': {'write_only': True}}
+
+User = get_user_model()
+class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [AllowAny]
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            username = serializer.validated_data.get('username')
+            email = serializer.validated_data.get('email')
+            password = serializer.validated_data.get('password')
+            user = User.objects.create_user(username=username, password=password, email=email)
+            return Response(serializer.validated_data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class Home(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        content = {'message': 'Hello, World!'}
+        return Response(content)

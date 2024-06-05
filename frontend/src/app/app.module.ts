@@ -39,6 +39,15 @@ import { WorkerComponent } from './worker/worker.component';
 import { SpaceComponent } from './space/space.component';
 import { TaskComponent } from './task/task.component';
 
+// import { JwtModule } from '@auth0/angular-jwt';
+
+// import { AuthService } from './services/auth.service';
+// import { AuthGuard } from './guards/auth.guard';
+// import { JwtInterceptor } from './interceptors/jwt.interceptor';
+
+// import { LoginComponent } from './login/login.component';
+// import { HomeComponent } from './home/home.component';
+
 import {
   MatDialog,
   MAT_DIALOG_DATA,
@@ -46,6 +55,8 @@ import {
 } from '@angular/material/dialog';
 import { s } from '@fullcalendar/core/internal-common';
 // import { CalendarWeekComponent } from './calendarWeek/calendarWeek.component';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
@@ -59,8 +70,9 @@ import { s } from '@fullcalendar/core/internal-common';
     HomePageComponent,
     WorkerComponent,
     SpaceComponent,
-    TaskComponent,
-    // CalendarWeekComponent,
+    TaskComponent, // CalendarWeekComponent,
+    LoginComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,

@@ -10,6 +10,15 @@ export class schedulerASP {
 
   constructor(private http: HttpClient) {}
 
+  // ---------User
+  createUser(data: any): Observable<any> {
+    return this.http.post(this.apiUrl + 'users/', data);
+  }
+
+  createToken(data: any): Observable<any> {
+    return this.http.post('http://localhost:8000/api/token/', data);
+  }
+
   // ---------Timetable
   createTimeTable(data: any): Observable<any> {
     return this.http.post(this.apiUrl + 'timetables/', data);
