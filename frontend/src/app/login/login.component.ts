@@ -32,8 +32,13 @@ export class LoginComponent {
     this.schedulerASP.createToken(data).subscribe(
       (data) => {
         console.log(data);
-        console.log(data.access);
-        localStorage.setItem('token', data.access);
+        const token = data.access;
+        const expirationDate = new Date();
+        expirationDate.setHours(expirationDate.getHours() + 1);
+
+        localStorage.setItem('token', token);
+        localStorage.setItem('tokenExpiration', expirationDate.toString());
+
         const username = this.loginForm.get('username')?.value;
         if (username) {
           this.schedulerASP.getUserByUserName(username).subscribe(
