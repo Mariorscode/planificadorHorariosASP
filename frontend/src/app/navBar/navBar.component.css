@@ -21,3 +21,12 @@ mat-toolbar {
   text-decoration: none;
   color: inherit;
 }
+
+.logout{
+  margin-left: auto; 
+  cursor: pointer
+}
+
+.logout:hover{
+  color: red;
+}
