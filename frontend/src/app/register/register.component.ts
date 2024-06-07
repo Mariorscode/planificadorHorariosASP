@@ -1,13 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  Validators,
-  FormsModule,
-  ReactiveFormsModule,
-  FormControl,
-} from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { schedulerASP } from '../schedulerASP.service';
-import { C } from '@fullcalendar/core/internal-common';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -20,11 +15,17 @@ export class RegisterComponent {
   username: string = '';
 
   loginForm = this.fb.group({
-    email: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
     username: ['', Validators.required],
   });
-  constructor(private fb: FormBuilder, private schedulerASP: schedulerASP) {}
+
+  constructor(
+    private fb: FormBuilder,
+    private schedulerASP: schedulerASP,
+    private snackBar: MatSnackBar,
+    private router: Router
+  ) {}
 
   getToken() {
     const data = {
@@ -36,41 +37,32 @@ export class RegisterComponent {
       (data) => {
         console.log(data);
         console.log(data.access);
-        // this.token = data.access;
         localStorage.setItem('token', data.access);
-        // this.postPrueba(); // Realiza la solicitud después de obtener el token
+        this.router.navigate(['/login']); // Redirige al login después de obtener el token
       },
       (error) => {
         console.log(error);
+        this.snackBar.open('Error al obtener el token', 'Cerrar', {
+          duration: 3000,
+          panelClass: ['custom-snackbar'],
+        });
       }
     );
   }
 
-  // postPrueba() {
-  //   const data = {
-  //     name: 'bbb',
-  //     turnsDuration: 1,
-  //     turnsPerDay: 1,
-  //     start_time: 'bbb',
-  //     user_id: 1,
-  //   };
-  //   console.log('local:', localStorage.getItem('token'));
-  //   const token = localStorage.getItem('token');
-  //   if (token) {
-  //     this.schedulerASP.postDataWithToken(token, data).subscribe(
-  //       (data) => {
-  //         console.log(data);
-  //       },
-  //       (error) => {
-  //         console.log(error);
-  //       }
-  //     );
-  //   } else {
-  //     console.log('Token not found');
-  //   }
-  // }
-
   register() {
+    if (this.loginForm.invalid) {
+      this.snackBar.open(
+        'Por favor, complete todos los campos correctamente',
+        'Cerrar',
+        {
+          duration: 3000,
+          panelClass: ['custom-snackbar'],
+        }
+      );
+      return;
+    }
+
     const data = {
       email: this.loginForm.get('email')?.value,
       password: this.loginForm.get('password')?.value,
@@ -86,6 +78,10 @@ export class RegisterComponent {
       },
       (error) => {
         console.log(error);
+        this.snackBar.open('Error al registrar el usuario', 'Cerrar', {
+          duration: 3000,
+          panelClass: ['custom-snackbar'],
+        });
       }
     );
   }

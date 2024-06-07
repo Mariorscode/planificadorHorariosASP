@@ -1,6 +1,6 @@
 <div class="container">
   <form class="custom-form" [formGroup]="loginForm" (ngSubmit)="login()">
-    <h1>Login</h1>
+    <h1>Inicio sesión</h1>
     <mat-form-field appearance="outline" color="primary">
       <mat-label>Usuario</mat-label>
       <input
@@ -20,4 +20,7 @@
     </mat-form-field>
     <button type="submit" class="btn">Login</button>
   </form>
+  <a class="linkRegister" *ngIf="loginError" (click)="redirectToRegister()"
+    >Crear cuenta</a
+  >
 </div>

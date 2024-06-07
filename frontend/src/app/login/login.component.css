@@ -38,3 +38,14 @@ mat-form-field {
 .btn:hover {
   background-color: #0056b3;
 }
+
+.linkRegister {
+  color: #ff0000;
+  text-decoration: none;
+  cursor: pointer;
+  margin-top: 10px ;
+}
+
+.linkRegister:hover {
+  text-decoration: underline;
+}

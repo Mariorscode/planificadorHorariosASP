@@ -1,11 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  Validators,
-  FormsModule,
-  ReactiveFormsModule,
-  FormControl,
-} from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { schedulerASP } from '../schedulerASP.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -18,6 +12,7 @@ import { Router } from '@angular/router';
 export class LoginComponent {
   password: string = '';
   username: string = '';
+  loginError: boolean = false;
 
   loginForm = this.fb.group({
     password: ['', Validators.required],
@@ -38,7 +33,6 @@ export class LoginComponent {
       (data) => {
         console.log(data);
         console.log(data.access);
-        // this.token = data.access;
         localStorage.setItem('token', data.access);
         const username = this.loginForm.get('username')?.value;
         if (username) {
@@ -50,18 +44,26 @@ export class LoginComponent {
             },
             (error) => {
               console.log(error);
-              let snackBarRef = this.snackBar.open(
-                'Usuario introducido no válido'
-              );
+              this.loginError = true;
             }
           );
         }
       },
       (error) => {
         console.log(error);
-        let snackBarRef = this.snackBar.open('Usuario introducido no válido');
+        this.loginError = true;
+        this.snackBar.open(
+          'Hay un error con las credenciales introducidas, revisa tu usuario y contraseña. Si no tienes cuenta, regístrate.',
+          'Quitar',
+          {
+            duration: 5000,
+          }
+        );
       }
     );
+  }
+  redirectToRegister() {
+    this.router.navigate(['/register']);
   }
 
   constructor(
