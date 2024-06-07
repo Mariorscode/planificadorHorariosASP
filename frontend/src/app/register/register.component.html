@@ -1,46 +1,48 @@
 <div class="container">
-  <form class="custom-form" [formGroup]="loginForm" (ngSubmit)="register()">
-    <h1>Registro</h1>
-    <mat-form-field appearance="outline" color="primary">
-      <mat-label>Nombre de usuario</mat-label>
-      <input
-        matInput
-        formControlName="username"
-        placeholder="Ingrese su nombre de usuario"
-      />
-      <mat-error *ngIf="loginForm.get('username')?.hasError('required')">
-        El nombre de usuario es obligatorio
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline" color="primary">
-      <mat-label>Correo electrónico</mat-label>
-      <input
-        matInput
-        formControlName="email"
-        placeholder="Ingrese su correo electrónico"
-        type="email"
-      />
-      <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
-        El correo electrónico es obligatorio
-      </mat-error>
-      <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
-        Introduzca un correo electrónico
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline" color="primary">
-      <mat-label>Contraseña</mat-label>
-      <input
-        matInput
-        formControlName="password"
-        placeholder="Ingrese su contraseña"
-        type="password"
-      />
-      <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
-        La contraseña es obligatoria
-      </mat-error>
-    </mat-form-field>
-    <button type="submit" class="btn" [disabled]="loginForm.invalid">
-      Registrarse
-    </button>
-  </form>
+  <div class="loginSquare">
+    <form class="custom-form" [formGroup]="loginForm" (ngSubmit)="register()">
+      <h1>Registro</h1>
+      <mat-form-field appearance="outline" color="primary">
+        <mat-label>Nombre de usuario</mat-label>
+        <input
+          matInput
+          formControlName="username"
+          placeholder="Ingrese su nombre de usuario"
+        />
+        <mat-error *ngIf="loginForm.get('username')?.hasError('required')">
+          El nombre de usuario es obligatorio
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" color="primary">
+        <mat-label>Correo electrónico</mat-label>
+        <input
+          matInput
+          formControlName="email"
+          placeholder="Ingrese su correo electrónico"
+          type="email"
+        />
+        <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+          El correo electrónico es obligatorio
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+          Introduzca un correo electrónico
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" color="primary">
+        <mat-label>Contraseña</mat-label>
+        <input
+          matInput
+          formControlName="password"
+          placeholder="Ingrese su contraseña"
+          type="password"
+        />
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+          La contraseña es obligatoria
+        </mat-error>
+      </mat-form-field>
+      <button type="submit" class="btn" [disabled]="loginForm.invalid">
+        Registrarse
+      </button>
+    </form>
+  </div>
 </div>

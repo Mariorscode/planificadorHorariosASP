@@ -1,26 +1,33 @@
 <div class="container">
-  <form class="custom-form" [formGroup]="loginForm" (ngSubmit)="login()">
-    <h1>Inicio sesión</h1>
-    <mat-form-field appearance="outline" color="primary">
-      <mat-label>Usuario</mat-label>
-      <input
-        matInput
-        formControlName="username"
-        placeholder="Enter your email"
-      />
-    </mat-form-field>
-    <mat-form-field appearance="outline" color="primary">
-      <mat-label>Contraseña</mat-label>
-      <input
-        matInput
-        formControlName="password"
-        type="password"
-        placeholder="Enter your password"
-      />
-    </mat-form-field>
-    <button type="submit" class="btn">Login</button>
-  </form>
-  <a class="linkRegister" *ngIf="loginError" (click)="redirectToRegister()"
-    >Crear cuenta</a
-  >
+  <div class="loginSquare">
+    <form class="custom-form" [formGroup]="loginForm" (ngSubmit)="login()">
+      <h1>Inicio sesión</h1>
+      <mat-form-field appearance="outline" color="primary">
+        <mat-label>Usuario</mat-label>
+        <input
+          matInput
+          formControlName="username"
+          placeholder="Enter your email"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline" color="primary">
+        <mat-label>Contraseña</mat-label>
+        <input
+          matInput
+          formControlName="password"
+          type="password"
+          placeholder="Enter your password"
+        />
+      </mat-form-field>
+      <button type="submit" class="btn">Login</button>
+      <div style="margin-top: 15px; display: flex; justify-content: center">
+        <a
+          class="linkRegister"
+          *ngIf="loginError"
+          (click)="redirectToRegister()"
+          >Crear cuenta</a
+        >
+      </div>
+    </form>
+  </div>
 </div>
