@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { schedulerASP } from '../schedulerASP.service';
 import { er, s } from '@fullcalendar/core/internal-common';
 import { Router } from '@angular/router';
+import { NavBarComponent } from '../navBar/navBar.component';
 
 interface Timetable {
   id: number;

@@ -16,20 +16,6 @@ import { filter } from 'rxjs/operators';
 })
 export class AppComponent {
   @ViewChild('sidenav') sidenav!: MatSidenav;
-  showSidenav = true;
 
-  constructor(private router: Router) {
-    // Suscribirse a los eventos de navegación para controlar la visibilidad del sidenav
-    this.router.events
-      .pipe(
-        filter(
-          (event): event is NavigationEnd => event instanceof NavigationEnd
-        )
-      )
-      .subscribe((event: NavigationEnd) => {
-        // Aquí definimos las rutas que no deberían mostrar el sidenav
-        const noSidenavRoutes = ['/stteperform'];
-        this.showSidenav = !noSidenavRoutes.includes(event.urlAfterRedirects);
-      });
-  }
+  constructor(private router: Router) {}
 }

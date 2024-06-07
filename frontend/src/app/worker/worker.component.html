@@ -1,42 +1,46 @@
-<h2>Trabajadores guardados</h2>
-<div style="display: flex">
-  <div class="column">
-    <div class="card-container">
-      <div *ngFor="let worker of workerCards">
-        <mat-card class="card">
-          <mat-card-header>
-            <mat-card-title>{{ worker.name }}</mat-card-title>
-          </mat-card-header>
-          <mat-card-content> </mat-card-content>
-          <mat-card-actions>
-            <button
-              mat-raised-button
-              color="accent"
-              (click)="openWorkerDialog(worker)"
-              style="margin: 5px"
-            >
-              Modificar
-            </button>
-            <button
-              mat-raised-button
-              color="warn"
-              (click)="deleteWorker(worker.name)"
-              style="margin: 5px"
-            >
-              Eliminar
-            </button>
-          </mat-card-actions>
-        </mat-card>
+<app-navBar>
+  <div style="margin: 20px">
+    <h2>Trabajadores guardados</h2>
+    <div style="display: flex">
+      <div class="column">
+        <div class="card-container">
+          <div *ngFor="let worker of workerCards">
+            <mat-card class="card">
+              <mat-card-header>
+                <mat-card-title>{{ worker.name }}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content> </mat-card-content>
+              <mat-card-actions>
+                <button
+                  mat-raised-button
+                  color="accent"
+                  (click)="openWorkerDialog(worker)"
+                  style="margin: 5px"
+                >
+                  Modificar
+                </button>
+                <button
+                  mat-raised-button
+                  color="warn"
+                  (click)="deleteWorker(worker.name)"
+                  style="margin: 5px"
+                >
+                  Eliminar
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="openWorkerDialog()"
+          style="margin: 5px"
+        >
+          Añadir Trabajor
+        </button>
       </div>
     </div>
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="openWorkerDialog()"
-      style="margin: 5px"
-    >
-      Añadir Trabajor
-    </button>
+    <div class="button-container"></div>
   </div>
-</div>
-<div class="button-container"></div>
+</app-navBar>

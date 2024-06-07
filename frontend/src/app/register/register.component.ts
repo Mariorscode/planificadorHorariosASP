@@ -78,10 +78,14 @@ export class RegisterComponent {
       },
       (error) => {
         console.log(error);
-        this.snackBar.open('Error al registrar el usuario', 'Cerrar', {
-          duration: 3000,
-          panelClass: ['custom-snackbar'],
-        });
+        this.snackBar.open(
+          'Error al registrar el usuario, pruebe con otro',
+          'Cerrar',
+          {
+            duration: 3000,
+            panelClass: ['custom-snackbar'],
+          }
+        );
       }
     );
   }

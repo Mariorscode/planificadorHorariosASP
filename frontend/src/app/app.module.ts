@@ -50,6 +50,7 @@ import {
 } from '@angular/material/dialog';
 import { s } from '@fullcalendar/core/internal-common';
 // import { CalendarWeekComponent } from './calendarWeek/calendarWeek.component';
+import { NavBarComponent } from './navBar/navBar.component';
 
 @NgModule({
   declarations: [
@@ -63,9 +64,10 @@ import { s } from '@fullcalendar/core/internal-common';
     HomePageComponent,
     WorkerComponent,
     SpaceComponent,
-    TaskComponent, // CalendarWeekComponent,
+    TaskComponent,
     LoginComponent,
     RegisterComponent,
+    NavBarComponent,
   ],
   imports: [
     BrowserModule,

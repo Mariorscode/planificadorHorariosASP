@@ -45,9 +45,7 @@ export class CalendarComponent implements OnInit {
   calendarVisible = signal(true);
   calendarOptions = signal<CalendarOptions>({
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
-    headerToolbar: {
-      center: 'title',
-    },
+    headerToolbar: {},
     views: {
       dayGridWeek: {
         dayHeaderFormat: {
@@ -66,7 +64,7 @@ export class CalendarComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.timetable_id = +params['timetable_id'];
-      // Lógica para cargar eventos basados en timetable_id
+      // load events based on timetable_id
     });
 
     this.getAllSchedules();
@@ -77,7 +75,7 @@ export class CalendarComponent implements OnInit {
       {
         id: createEventId(),
         title: 'EVENTO NUEVO',
-        daysOfWeek: [1], // Lunes
+        daysOfWeek: [1],
         startTime: '10:00:00',
         endTime: '14:00:00',
       },
@@ -105,21 +103,21 @@ export class CalendarComponent implements OnInit {
       (response) => {
         console.log('Response all schedules:', response);
         this.apischedules = response;
-        this.events = []; // Reiniciar eventos para evitar duplicados
+        this.events = []; // Reload events
 
         this.apischedules.forEach((apiWorker) => {
-          // Convertir timetableStartTime a minutos
+          // transform timetableStartTime to minutes
           const [startHour, startMinutes] = this.timetableStartTime
             .split(':')
             .map(Number);
           let startTimeInMinutes = startHour * 60 + startMinutes;
 
-          // Calcular el nuevo startTime y endTime
-          startTimeInMinutes += this.timetableDuration * (apiWorker.number - 1); // -1 porque empieza desde 0
+          // Calculate startTime y endTime
+          startTimeInMinutes += this.timetableDuration * (apiWorker.number - 1);
 
           const endTimeInMinutes = startTimeInMinutes + this.timetableDuration;
 
-          // Convertir minutos de vuelta a hh:mm
+          // transform startTime y endTime to HH:mm:ss format
           const newStartHour = Math.floor(startTimeInMinutes / 60)
             .toString()
             .padStart(2, '0');
@@ -136,7 +134,7 @@ export class CalendarComponent implements OnInit {
           const apiEvent: EventInput = {
             id: createEventId(),
             title: apiWorker.name,
-            daysOfWeek: [this.getDayIndex(apiWorker.day)], // Asignar el día de la semana correctamente
+            daysOfWeek: [this.getDayIndex(apiWorker.day)], // assign day to event based on day name
             startTime: `${newStartHour}:${newStartMinutes}:00`,
             endTime: `${newEndHour}:${newEndMinutes}:00`,
           };
@@ -144,7 +142,7 @@ export class CalendarComponent implements OnInit {
           this.events.push(apiEvent);
         });
 
-        // Actualizar los eventos en el calendario
+        // Update calendar events
         this.calendarOptions().events = this.events;
         this.changeDetector.detectChanges();
       },

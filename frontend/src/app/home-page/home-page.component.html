@@ -1,42 +1,46 @@
-<h2 style="margin-left: 10px">Horarios</h2>
-<div style="display: flex">
-  <div class="column">
-    <div class="card-container">
-      <div *ngFor="let timetable of timetableCards">
-        <mat-card class="card">
-          <mat-card-header>
-            <mat-card-title>{{ timetable.name }}</mat-card-title>
-          </mat-card-header>
-          <mat-card-content> </mat-card-content>
-          <mat-card-actions>
-            <button
-              mat-raised-button
-              color="warn"
-              (click)="deleteTimetable(timetable.id)"
-              style="margin: 5px"
-            >
-              Eliminar
-            </button>
-            <button
-              mat-raised-button
-              color="primary"
-              (click)="visualizeTimetable(timetable.id)"
-              style="margin: 5px"
-            >
-              Visualizar
-            </button>
-          </mat-card-actions>
-        </mat-card>
+<app-navBar>
+  <div style="margin: 20px">
+    <h2>Horarios</h2>
+    <div style="display: flex">
+      <div class="column">
+        <div class="card-container">
+          <div *ngFor="let timetable of timetableCards">
+            <mat-card class="card">
+              <mat-card-header>
+                <mat-card-title>{{ timetable.name }}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content> </mat-card-content>
+              <mat-card-actions>
+                <button
+                  mat-raised-button
+                  color="warn"
+                  (click)="deleteTimetable(timetable.id)"
+                  style="margin: 5px"
+                >
+                  Eliminar
+                </button>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="visualizeTimetable(timetable.id)"
+                  style="margin: 5px"
+                >
+                  Visualizar
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="generateSchedule()"
+          style="margin: 5px"
+        >
+          Crear nuevo horario
+        </button>
       </div>
     </div>
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="generateSchedule()"
-      style="margin: 5px"
-    >
-      Crear nuevo horario
-    </button>
+    <div class="button-container"></div>
   </div>
-</div>
-<div class="button-container"></div>
+</app-navBar>
