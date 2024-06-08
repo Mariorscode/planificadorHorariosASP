@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class LoginComponent {
   password: string = '';
   username: string = '';
-  loginError: boolean = true;
+  loginError: boolean = false;
 
   loginForm = this.fb.group({
     password: ['', Validators.required],
