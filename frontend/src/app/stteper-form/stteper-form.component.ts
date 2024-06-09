@@ -5,6 +5,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
   FormControl,
+  FormGroup,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { SpaceDialogComponent } from '../dialog/spaceDialog/spaceDialog/spaceDialog.component';
@@ -130,16 +131,19 @@ export class StteperFormComponent {
   //-------------------- Form Steps --------------------
 
   // First formStep
-  firstFormGroup = this._formBuilder.group({
-    scheduleName: ['', Validators.required],
-    weekDays: this.weekDays,
-    turnDuration: ['', Validators.required],
-    firstTurnTime: ['', Validators.required],
-    lastTurnTime: ['', Validators.required],
-    weekDaysRestriction: this.weekDaysRestriction,
-    dayTimerestriction: ['', Validators.required],
-    numberOfTurns: this.numberOfTurns,
-  });
+  firstFormGroup = this._formBuilder.group(
+    {
+      scheduleName: ['', Validators.required],
+      weekDays: this.weekDays,
+      turnDuration: ['', Validators.required],
+      firstTurnTime: ['', Validators.required],
+      lastTurnTime: ['', Validators.required],
+      // weekDaysRestriction: this.weekDaysRestriction,
+      // dayTimerestriction: ['', Validators.required],
+      numberOfTurns: this.numberOfTurns,
+    },
+    { validator: this.timeValidator }
+  );
   // Second formStep
   secondFormGroup = this._formBuilder.group({
     turns: [this.turns, Validators.required],
@@ -176,6 +180,23 @@ export class StteperFormComponent {
     this.getAllCommonSpaces();
     this.getAllCommonWorkers();
     this.getAllCommonTasks();
+  }
+
+  timeValidator(firstFormGroup: FormGroup) {
+    const firstTurnTime = firstFormGroup.get('firstTurnTime')?.value;
+    const lastTurnTime = firstFormGroup.get('lastTurnTime')?.value;
+
+    if (firstTurnTime && lastTurnTime && firstTurnTime > lastTurnTime) {
+      firstFormGroup.get('lastTurnTime')?.setErrors({ invalidTime: true });
+    } else {
+      firstFormGroup.get('lastTurnTime')?.setErrors(null);
+    }
+  }
+  lastTurnTimeCompleted: boolean = false;
+
+  validateTime() {
+    this.timeValidator(this.firstFormGroup);
+    this.lastTurnTimeCompleted = true;
   }
 
   remove(tag: Tag): void {

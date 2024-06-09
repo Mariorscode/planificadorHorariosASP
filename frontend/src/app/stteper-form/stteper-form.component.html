@@ -26,7 +26,6 @@
               Días seleccionados:
               <span *ngFor="let selectedDay of weekDays.value">
                 {{ selectedDay }}
-                <!-- Añade una coma y un espacio si no es el último día -->
                 <ng-container *ngIf="!isLast(selectedDay, weekDays.value)"
                   >,
                 </ng-container>
@@ -42,7 +41,7 @@
               placeholder=""
             />
           </mat-form-field>
-          <br />
+          <!-- <br /> -->
           <mat-form-field appearance="outline">
             <mat-label>Hora Inicio primer turno</mat-label>
             <input
@@ -52,7 +51,7 @@
               placeholder="Selecciona una hora"
             />
           </mat-form-field>
-          <br />
+          <!-- <br /> -->
           <mat-form-field appearance="outline">
             <mat-label>Hora Inicio último turno</mat-label>
             <input
@@ -60,9 +59,10 @@
               type="time"
               formControlName="lastTurnTime"
               placeholder="Selecciona una hora"
+              (change)="validateTime()"
             />
           </mat-form-field>
-          <mat-checkbox>Último turno extendible</mat-checkbox>
+          <!-- <mat-checkbox>Último turno extendible</mat-checkbox> -->
         </div>
       </div>
       <div class="button-container">
@@ -71,6 +71,7 @@
           color="primary"
           matStepperNext
           (click)="fillTurns()"
+          [disabled]="!firstFormGroup.valid || !lastTurnTimeCompleted"
         >
           Siguiente
         </button>
