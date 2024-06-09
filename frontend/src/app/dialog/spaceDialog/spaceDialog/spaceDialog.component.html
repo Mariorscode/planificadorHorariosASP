@@ -16,7 +16,7 @@
       />
     </mat-form-field>
     <div>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" *ngIf="!isCommonSpace">
         <mat-label>Días de la semana</mat-label>
         <mat-select multiple>
           <mat-option

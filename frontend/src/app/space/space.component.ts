@@ -36,8 +36,8 @@ export class SpaceComponent {
     if (space) {
       dialogRef = this.dialog.open(SpaceDialogComponent, {
         data: {
-          spaceName: space.name,
-          spaceCapacity: space.spaceCapacity,
+          space: space,
+          isCommonSpace: true,
           eliminate: this.deleteSpace.bind(this),
         },
       });
@@ -46,6 +46,7 @@ export class SpaceComponent {
         data: {
           spaceName: null,
           spaceCapacity: null,
+          isCommonSpace: true,
           eliminate: this.deleteSpace.bind(this),
         },
       });
@@ -100,7 +101,7 @@ export class SpaceComponent {
     this.spaces.splice(index, 1);
 
     this.schedulerASP
-      .deleteCommonWorkerById(this.apiSpaces[apiIndex].id) // ----------------
+      .deleteCommonSpaceById(this.apiSpaces[apiIndex].id)
       .subscribe((response) => {
         console.log('Response:', response);
       });

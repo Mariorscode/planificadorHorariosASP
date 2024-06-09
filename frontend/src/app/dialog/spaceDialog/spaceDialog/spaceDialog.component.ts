@@ -5,6 +5,7 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Space } from 'src/app/stteper-form/stteper-form.component';
 import { Turn } from 'src/app/stteper-form/stteper-form.component';
 import { Dialog } from '@angular/cdk/dialog';
+import { S } from '@fullcalendar/core/internal-common';
 
 @Component({
   selector: 'app-spaceDialog',
@@ -13,10 +14,11 @@ import { Dialog } from '@angular/cdk/dialog';
 })
 export class SpaceDialogComponent {
   restrictionsSpace: Turn[] = [];
+  isCommonSpace = this.data.isCommonSpace || false;
 
   spaceForm = this.fb.group({
-    name: [this.data.spaceName || '', Validators.required],
-    spaceCapacity: [0, Validators.required],
+    name: [this.data.space.name || '', Validators.required],
+    spaceCapacity: [this.data.space.spaceCapacity, Validators.required],
     restrictionsSpace: [this.restrictionsSpace, Validators.required],
   });
 
@@ -24,8 +26,9 @@ export class SpaceDialogComponent {
     public dialogRef: MatDialogRef<SpaceDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      spaceName: string;
+      space: Space;
       turns: Turn[];
+      isCommonSpace?: boolean;
       eliminate: (spaceToEliminate: String) => void;
     },
     private fb: FormBuilder
@@ -33,7 +36,11 @@ export class SpaceDialogComponent {
 
   ngOnInit(): void {
     // Set the form value based on data.space
-    this.spaceForm.get('name')?.setValue(this.data.spaceName);
+    this.spaceForm.get('name')?.setValue(this.data.space.name);
+
+    this.spaceForm
+      .get('spaceCapacity')
+      ?.setValue(this.data.space.spaceCapacity);
   }
 
   onNoClick(): void {
