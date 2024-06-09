@@ -19,7 +19,7 @@
         </mat-form-field>
       </div>
       <div class="column">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" *ngIf="!isCommon">
           <mat-label>Días de la semana (restriccion)</mat-label>
           <mat-select multiple>
             <mat-option
@@ -31,7 +31,7 @@
           </mat-select>
         </mat-form-field>
         <br />
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" *ngIf="!isCommon">
           <mat-label>Trabajador</mat-label>
           <mat-select>
             <mat-option
@@ -43,7 +43,7 @@
           </mat-select>
         </mat-form-field>
         <br />
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" *ngIf="!isCommon">
           <mat-label>Espacio</mat-label>
           <mat-select>
             <mat-option
@@ -56,8 +56,8 @@
         </mat-form-field>
       </div>
     </div>
-    <h4>Tags disponibles:</h4>
-    <mat-chip-listbox multiple="true">
+    <h4 *ngIf="!isCommon">Tags disponibles:</h4>
+    <mat-chip-listbox multiple="true" *ngIf="!isCommon">
       <mat-chip-option
         *ngFor="let tag of availableTags"
         [value]="tag"

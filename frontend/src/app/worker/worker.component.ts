@@ -22,11 +22,13 @@ export class WorkerComponent {
   workers: Worker[] = [];
   apiWorkers: ApiWorkers[] = [];
 
-  userid = 1;
+  userid = parseInt(localStorage.getItem('userId') ?? '', 0);
 
   ngOnInit() {
     // this.loadWorkerCards();
-    this.getCommonWorkersbyID(this.userid);
+    this.getCommonWorkersbyID(
+      parseInt(localStorage.getItem('userId') ?? '', 0)
+    );
   }
 
   openWorkerDialog(worker?: Worker) {
@@ -36,6 +38,7 @@ export class WorkerComponent {
       dialogRef = this.dialog.open(WorkerDialogComponent, {
         data: {
           workerName: worker.name,
+          isCommon: true,
           eliminate: this.deleteWorker.bind(this),
         },
       });
@@ -43,6 +46,7 @@ export class WorkerComponent {
       dialogRef = this.dialog.open(WorkerDialogComponent, {
         data: {
           workerName: null,
+          isCommon: true,
           eliminate: this.deleteWorker.bind(this),
         },
       });

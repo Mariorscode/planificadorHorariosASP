@@ -317,7 +317,7 @@ export class StteperFormComponent {
       spaceName = space.name;
       dialogRef = this.dialog.open(SpaceDialogComponent, {
         data: {
-          spaceName: spaceName,
+          space: space,
           turns: this.turns,
           eliminate: this.deleteSpace.bind(this),
         },
@@ -325,7 +325,7 @@ export class StteperFormComponent {
     } else {
       dialogRef = this.dialog.open(SpaceDialogComponent, {
         data: {
-          spaceName: null,
+          space: null,
           turns: this.turns,
           eliminate: this.deleteSpace.bind(this),
         },
@@ -369,7 +369,7 @@ export class StteperFormComponent {
       // workerName = worker.name;
       dialogRef = this.dialog.open(WorkerDialogComponent, {
         data: {
-          workerName: worker.name,
+          worker: worker,
           turns: this.turns,
           eliminate: this.deleteWorker.bind(this),
         },
@@ -377,7 +377,7 @@ export class StteperFormComponent {
     } else {
       dialogRef = this.dialog.open(WorkerDialogComponent, {
         data: {
-          workerName: null,
+          worker: null,
           turns: this.turns,
           eliminate: this.deleteWorker.bind(this),
         },
@@ -700,6 +700,7 @@ export class StteperFormComponent {
       };
     });
 
+    console.log('Data2:', data2);
     this.schedulerASP.createAllCommonSpace(data2).subscribe(
       (response) => {
         console.log('Response:', response);
@@ -709,6 +710,7 @@ export class StteperFormComponent {
       }
     );
 
+    console.log('Data:', data);
     this.schedulerASP.createAllSpace(data).subscribe(
       (response) => {
         console.log('Response:', response);

@@ -13,9 +13,10 @@ import { Dialog } from '@angular/cdk/dialog';
 })
 export class WorkerDialogComponent {
   restrictionsWorker: Turn[] = [];
+  isCommon = this.data.isCommon || false;
 
   workerForm = this.fb.group({
-    name: [this.data.workerName || '', Validators.required],
+    name: [this.data.worker.name || '', Validators.required],
     restrictionsWorker: [this.restrictionsWorker, Validators.required],
   });
 
@@ -23,7 +24,8 @@ export class WorkerDialogComponent {
     public dialogRef: MatDialogRef<WorkerDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      workerName: string;
+      worker: Worker;
+      isCommon?: boolean;
       turns: Turn[];
       eliminate: (workerToEliminate: String) => void;
     },
@@ -32,8 +34,8 @@ export class WorkerDialogComponent {
 
   ngOnInit(): void {
     // Set the form value based on data.space
-    this.workerForm.get('name')?.setValue(this.data.workerName);
-    console.log('NOMBREEE', this.data.workerName);
+    this.workerForm.get('name')?.setValue(this.data.worker.name);
+    console.log('NOMBREEE', this.data.worker.name);
   }
 
   onNoClick(): void {

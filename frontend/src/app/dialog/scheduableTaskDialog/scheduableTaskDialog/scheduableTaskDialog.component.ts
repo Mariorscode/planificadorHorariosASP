@@ -19,6 +19,8 @@ export class ScheduableTaskDialogComponent {
   tags: Tag[] = [];
   workers: Worker[] = [];
   spaces: Space[] = [];
+  isCommon = this.data.isCommon || false;
+
   availableTags: Tag[] = this.data.datatags;
 
   scheduableTaskForm = this.fb.group({
@@ -34,11 +36,14 @@ export class ScheduableTaskDialogComponent {
     public dialogRef: MatDialogRef<ScheduableTaskDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
+      // task: ScheduableTask;
       taskName: string;
+      taskSize: number;
       turns: Turn[];
       dataWorkers: Worker[];
       datatags: Tag[];
       dataSpaces: Space[];
+      isCommon?: boolean;
       // eliminate: (spaceToEliminate: String) => void;
     },
     private fb: FormBuilder
@@ -47,6 +52,7 @@ export class ScheduableTaskDialogComponent {
   ngOnInit(): void {
     // Set the form value based on data
     this.scheduableTaskForm.get('name')?.setValue(this.data.taskName);
+    this.scheduableTaskForm.get('taskSize')?.setValue(this.data.taskSize);
   }
 
   onSelectionTurn(turn: Turn) {

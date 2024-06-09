@@ -43,7 +43,7 @@ export class TaskComponent {
         data: {
           taskName: scheduableTask.name,
           taskSize: scheduableTask.size,
-          scheduableTask: scheduableTask,
+          isCommon: true,
           eliminate: this.deletetask.bind(this),
         },
       });
@@ -52,6 +52,7 @@ export class TaskComponent {
         data: {
           taskName: null,
           taskSize: null,
+          isCommon: true,
           eliminate: this.deletetask.bind(this),
         },
       });

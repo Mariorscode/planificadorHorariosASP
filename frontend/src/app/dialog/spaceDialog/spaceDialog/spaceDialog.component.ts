@@ -14,7 +14,7 @@ import { S } from '@fullcalendar/core/internal-common';
 })
 export class SpaceDialogComponent {
   restrictionsSpace: Turn[] = [];
-  isCommonSpace = this.data.isCommonSpace || false;
+  isCommon = this.data.isCommon || false;
 
   spaceForm = this.fb.group({
     name: [this.data.space.name || '', Validators.required],
@@ -28,7 +28,7 @@ export class SpaceDialogComponent {
     public data: {
       space: Space;
       turns: Turn[];
-      isCommonSpace?: boolean;
+      isCommon?: boolean;
       eliminate: (spaceToEliminate: String) => void;
     },
     private fb: FormBuilder

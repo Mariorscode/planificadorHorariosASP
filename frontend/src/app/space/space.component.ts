@@ -25,9 +25,10 @@ export class SpaceComponent {
   spaces: Space[] = [];
   apiSpaces: ApiSpaces[] = [];
 
-  userid = 1;
+  userid = parseInt(localStorage.getItem('userId') ?? '', 0);
+
   ngOnInit() {
-    this.getCommonSpacesbyID(this.userid);
+    this.getCommonSpacesbyID(parseInt(localStorage.getItem('userId') ?? '', 0));
   }
 
   openSpaceDialog(space?: Space) {
@@ -37,7 +38,7 @@ export class SpaceComponent {
       dialogRef = this.dialog.open(SpaceDialogComponent, {
         data: {
           space: space,
-          isCommonSpace: true,
+          isCommon: true,
           eliminate: this.deleteSpace.bind(this),
         },
       });
@@ -46,7 +47,7 @@ export class SpaceComponent {
         data: {
           spaceName: null,
           spaceCapacity: null,
-          isCommonSpace: true,
+          isCommon: true,
           eliminate: this.deleteSpace.bind(this),
         },
       });
