@@ -21,14 +21,14 @@ export class schedulerASP {
 
   getAllUsersWithToken(): Observable<any> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('token')}`, // Prefijo "Bearer " seguido del token
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     });
     return this.http.get(this.apiUrl + 'users/', { headers });
   }
 
   postDataWithToken(postData: any): Observable<any> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('token')}`, // Prefijo "Bearer " seguido del token
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     });
     return this.http.post<any>(`${this.apiUrl}timetables/`, postData, {
       headers,
@@ -37,7 +37,7 @@ export class schedulerASP {
 
   getDataWithToken(): Observable<any> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('token')}`, // Prefijo "Bearer " seguido del token
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     });
     return this.http.get<any>(`http://127.0.0.1:8000/home/`, { headers });
   }
@@ -53,7 +53,7 @@ export class schedulerASP {
   // ---------Timetable
   createTimeTable(data: any): Observable<any> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('token')}`, // Prefijo "Bearer " seguido del token
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     });
     return this.http.post(this.apiUrl + 'timetables/', data, { headers });
   }
@@ -62,7 +62,7 @@ export class schedulerASP {
     // localStorage.setItem('userId', userId.toString());
     const userId = localStorage.getItem('userId');
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('token')}`, // Prefijo "Bearer " seguido del token
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     });
     return this.http.get(this.apiUrl + 'timetables/?user_id=' + userId, {
       headers,
@@ -70,84 +70,163 @@ export class schedulerASP {
   }
 
   deleteTimetable(timetableId: number): Observable<any> {
-    return this.http.delete(this.apiUrl + 'timetables/' + timetableId + '/');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.delete(this.apiUrl + 'timetables/' + timetableId + '/', {
+      headers,
+    });
   }
   // ---------/Timetable
 
   // ---------Turns
   createAllTurns(data: any): Observable<any> {
-    return this.http.post(this.apiUrl + 'turns/create_multiple/', data);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.post(this.apiUrl + 'turns/create_multiple/', data, {
+      headers,
+    });
   }
   // ---------/Turns
 
   // ---------Workers
   createAllWorker(data: any): Observable<any> {
-    return this.http.post(this.apiUrl + 'workers/create_multiple/', data);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.post(this.apiUrl + 'workers/create_multiple/', data, {
+      headers,
+    });
   }
   // ---------/Workers
 
   // ---------CommonWorkers
 
   createAllCommonWorkers(data: any): Observable<any> {
-    return this.http.post(this.apiUrl + 'commonworkers/create_multiple/', data);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.post(
+      this.apiUrl + 'commonworkers/create_multiple/',
+      data,
+      { headers }
+    );
   }
 
   createCommonWorker(data: any): Observable<any> {
-    return this.http.post(this.apiUrl + 'commonworkers/', data);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.post(this.apiUrl + 'commonworkers/', data, { headers });
   }
 
   updateCommonWorker(workerId: number, data: any): Observable<any> {
-    return this.http.put(this.apiUrl + 'commonworkers/' + workerId + '/', data);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.put(
+      this.apiUrl + 'commonworkers/' + workerId + '/',
+      data,
+      { headers }
+    );
   }
 
   getAllCommonWorkers(): Observable<any> {
-    return this.http.get(this.apiUrl + 'commonworkers/');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.get(this.apiUrl + 'commonworkers/', { headers });
   }
 
   getCommonWorkersByUserId(userId: number): Observable<any> {
-    return this.http.get(this.apiUrl + 'commonworkers/?user_id=' + userId);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.get(this.apiUrl + 'commonworkers/?user_id=' + userId, {
+      headers,
+    });
   }
 
   deleteCommonWorkerById(workerId: number): Observable<any> {
-    return this.http.delete(this.apiUrl + 'commonworkers/' + workerId + '/');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.delete(this.apiUrl + 'commonworkers/' + workerId + '/', {
+      headers,
+    });
   }
   // ---------/CommonWorkers
 
   // --------- Space
 
   createAllSpace(data: any): Observable<any> {
-    return this.http.post(this.apiUrl + 'spaces/create_multiple/', data);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.post(this.apiUrl + 'spaces/create_multiple/', data, {
+      headers,
+    });
   }
 
   getAllSpaces(): Observable<any> {
-    return this.http.get(this.apiUrl + 'spaces/');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.get(this.apiUrl + 'spaces/', { headers });
   }
 
   // ---------/Space
 
   // ---------CommonSpace
   getAllCommonSpaces(): Observable<any> {
-    return this.http.get(this.apiUrl + 'commonspaces/');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.get(this.apiUrl + 'commonspaces/', { headers });
   }
 
   createAllCommonSpace(data: any): Observable<any> {
-    return this.http.post(this.apiUrl + 'commonspaces/create_multiple/', data);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.post(this.apiUrl + 'commonspaces/create_multiple/', data, {
+      headers,
+    });
   }
 
   createCommonSpace(data: any): Observable<any> {
-    return this.http.post(this.apiUrl + 'commonspaces/', data);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.post(this.apiUrl + 'commonspaces/', data, { headers });
   }
 
   updateCommonSpace(spaceId: number, data: any): Observable<any> {
-    return this.http.put(this.apiUrl + 'commonspaces/' + spaceId + '/', data);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.put(this.apiUrl + 'commonspaces/' + spaceId + '/', data, {
+      headers,
+    });
   }
 
   getCommonSpacesByUserId(userId: number): Observable<any> {
-    return this.http.get(this.apiUrl + 'commonspaces/?user_id=' + userId);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.get(this.apiUrl + 'commonspaces/?user_id=' + userId, {
+      headers,
+    });
   }
 
   deleteCommonSpaceById(spaceId: number): Observable<any> {
-    return this.http.delete(this.apiUrl + 'commonspaces/' + spaceId + '/');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.delete(this.apiUrl + 'commonspaces/' + spaceId + '/', {
+      headers,
+    });
   }
 
   // ---------/CommonSpace
@@ -155,13 +234,20 @@ export class schedulerASP {
   // ---------Tasks
 
   getAllscheduableTasks(): Observable<any> {
-    return this.http.get(this.apiUrl + 'scheduabletasks/');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.get(this.apiUrl + 'scheduabletasks/', { headers });
   }
 
   createAllscheduableTasks(data: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
     return this.http.post(
       this.apiUrl + 'scheduabletasks/create_multiple/',
-      data
+      data,
+      { headers }
     );
   }
 
@@ -170,36 +256,60 @@ export class schedulerASP {
   // ---------CommonTasks
 
   getAllCommonTasks(): Observable<any> {
-    return this.http.get(this.apiUrl + 'commonscheduabletasks/');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.get(this.apiUrl + 'commonscheduabletasks/', { headers });
   }
 
   createAllCommonTasks(data: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
     return this.http.post(
       this.apiUrl + 'commonscheduabletasks/create_multiple/',
-      data
+      data,
+      { headers }
     );
   }
 
   createCommonTasks(data: any): Observable<any> {
-    return this.http.post(this.apiUrl + 'commonscheduabletasks/', data);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.post(this.apiUrl + 'commonscheduabletasks/', data, {
+      headers,
+    });
   }
 
   updateCommonTasks(taskId: number, data: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
     return this.http.put(
       this.apiUrl + 'commonscheduabletasks/' + taskId + '/',
-      data
+      data,
+      { headers }
     );
   }
 
   getCommonTasksByUserId(userId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
     return this.http.get(
-      this.apiUrl + 'commonscheduabletasks/?user_id=' + userId
+      this.apiUrl + 'commonscheduabletasks/?user_id=' + userId,
+      { headers }
     );
   }
 
   deleteCommonTasksById(taskId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
     return this.http.delete(
-      this.apiUrl + 'commonscheduabletasks/' + taskId + '/'
+      this.apiUrl + 'commonscheduabletasks/' + taskId + '/',
+      { headers }
     );
   }
 
@@ -208,21 +318,38 @@ export class schedulerASP {
   // ---------Schedule
 
   createSchedule(data: any): Observable<any> {
-    return this.http.post(this.apiUrl + 'schedules/', data);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.post(this.apiUrl + 'schedules/', data, { headers });
   }
 
   createAllSchedules(data: any): Observable<any> {
-    return this.http.post(this.apiUrl + 'schedules/create_multiple/', data);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.post(this.apiUrl + 'schedules/create_multiple/', data, {
+      headers,
+    });
   }
 
   getAllSchedulesByTimeTableId(timeTableId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
     return this.http.get(
-      this.apiUrl + 'schedules/?timeTable_schedule=' + timeTableId
+      this.apiUrl + 'schedules/?timeTable_schedule=' + timeTableId,
+      { headers }
     );
   }
 
   deleteScheduleById(scheduleId: number): Observable<any> {
-    return this.http.delete(this.apiUrl + 'schedules/' + scheduleId + '/');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.delete(this.apiUrl + 'schedules/' + scheduleId + '/', {
+      headers,
+    });
   }
   // ---------/Schedule
 }
