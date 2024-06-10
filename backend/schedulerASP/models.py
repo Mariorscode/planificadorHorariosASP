@@ -104,7 +104,7 @@ class ScheduableTask(models.Model):
     task_restrictions = models.ManyToManyField(Turn,related_name='task_restrictions', blank=True, null=True)
     # task_tags = models.ManyToManyField(Tag, blank=True, null=True, related_name='task_tags')
     # task_tags = models.CharField(max_length=70, blank=False, default='')
-    task_tags = models.JSONField(default=list)
+    task_tags = models.JSONField(default=list, blank=True, null=True)
     # task_tags = models.CharField(max_length=200, blank=False, default='')
     task_worker = models.ForeignKey(Worker, blank=True, null=True, related_name='scheduable_tasks', on_delete=models.SET_NULL)
     task_spaces = models.ForeignKey(Space, blank=True, null=True, related_name='scheduable_tasks', on_delete=models.SET_NULL)

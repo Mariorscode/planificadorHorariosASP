@@ -16,7 +16,7 @@ class WorkerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Worker
-        fields = ['id', 'name', 'restrictionsWorker', 'timtable_id']
+        fields = ['id', 'name', 'restrictionsWorker', 'timeTable_id']
         
 class CommonWorkerSerializer(serializers.ModelSerializer):
     

@@ -841,6 +841,8 @@ export class StteperFormComponent {
         ?.id;
     });
 
+    console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAA', this.apiTimeTable.id);
+
     const data = auxTask.map((task: ScheduableTask) => {
       return {
         name: task.name,
@@ -858,7 +860,7 @@ export class StteperFormComponent {
         task_spaces: this.apiSpaces.find(
           (apiSpace) => apiSpace.name === (task.taskSpace?.[0]?.name ?? null)
         )?.id,
-        timetable_id: localStorage.getItem('timetable_id') ?? 0,
+        timeTable_id: this.apiTimeTable.id,
       };
     });
 
@@ -877,7 +879,7 @@ export class StteperFormComponent {
         console.error('Error:', error);
       }
     );
-
+    console.log('DATAAAA:', data);
     this.schedulerASP.createAllscheduableTasks(data).subscribe(
       (response) => {
         console.log('Response:', response);
