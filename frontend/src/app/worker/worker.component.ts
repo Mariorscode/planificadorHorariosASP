@@ -26,9 +26,7 @@ export class WorkerComponent {
 
   ngOnInit() {
     // this.loadWorkerCards();
-    this.getCommonWorkersbyID(
-      parseInt(localStorage.getItem('userId') ?? '', 0)
-    );
+    this.getCommonWorkersbyID();
   }
 
   openWorkerDialog(worker?: Worker) {
@@ -147,8 +145,8 @@ export class WorkerComponent {
     );
   }
 
-  getCommonWorkersbyID(user_id: number) {
-    this.schedulerASP.getCommonWorkersByUserId(user_id).subscribe(
+  getCommonWorkersbyID() {
+    this.schedulerASP.getCommonWorkersByUserId().subscribe(
       (response) => {
         console.log('Response all common workers:', response);
         this.apiWorkers = response;

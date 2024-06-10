@@ -17,8 +17,8 @@ export class SpaceDialogComponent {
   isCommon = this.data.isCommon || false;
 
   spaceForm = this.fb.group({
-    name: [this.data.space.name || '', Validators.required],
-    spaceCapacity: [this.data.space.spaceCapacity, Validators.required],
+    name: [this.data.spaceName || '', Validators.required],
+    spaceCapacity: [this.data.spaceCapacity, Validators.required],
     restrictionsSpace: [this.restrictionsSpace, Validators.required],
   });
 
@@ -26,7 +26,8 @@ export class SpaceDialogComponent {
     public dialogRef: MatDialogRef<SpaceDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      space: Space;
+      spaceName: string;
+      spaceCapacity: number;
       turns: Turn[];
       isCommon?: boolean;
       eliminate: (spaceToEliminate: String) => void;
@@ -36,11 +37,9 @@ export class SpaceDialogComponent {
 
   ngOnInit(): void {
     // Set the form value based on data.space
-    this.spaceForm.get('name')?.setValue(this.data.space.name);
+    // this.spaceForm.get('name')?.setValue(this.data.space.name);
 
-    this.spaceForm
-      .get('spaceCapacity')
-      ?.setValue(this.data.space.spaceCapacity);
+    this.spaceForm.get('spaceCapacity')?.setValue(this.data.spaceCapacity);
   }
 
   onNoClick(): void {

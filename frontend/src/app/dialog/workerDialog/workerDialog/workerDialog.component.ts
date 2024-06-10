@@ -16,7 +16,7 @@ export class WorkerDialogComponent {
   isCommon = this.data.isCommon || false;
 
   workerForm = this.fb.group({
-    name: [this.data.worker.name || '', Validators.required],
+    name: [this.data.workerName || '', Validators.required],
     restrictionsWorker: [this.restrictionsWorker, Validators.required],
   });
 
@@ -24,7 +24,7 @@ export class WorkerDialogComponent {
     public dialogRef: MatDialogRef<WorkerDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      worker: Worker;
+      workerName: string;
       isCommon?: boolean;
       turns: Turn[];
       eliminate: (workerToEliminate: String) => void;
@@ -34,8 +34,7 @@ export class WorkerDialogComponent {
 
   ngOnInit(): void {
     // Set the form value based on data.space
-    this.workerForm.get('name')?.setValue(this.data.worker.name);
-    console.log('NOMBREEE', this.data.worker.name);
+    this.workerForm.get('name')?.setValue(this.data.workerName);
   }
 
   onNoClick(): void {

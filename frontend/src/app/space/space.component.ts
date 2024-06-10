@@ -28,7 +28,7 @@ export class SpaceComponent {
   userid = parseInt(localStorage.getItem('userId') ?? '', 0);
 
   ngOnInit() {
-    this.getCommonSpacesbyID(parseInt(localStorage.getItem('userId') ?? '', 0));
+    this.getCommonSpacesbyID();
   }
 
   openSpaceDialog(space?: Space) {
@@ -37,7 +37,8 @@ export class SpaceComponent {
     if (space) {
       dialogRef = this.dialog.open(SpaceDialogComponent, {
         data: {
-          space: space,
+          spaceName: space.name,
+          spaceCapacity: space.spaceCapacity,
           isCommon: true,
           eliminate: this.deleteSpace.bind(this),
         },
@@ -151,8 +152,8 @@ export class SpaceComponent {
     );
   }
 
-  getCommonSpacesbyID(user_id: number) {
-    this.schedulerASP.getCommonSpacesByUserId(user_id).subscribe(
+  getCommonSpacesbyID() {
+    this.schedulerASP.getCommonSpacesByUserId().subscribe(
       (response) => {
         console.log('Response all common workers:', response);
         this.apiSpaces = response;

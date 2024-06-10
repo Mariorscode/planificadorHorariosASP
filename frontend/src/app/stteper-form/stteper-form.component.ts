@@ -21,6 +21,7 @@ export interface Turn {
   day: String;
   startTime: String;
   is_free_time?: boolean;
+  displayTime?: String;
 }
 
 export interface Space {
@@ -236,6 +237,7 @@ export class StteperFormComponent {
   }
 
   // Fill the turns array with the turns calculated from the form values
+  auxTurns: Turn[] = []; // Array to store the auxiliary turns
   fillTurns() {
     // get the values from the form
     const turnDuration = this.firstFormGroup.get('turnDuration')?.value;
@@ -252,15 +254,16 @@ export class StteperFormComponent {
       return;
     }
 
-    //clear the turns array
+    // clear the turns array
     this.turns = [];
+    this.auxTurns = []; // Array to store the auxiliary turns
 
     // iterate over the selected days
     const selectedDays = this.weekDays.value;
     for (const day of selectedDays) {
       // get the number of turns per day
       this.numberOfTurns = this.calculateTurnsPerDay();
-      // Check if the number of turns caculation was successful
+      // Check if the number of turns calculation was successful
       if (this.numberOfTurns === -1) {
         console.error('No se pudieron calcular los turnos para el día:', day);
         return;
@@ -269,13 +272,14 @@ export class StteperFormComponent {
       // Cast the firstTurnTimeStr string to a Date object
       const startTime = new Date(`2022-01-01T${firstTurnTimeStr}`);
       for (let i = 0; i < this.numberOfTurns; i++) {
-        // Create a turn object
+        // Create a turn object with the turn number and display time
         const turno: Turn = {
           day: day,
-          startTime: startTime.toLocaleTimeString('es-ES', {
+          startTime: (i + 1).toString(), // Guardar el número del turno
+          displayTime: startTime.toLocaleTimeString('es-ES', {
             hour: '2-digit',
             minute: '2-digit',
-          }),
+          }), // Hora de inicio para mostrar en el HTML
         };
         // Add the turn to the turns array
         this.turns.push(turno);
@@ -288,6 +292,7 @@ export class StteperFormComponent {
     this.secondFormGroup.patchValue({ turns: this.turns });
     this.createTimeTable();
     console.log('Turnos llenados:', this.turns);
+    console.log('Turnos auxiliares llenados:', this.auxTurns); // Log the auxiliary turns for debugging
   }
 
   // Function to handle the selection of a turn
@@ -317,7 +322,8 @@ export class StteperFormComponent {
       spaceName = space.name;
       dialogRef = this.dialog.open(SpaceDialogComponent, {
         data: {
-          space: space,
+          spaceName: space.name,
+          spaceCapacity: space.spaceCapacity,
           turns: this.turns,
           eliminate: this.deleteSpace.bind(this),
         },
@@ -369,7 +375,7 @@ export class StteperFormComponent {
       // workerName = worker.name;
       dialogRef = this.dialog.open(WorkerDialogComponent, {
         data: {
-          worker: worker,
+          workerName: worker.name,
           turns: this.turns,
           eliminate: this.deleteWorker.bind(this),
         },
@@ -606,7 +612,13 @@ export class StteperFormComponent {
 
     this.schedulerASP.createTimeTable(data).subscribe(
       (response) => {
+        console.log('Response:', response.id);
         this.apiTimeTable = response;
+        console.log('TimeTable:', this.apiTimeTable);
+        localStorage.setItem(
+          'timetable_id',
+          this.apiTimeTable.id.toString() ?? ''
+        );
       },
       (error) => {
         console.error('Error:', error);
@@ -649,7 +661,7 @@ export class StteperFormComponent {
   }
 
   getAllCommonSpaces() {
-    this.schedulerASP.getAllCommonSpaces().subscribe(
+    this.schedulerASP.getCommonSpacesByUserId().subscribe(
       (response) => {
         this.apiSpaces = response;
         this.apiSpaces.forEach((apiSpace) => {
@@ -724,7 +736,7 @@ export class StteperFormComponent {
   }
 
   getAllCommonWorkers() {
-    this.schedulerASP.getAllCommonWorkers().subscribe(
+    this.schedulerASP.getCommonWorkersByUserId().subscribe(
       (response) => {
         console.log('Response all common workers:', response);
         this.apiWorkers = response;
@@ -843,10 +855,10 @@ export class StteperFormComponent {
         task_worker: this.apiWorkers.find(
           (apiWorker) => apiWorker.name === (task.taskWorker?.[0]?.name ?? null)
         )?.id,
-        task_spaces: this.apiWorkers.find(
-          (apiWorker) => apiWorker.name === (task.taskWorker?.[0]?.name ?? null)
+        task_spaces: this.apiSpaces.find(
+          (apiSpace) => apiSpace.name === (task.taskSpace?.[0]?.name ?? null)
         )?.id,
-        timetable_id: this.apiTimeTable.id,
+        timetable_id: localStorage.getItem('timetable_id') ?? 0,
       };
     });
 

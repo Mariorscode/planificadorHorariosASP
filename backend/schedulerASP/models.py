@@ -61,7 +61,7 @@ class Turn(models.Model):
 class Worker(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')
     restrictionsWorker = models.ManyToManyField(Turn, related_name='workers', blank=True, null=True)
-    timtable_id = models.ForeignKey(TimeTable, related_name='workers', on_delete=models.CASCADE, null=True)
+    timeTable_id = models.ForeignKey(TimeTable, related_name='workers', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name + " " + str(self.restrictionsWorker)
@@ -104,8 +104,8 @@ class ScheduableTask(models.Model):
     task_restrictions = models.ManyToManyField(Turn,related_name='task_restrictions', blank=True, null=True)
     # task_tags = models.ManyToManyField(Tag, blank=True, null=True, related_name='task_tags')
     # task_tags = models.CharField(max_length=70, blank=False, default='')
-    # task_tags = models.JSONField(default=list)
-    tags = models.CharField(max_length=70, blank=False, default='')
+    task_tags = models.JSONField(default=list)
+    # task_tags = models.CharField(max_length=200, blank=False, default='')
     task_worker = models.ForeignKey(Worker, blank=True, null=True, related_name='scheduable_tasks', on_delete=models.SET_NULL)
     task_spaces = models.ForeignKey(Space, blank=True, null=True, related_name='scheduable_tasks', on_delete=models.SET_NULL)
     timeTable_id = models.ForeignKey(TimeTable, related_name='scheduable_tasks', on_delete=models.CASCADE, null=True)

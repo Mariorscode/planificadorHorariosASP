@@ -29,10 +29,8 @@ export class TaskComponent {
   scheduableTasks: ScheduableTask[] = [];
   apiTasks: apiScheduableTask[] = [];
 
-  userid = 1;
-
   ngOnInit() {
-    this.getCommonTasksById(this.userid);
+    this.getCommonTasksById();
   }
 
   openScheduableTaskDialog(scheduableTask?: ScheduableTask) {
@@ -67,7 +65,7 @@ export class TaskComponent {
         const newTaskApi: any = {
           name: result.name,
           task_size: result.taskSize,
-          user_id: this.userid,
+          user_id: localStorage.getItem('userId'),
         };
 
         if (scheduableTask) {
@@ -157,8 +155,8 @@ export class TaskComponent {
     );
   }
 
-  getCommonTasksById(user_id: number) {
-    this.schedulerASP.getCommonTasksByUserId(user_id).subscribe(
+  getCommonTasksById() {
+    this.schedulerASP.getCommonTasksByUserId().subscribe(
       (response) => {
         console.log('Response all common workers:', response);
         this.apiTasks = response;

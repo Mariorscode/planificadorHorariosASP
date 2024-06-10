@@ -139,7 +139,8 @@ export class schedulerASP {
     return this.http.get(this.apiUrl + 'commonworkers/', { headers });
   }
 
-  getCommonWorkersByUserId(userId: number): Observable<any> {
+  getCommonWorkersByUserId(): Observable<any> {
+    const userId = localStorage.getItem('userId');
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     });
@@ -211,7 +212,8 @@ export class schedulerASP {
     });
   }
 
-  getCommonSpacesByUserId(userId: number): Observable<any> {
+  getCommonSpacesByUserId(): Observable<any> {
+    const userId = localStorage.getItem('userId');
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     });
@@ -293,12 +295,14 @@ export class schedulerASP {
     );
   }
 
-  getCommonTasksByUserId(userId: number): Observable<any> {
+  getCommonTasksByUserId(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     });
     return this.http.get(
-      this.apiUrl + 'commonscheduabletasks/?user_id=' + userId,
+      this.apiUrl +
+        'commonscheduabletasks/?user_id=' +
+        localStorage.getItem('userId'),
       { headers }
     );
   }

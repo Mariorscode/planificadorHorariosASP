@@ -14,10 +14,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from django.http import JsonResponse
 
+from clorm import FactBase
+
+from . import Clingo
+from . import Terms
 
 from django.contrib.auth import get_user_model
+from collections import defaultdict
+from operator import itemgetter
+from datetime import datetime
 
 class TurnViewSet(ModelViewSet):
     serializer_class = TurnSerializer
@@ -84,7 +90,7 @@ class TimeTableFilter(filters.FilterSet):
         model = TimeTable
         fields = ['user_id']
 
-class TimeTableViewSet(ModelViewSet):
+class TimeTableViewSet(ModelViewSet, Clingo):
     queryset = TimeTable.objects.all()
     serializer_class = TimeTableSerializer
     filter_backends = [DjangoFilterBackend]
@@ -92,47 +98,144 @@ class TimeTableViewSet(ModelViewSet):
     
     permission_classes = [AllowAny]
     
+    DAYS_OF_WEEK = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
     
+    def convert_start_time_to_number(turns):
+    # Ordenar los turnos por `startTime`
+        turns.sort(key=lambda x: datetime.strptime(x['startTime'], '%H:%M'))
+    # Asignar un número secuencial a cada turno
+        for number, turn in enumerate(turns, start=1):
+         turn['number'] = number
+        return turns
+
     @action(detail=False, methods=['get'])
-    def manyschedulesPrueba(self, request):
-        # Aquí deberías obtener tus datos y prepararlos para el JSON
-        data = [
-            {
-                "response": [
-                {
-                    "day": "Lunes",
-                    "name": "task1",
-                    "number": 1,
-                    "schedule_space": "space1",
-                    "schedule_worker": "mario",
-                    "timeTable_schedule": 3
-                },
-                {
-                    "day": "Lunes",
-                    "name": "task1",
-                    "number": 1,
-                    "schedule_space": "space1",
-                    "schedule_worker": "mario",
-                    "timeTable_schedule": 3
-                }
-                ]
-            },
-            {
-                "response": [
-                {
-                    "day": "Martes",
-                    "name": "task2",
-                    "number": 2,
-                    "schedule_space": "space2",
-                    "schedule_worker": "juan",
-                    "timeTable_schedule": 4
-                }
-                ]
-            }
-            ]
+    def generateTimetable(self, request):
         
-        # Devolver los datos como JSON
-        return JsonResponse(data, safe=False)
+        timetable_id = request.query_params.get('timetable_id')
+
+        timetable_id = 18
+        turnsDuration = 0
+
+        if not timetable_id:
+            return Response({"error": "timetable_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # poner: 
+            # Terms.TurnsPerDay, #
+            # Terms.UnavailableDay, #
+            # Terms.Schedule, # 
+            # Terms.Worker, # 
+            # Terms.Space, #
+            # Terms.SpaceCapacity, #
+            # Terms.TaskName, # 
+            # Terms.SchedulableTask,#
+            # Terms.Restrictionworker,#
+            # Terms.Restrictionspace,#
+            # Terms.TaskSize,#
+            # Terms.Spacecapacity,#
+            # Terms.Tag,#
+            # Terms.Tags,#
+            # Terms.TaskUnknownSpace, #
+            # Terms.TaskUnknownWorker, #
+            # Terms.TaskUnknownWorkerAndSpace, #
+            # Terms.FreeTimeTurn, #
+            
+        
+        fact_list = [
+            # Terms.TurnsPerDay(2),
+            # Terms.UnavailableDay(day="tuesday"),
+            # Terms.UnavailableDay(day="wednesday"),
+            # Terms.UnavailableDay(day="thursday"),
+            # Terms.UnavailableDay(day="friday"),
+            # Terms.UnavailableDay(day="saturday"),
+            # Terms.UnavailableDay(day="sunday"),
+            # Terms.TaskName(name="task1"),
+            # Terms.TaskName(name="task2"),
+            # Terms.Worker(name="john"),
+            # Terms.Space(name="space1"),
+            # Terms.SpaceCapacity(space="space1", capacity=10),
+            # Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            # Terms.SchedulableTask(taskname="task2", worker="john", space="space1"),
+            # Terms.TaskSize(taskname="task1", size=5)
+        ]
+         
+        
+        timeTables = TimeTable.objects.filter(id=timetable_id)
+        
+        for timetable in timeTables:
+            fact_list.append(Terms.TurnsPerDay(timetable.turnsPerDay))
+            turnsDuration = timetable.turnsDuration
+            
+        turns = Turn.objects.filter(timeTable_id=timetable_id)
+        
+        available_days = set(turn.day for turn in turns)
+        unavailable_days = [day for day in self.DAYS_OF_WEEK if day not in available_days]
+
+        for day in unavailable_days:
+            fact_list.append(Terms.UnavailableDay(day=day))
+
+        for turn in turns:
+            if turn.is_free_time == True:
+                fact_list.append(Terms.FreeTimeTurn(day=turn.day, number=int(turn.startTime)))
+       
+        workers = Worker.objects.filter(timtable_id=timetable_id)
+        
+        for worker in workers:
+            fact_list.append(Terms.Worker(name=worker.name))
+            for restriction in worker.restrictionsWorker.all():
+                restrictionWorkerTurns = Turn.objects.filter(id=restriction) 
+                for restrictionWorkerTurns in restrictionWorkerTurns:
+                    fact_list.append(Terms.Restrictionworker(worker=worker.name, day=restrictionWorkerTurns.day, number=restrictionWorkerTurns.startTime))
+                    
+        spaces = Space.objects.filter(timeTable_id=timetable_id)
+        
+        for space in spaces:
+            fact_list.append(Terms.Space(name=space.name))
+            fact_list.append(Terms.SpaceCapacity(space=space.name, capacity=space.space_capacity))
+            for restriction in space.restrictionsSpace.all():
+                restrictionSpaceTurns = Turn.objects.filter(id=restriction)
+                for restrictionSpaceTurns in restrictionSpaceTurns:
+                    fact_list.append(Terms.Restrictionspace(space=space.name, day=restrictionSpaceTurns.day, number=restrictionSpaceTurns.startTime))
+                    
+        scheduableTasks = ScheduableTask.objects.all()
+        
+        tags = []
+        for scheduableTask in scheduableTasks:
+            fact_list.append(Terms.TaskName(name=scheduableTask.name))
+            fact_list.append(Terms.TaskSize(taskname=scheduableTask.name, size=scheduableTask.task_size))
+            
+            # for tag in scheduableTask.task_tags:
+            #     if tag not in tags:
+            #         tags.append(tag)
+            #         fact_list.append(Terms.Tag(name=tag))    
+            #         fact_list.append(Terms.Tags(taskname=scheduableTask.name, tag=tag))
+                    
+                
+            if scheduableTask.task_spaces.name == None & scheduableTask.task_worker.name == None:
+                fact_list.append(Terms.TaskUnknownWorkerAndSpace(taskname=scheduableTask.name))
+            elif scheduableTask.task_worker.name == None:
+                fact_list.append(Terms.TaskUnknownWorker(taskname=scheduableTask.name))
+            elif scheduableTask.task_spaces.name == None:
+                fact_list.append(Terms.TaskUnknownSpace(taskname=scheduableTask.name))
+            else:
+              fact_list.append(Terms.SchedulableTask(taskname=scheduableTask.name, worker=scheduableTask.task_worker.name, space=scheduableTask.task_spaces.name))
+              
+        
+        self.clingo_setup()
+  
+        self.load_knowledge(FactBase(fact_list))
+
+        solutions = list(self.get_solutions())
+        all_solutions = []
+
+        for index, solution in enumerate(solutions):
+            query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
+            solution_dict = {
+                'solution_id': index + 1,  # Identificador de la solución
+                'schedules': [str(q) for q in query]
+            }
+            all_solutions.append(solution_dict)
+
+        return Response({"solutions": all_solutions}, status=status.HTTP_200_OK)
         
     
 
