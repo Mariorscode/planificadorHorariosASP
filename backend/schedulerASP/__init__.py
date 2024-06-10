@@ -1,8 +1,13 @@
+import os
+
+from django.conf import settings
+
 from clorm import monkey
 monkey.patch() # must call this before importing clingo
 from clingo import Control
 
 
+ASP_DIR = os.path.join(settings.BASE_DIR, 'ASP')
 class Clingo:
     def clingo_setup(self, *files):
         self.ctrl = Control(['--models=0'], unifier=[
@@ -29,11 +34,11 @@ class Clingo:
             Terms.FreeTimeTurn,
             # ...
         ])
-        
+
         if not files:
-            
-            self.ctrl.load("ASP/engine.lp")
-            self.ctrl.load("ASP/knowledge.lp")
+
+            self.ctrl.load(os.path.join(ASP_DIR, 'knowledge.lp'))
+            self.ctrl.load(os.path.join(ASP_DIR, 'engine.lp'))
             return
 
         for f in files:
@@ -69,68 +74,68 @@ class Terms:
         taskname = ConstantField
         worker = ConstantField
         space = ConstantField
-    
+
     class Worker(Predicate):
         name = ConstantField
 
     class Space(Predicate):
         name = ConstantField
-    
+
     class SpaceCapacity(Predicate):
         space = ConstantField
         capacity = IntegerField
-    
+
     class TaskName(Predicate):
         name = ConstantField
-    
+
     class Tag(Predicate):
         name = ConstantField
-        
+
     #class tags con list de tag
-    
+
     class SchedulableTask(Predicate):
         taskname = ConstantField
         worker = ConstantField
         space = ConstantField
-    
+
     class Restrictionworker(Predicate):
         worker = ConstantField
         day = ConstantField
         number = IntegerField
 
-    
+
     class Restrictionspace(Predicate):
         space = ConstantField
         day = ConstantField
         number = IntegerField
-        
+
     class TaskSize(Predicate):
         taskname = ConstantField
         size = IntegerField
-        
+
     class Spacecapacity(Predicate):
         space = ConstantField
         size = IntegerField
-    
+
     class Tag(Predicate):
-        name = ConstantField    
-        
+        name = ConstantField
+
     class Tags(Predicate):
         taskname = ConstantField
         tag = ConstantField
-      
+
 
     class TaskUnknownSpace(Predicate):
         taskname = ConstantField
-        worker = ConstantField   
-    
+        worker = ConstantField
+
     class TaskUnknownWorker(Predicate):
         taskname = ConstantField
         space = ConstantField
-        
+
     class TaskUnknownWorkerAndSpace(Predicate):
         taskname = ConstantField
-        
+
     class FreeTimeTurn(Predicate):
         day = ConstantField
         number = IntegerField

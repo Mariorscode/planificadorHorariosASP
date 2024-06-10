@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 
-from .models import Turn, Worker, CommonWorker, Space, CommonSpace, Tag, ScheduableTask, CommonScheduableTask,TimeTable, Schedule, User   
+from .models import Turn, Worker, CommonWorker, Space, CommonSpace, Tag, ScheduableTask, CommonScheduableTask,TimeTable, Schedule, User
 
 from .serializer import TurnSerializer, WorkerSerializer, CommonWorkerSerializer, SpaceSerializer,CommonSpaceSerializer, TagSerializer, ScheduableTaskSerializer, CommonScheduableTaskSerializer, TimeTableSerializer, ScheduleSerializer, UserSerializer
 
@@ -16,7 +16,7 @@ from . import Terms
 class TurnViewSet(ModelViewSet):
     serializer_class = TurnSerializer
     queryset = Turn.objects.all()
-    
+
     @action(detail=False, methods=['post'])
     def create_multiple(self, request, *args, **kwargs):
         if isinstance(request.data, list):
@@ -32,7 +32,7 @@ class TurnViewSet(ModelViewSet):
 class WorkerViewSet(ModelViewSet):
     serializer_class = WorkerSerializer
     queryset = Worker.objects.all()
-    
+
     @action(detail=False, methods=['post'])
     def create_multiple(self, request, *args, **kwargs):
         if isinstance(request.data, list):
@@ -43,11 +43,11 @@ class WorkerViewSet(ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         else:
             return Response({'error': 'Expected a list of items'}, status=status.HTTP_400_BAD_REQUEST)
-        
+
 class CommonWorkerViewSet(ModelViewSet):
     serializer_class = CommonWorkerSerializer
     queryset = CommonWorker.objects.all()
-    
+
     @action(detail=False, methods=['post'])
     def create_multiple(self, request, *args, **kwargs):
         if isinstance(request.data, list):
@@ -57,19 +57,19 @@ class CommonWorkerViewSet(ModelViewSet):
             headers = self.get_success_headers(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         else:
-            return Response({'error': 'Expected a list of items'}, status=status.HTTP_400_BAD_REQUEST)        
-        
+            return Response({'error': 'Expected a list of items'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class TimeTableViewSet(ModelViewSet,Clingo):
     queryset = TimeTable.objects.all()
     serializer_class = TimeTableSerializer
-    
-    
+
+
     @action(detail=False, methods=['get'])
     def generateTimetable(self, request):
-        
+
         self.clingo_setup()
-            
+
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(1),
             Terms.UnavailableDay(day="tuesday"),
@@ -84,23 +84,21 @@ class TimeTableViewSet(ModelViewSet,Clingo):
             Terms.SpaceCapacity(space="space1", capacity=10),
             Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
             Terms.TaskSize(taskname="task1", size=5)
-        
+
         ]))
-        
+
         solutions = list(self.get_solutions())
         solution = solutions[0]
-      
-        
+
+
         query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
-        
-        print(query)
-        
-        return Response({"query": query}, status=status.HTTP_200_OK)
+
+        return Response({"query": str(query)}, status=status.HTTP_200_OK)
 
 class SpaceViewSet(ModelViewSet):
     queryset = Space.objects.all()
     serializer_class = SpaceSerializer
-    
+
     @action(detail=False, methods=['post'])
     def create_multiple(self, request, *args, **kwargs):
         if isinstance(request.data, list):
@@ -111,11 +109,11 @@ class SpaceViewSet(ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         else:
             return Response({'error': 'Expected a list of items'}, status=status.HTTP_400_BAD_REQUEST)
-    
+
 class CommonSpaceViewSet(ModelViewSet):
     queryset = CommonSpace.objects.all()
     serializer_class = CommonSpaceSerializer
-    
+
     @action(detail=False, methods=['post'])
     def create_multiple(self, request, *args, **kwargs):
         if isinstance(request.data, list):
@@ -126,7 +124,7 @@ class CommonSpaceViewSet(ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         else:
             return Response({'error': 'Expected a list of items'}, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 class TagViewSet(ModelViewSet):
     queryset = Tag.objects.all()
@@ -136,7 +134,7 @@ class TagViewSet(ModelViewSet):
 class CommonScheduableTaskViewSet(ModelViewSet):
     queryset = CommonScheduableTask.objects.all()
     serializer_class = CommonScheduableTaskSerializer
-    
+
     @action(detail=False, methods=['post'])
     def create_multiple(self, request, *args, **kwargs):
         if isinstance(request.data, list):
@@ -151,8 +149,8 @@ class CommonScheduableTaskViewSet(ModelViewSet):
 class ScheduableTaskViewSet(ModelViewSet):
     queryset = ScheduableTask.objects.all()
     serializer_class = ScheduableTaskSerializer
-    
-    
+
+
     @action(detail=False, methods=['post'])
     def create_multiple(self, request, *args, **kwargs):
         if isinstance(request.data, list):
@@ -163,15 +161,11 @@ class ScheduableTaskViewSet(ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         else:
             return Response({'error': 'Expected a list of items'}, status=status.HTTP_400_BAD_REQUEST)
-    
+
 class scheduleViewSet(ModelViewSet):
     queryset = Schedule.objects.all()
     serializer_class = ScheduleSerializer
-    
+
 class userViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    
-    
-    
-
