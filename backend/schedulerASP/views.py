@@ -98,23 +98,38 @@ class TimeTableViewSet(ModelViewSet):
         # Aquí deberías obtener tus datos y prepararlos para el JSON
         data = [
             {
-                "day": "Lunes",
-                "name": "task1",
-                "number": 1,
-                "schedule_space": "space1",
-                "schedule_worker": "mario",
-                "timeTable_schedule": 3
+                "response": [
+                {
+                    "day": "Lunes",
+                    "name": "task1",
+                    "number": 1,
+                    "schedule_space": "space1",
+                    "schedule_worker": "mario",
+                    "timeTable_schedule": 3
+                },
+                {
+                    "day": "Lunes",
+                    "name": "task1",
+                    "number": 1,
+                    "schedule_space": "space1",
+                    "schedule_worker": "mario",
+                    "timeTable_schedule": 3
+                }
+                ]
             },
             {
-                "day": "Martes",
-                "name": "task2",
-                "number": 2,
-                "schedule_space": "space2",
-                "schedule_worker": "juan",
-                "timeTable_schedule": 4
-            },
-            # Agrega más objetos JSON a la lista según sea necesario
-        ]
+                "response": [
+                {
+                    "day": "Martes",
+                    "name": "task2",
+                    "number": 2,
+                    "schedule_space": "space2",
+                    "schedule_worker": "juan",
+                    "timeTable_schedule": 4
+                }
+                ]
+            }
+            ]
         
         # Devolver los datos como JSON
         return JsonResponse(data, safe=False)
