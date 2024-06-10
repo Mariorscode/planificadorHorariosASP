@@ -8,6 +8,7 @@ import { SpaceComponent } from './space/space.component';
 import { TaskComponent } from './task/task.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
+import { GeneratedCalendarComponent } from './generatedCalendar/generatedCalendar.component';
 
 import { AuthGuard } from './auth.guard';
 
@@ -24,6 +25,11 @@ const routes: Routes = [
   { path: 'workers', component: WorkerComponent, canActivate: [AuthGuard] },
   { path: 'spaces', component: SpaceComponent, canActivate: [AuthGuard] },
   { path: 'tasks', component: TaskComponent, canActivate: [AuthGuard] },
+  {
+    path: 'generatedCalendar',
+    component: GeneratedCalendarComponent,
+    canActivate: [AuthGuard],
+  },
   // { path: 'calendarWeek', component: CalendarWeekComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: 'register', component: RegisterComponent },

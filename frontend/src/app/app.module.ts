@@ -41,6 +41,7 @@ import { SpaceComponent } from './space/space.component';
 import { TaskComponent } from './task/task.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
+import { GeneratedCalendarComponent } from './generatedCalendar/generatedCalendar.component';
 
 import { AuthGuard } from './auth.guard';
 import {
@@ -51,9 +52,10 @@ import {
 import { s } from '@fullcalendar/core/internal-common';
 // import { CalendarWeekComponent } from './calendarWeek/calendarWeek.component';
 import { NavBarComponent } from './navBar/navBar.component';
+import { GeneratedCalendarOptionComponent } from './generatedCalendarOption/generatedCalendarOption.component';
 
 @NgModule({
-  declarations: [
+  declarations: [	
     AppComponent,
     CalendarComponent,
     StteperFormComponent,
@@ -68,7 +70,9 @@ import { NavBarComponent } from './navBar/navBar.component';
     LoginComponent,
     RegisterComponent,
     NavBarComponent,
-  ],
+    GeneratedCalendarComponent,
+      GeneratedCalendarOptionComponent
+   ],
   imports: [
     BrowserModule,
     AppRoutingModule,

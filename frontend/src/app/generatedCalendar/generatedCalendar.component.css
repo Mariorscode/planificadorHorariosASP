@@ -1,0 +1,6 @@
+.save-button {
+    position: fixed;
+    bottom: 20px; /* ajusta la distancia desde la parte inferior según sea necesario */
+    right: 20px; /* ajusta la distancia desde la derecha según sea necesario */
+    z-index: 1;
+  }

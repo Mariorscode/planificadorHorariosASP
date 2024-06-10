@@ -14,6 +14,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from django.http import JsonResponse
 
 
 from django.contrib.auth import get_user_model
@@ -88,6 +89,36 @@ class TimeTableViewSet(ModelViewSet):
     serializer_class = TimeTableSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = TimeTableFilter
+    
+    permission_classes = [AllowAny]
+    
+    
+    @action(detail=False, methods=['get'])
+    def manyschedulesPrueba(self, request):
+        # Aquí deberías obtener tus datos y prepararlos para el JSON
+        data = [
+            {
+                "day": "Lunes",
+                "name": "task1",
+                "number": 1,
+                "schedule_space": "space1",
+                "schedule_worker": "mario",
+                "timeTable_schedule": 3
+            },
+            {
+                "day": "Martes",
+                "name": "task2",
+                "number": 2,
+                "schedule_space": "space2",
+                "schedule_worker": "juan",
+                "timeTable_schedule": 4
+            },
+            # Agrega más objetos JSON a la lista según sea necesario
+        ]
+        
+        # Devolver los datos como JSON
+        return JsonResponse(data, safe=False)
+        
     
 
 class SpaceViewSet(ModelViewSet):
@@ -188,6 +219,8 @@ class scheduleViewSet(ModelViewSet):
     serializer_class = ScheduleSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = ScheduleFilter
+    permission_classes = [AllowAny]
+    
       
     @action(detail=False, methods=['post'])
     def create_multiple(self, request, *args, **kwargs):
