@@ -432,6 +432,7 @@ export class StteperFormComponent {
       dialogRef = this.dialog.open(ScheduableTaskDialogComponent, {
         data: {
           taskName: scheduableTask.name,
+          taskSize: scheduableTask.size,
           turns: this.turns,
           dataWorkers: this.workers,
           dataSpaces: this.spaces,

@@ -121,6 +121,14 @@
   <mat-step [stepControl]="thirdFormGroup" label="Espacios disponibles">
     <form>
       <h2>Espacios disponibles</h2>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="openSpaceDialog()"
+        style="margin: 5px"
+      >
+        Añadir espacio
+      </button>
       <div style="display: flex">
         <div class="column">
           <div class="card-container">
@@ -161,14 +169,6 @@
               </mat-card>
             </div>
           </div>
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="openSpaceDialog()"
-            style="margin: 5px"
-          >
-            Añadir espacio
-          </button>
         </div>
       </div>
     </form>
@@ -187,6 +187,14 @@
   <mat-step [stepControl]="fourthFormGroup" label="Trabajadores disponibles">
     <form>
       <h2>Trabajadores disponibles</h2>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="openWorkerDialog()"
+        style="margin: 5px"
+      >
+        Añadir Trabajor
+      </button>
       <div style="display: flex">
         <div class="column">
           <div class="card-container">
@@ -224,14 +232,6 @@
               </mat-card>
             </div>
           </div>
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="openWorkerDialog()"
-            style="margin: 5px"
-          >
-            Añadir Trabajor
-          </button>
         </div>
       </div>
     </form>
@@ -257,7 +257,6 @@
           style="align-self: center; margin: 5px"
           color="primary"
           (click)="openTagsDialog()"
-          [disabled]="availableTags.length >= 3"
         >
           Añadir tag
           <mat-icon
@@ -282,6 +281,22 @@
         </div>
         <mat-divider style="margin: 5px"></mat-divider>
         <h2>Tareas programables</h2>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="openScheduableTaskDialog()"
+          style="margin: 5px"
+        >
+          Añadir tarea
+        </button>
+        <button
+          mat-raised-button
+          style="background-color: rgb(77, 163, 37); color: white; margin: 5px"
+          matStepperNext
+          (click)="createAllTasksAndCommonTasks()"
+        >
+          Generar horario
+        </button>
         <div class="column">
           <div class="card-container">
             <div class="card-container">
@@ -346,26 +361,9 @@
               </div>
             </div>
           </div>
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="openScheduableTaskDialog()"
-            style="margin: 5px"
-          >
-            Añadir tarea
-          </button>
         </div>
       </div>
     </form>
-    <div class="button-container">
-      <button
-        mat-raised-button
-        color="primary"
-        matStepperNext
-        (click)="createAllTasksAndCommonTasks()"
-      >
-        Siguiente
-      </button>
-    </div>
+    <div class="button-container"></div>
   </mat-step>
 </mat-stepper>
