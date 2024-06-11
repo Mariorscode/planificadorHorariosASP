@@ -137,7 +137,7 @@ class TimeTableViewSet(ModelViewSet, Clingo):
             # Terms.TaskSize(taskname="task1", size=5)
         ]
         # ID específico de TimeTable que quieres obtener
-        timetable_id = 40
+        timetable_id = 41
         
         TimeTables = TimeTable.objects.filter(id=timetable_id)
         
@@ -164,19 +164,20 @@ class TimeTableViewSet(ModelViewSet, Clingo):
         for worker in Workers:
             fact_list.append(Terms.Worker(name=worker.name))
             for restriction in worker.restrictionsWorker.all():
-                restrictionWorkerTurns = Turn.objects.filter(id=restriction) 
-                for restrictionWorkerTurns in restrictionWorkerTurns:
-                    fact_list.append(Terms.Restrictionworker(worker=worker.name, day=restrictionWorkerTurns.day, number=restrictionWorkerTurns.startTime))
+                restrictionWorkerTurns = Turn.objects.filter(id=restriction.id)
+                for restrictionWorkerTurn in restrictionWorkerTurns:
+                    fact_list.append(Terms.Restrictionworker(worker=worker.name, day=restrictionWorkerTurn.day, number=int(restrictionWorkerTurn.startTime)))
                     
         Spaces = Space.objects.filter(timeTable_id=timetable_id)
         
         for space in Spaces:
             fact_list.append(Terms.Space(name=space.name))
             fact_list.append(Terms.SpaceCapacity(space=space.name, capacity=space.space_capacity))
+            
             for restriction in space.restrictionsSpace.all():
-                restrictionSpaceTurns = Turn.objects.filter(id=restriction)
+                restrictionSpaceTurns = Turn.objects.filter(id=restriction.id)
                 for restrictionSpaceTurns in restrictionSpaceTurns:
-                    fact_list.append(Terms.Restrictionspace(space=space.name, day=restrictionSpaceTurns.day, number=restrictionSpaceTurns.startTime))
+                    fact_list.append(Terms.Restrictionspace(space=space.name, day=restrictionSpaceTurns.day, number=int(restrictionSpaceTurns.startTime)))
             
         ScheduableTasks = ScheduableTask.objects.filter(timeTable_id=timetable_id)
         
@@ -187,13 +188,19 @@ class TimeTableViewSet(ModelViewSet, Clingo):
             fact_list.append(Terms.SchedulableTask(taskname=scheduableTask.name, worker=scheduableTask.task_worker.name, space=scheduableTask.task_spaces.name))
       
             for tag in scheduableTask.task_tags:
-                fact_list.append(Terms.Tag(name=tag))
-                fact_list.append(Terms.Tags(taskname=scheduableTask.name, tag=tag))
+                # Ensure the tag is a string
+                if isinstance(tag, dict):
+                    tag_name = tag.get('name')
+                else:
+                    tag_name = str(tag)
+                
+                fact_list.append(Terms.Tag(name=tag_name))
+                fact_list.append(Terms.Tags(taskname=scheduableTask.name, tag=tag_name))
             
-            for restriction in scheduableTask.task_restrictions.all():
-                restrictionTaskTurns = Turn.objects.filter(id=restriction)
-                for restrictionTaskTurns in restrictionTaskTurns:
-                    fact_list.append(Terms.Restrictiontask(taskname=scheduableTask.name, day=restrictionTaskTurns.day, number=restrictionTaskTurns.startTime))
+            # for restriction in scheduableTask.task_restrictions.all():
+            #     restrictionTaskTurns = Turn.objects.filter(id=restriction.id)
+            #     for restrictionTaskTurn in restrictionTaskTurns:
+            #         fact_list.append(Terms.SchedulableTask(taskname=scheduableTask.name, day=restrictionTaskTurn.day, number=int(restrictionTaskTurn.startTime)))
 
 
 
