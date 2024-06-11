@@ -112,32 +112,9 @@ class TimeTableViewSet(ModelViewSet, Clingo):
     def generateTimetable(self, request):
         self.clingo_setup()
 
-        fact_list = [
-            # Terms.TurnsPerDay(2),
-            # Terms.UnavailableDay(day="tuesday"),
-            # Terms.UnavailableDay(day="wednesday"),
-            # Terms.UnavailableDay(day="thursday"),
-            # Terms.UnavailableDay(day="friday"),
-            # Terms.UnavailableDay(day="saturday"),
-            # Terms.UnavailableDay(day="sunday"),
-            # Terms.UnavailableDay(day="martes"),
-            # Terms.UnavailableDay(day="miercoles"),
-            # Terms.UnavailableDay(day="jueves"),
-            # Terms.UnavailableDay(day="viernes"),
-            # Terms.UnavailableDay(day="sabado"),
-            # Terms.UnavailableDay(day="domingo"),
-            # Terms.FreeTimeTurn(day="monday", number=1),
-            # Terms.TaskName(name="task1"),
-            # Terms.TaskName(name="task2"),
-            # Terms.Worker(name="john"),
-            # Terms.Space(name="space1"),
-            # Terms.SpaceCapacity(space="space1", capacity=10),
-            # Terms.SchedulableTask(taskname="task1", worker="john", space="espacio1"),
-            # Terms.SchedulableTask(taskname="task2", worker="john", space="espacio1"),
-            # Terms.TaskSize(taskname="task1", size=5)
-        ]
+        fact_list = []
         # ID específico de TimeTable que quieres obtener
-        timetable_id = 42
+        timetable_id = 44
         
         TimeTables = TimeTable.objects.filter(id=timetable_id)
         
@@ -217,7 +194,7 @@ class TimeTableViewSet(ModelViewSet, Clingo):
         for index, solution in enumerate(solutions):
             query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
             solution_dict = {
-                'solution_id': index + 1,  # Identificador de la solución
+                'solution_id': index + 1,  
                 'schedules': [str(q) for q in query]
             }
             all_solutions.append(solution_dict)
