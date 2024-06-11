@@ -22,9 +22,13 @@ export class GeneratedCalendarComponent implements OnInit {
   }
 
   getGeneratedSchedules() {
-    const timetable_id = 44;
+    const timetable_id = parseInt(
+      localStorage.getItem('timetable_id') || '0',
+      0
+    );
     this.schedulerASP.generateTimetable(timetable_id).subscribe(
       (response) => {
+        console.log('Generated schedules:', response);
         this.solutions = response.solutions;
         this.loadMoreSolutions();
       },

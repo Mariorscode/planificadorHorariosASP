@@ -71,19 +71,19 @@ export class GeneratedCalendarOptionComponent implements OnInit {
 
   ngOnInit() {
     this.solution_id = parseInt(localStorage.getItem('solution_id') ?? '', 0);
-    this.timetable_id = 44;
+    this.timetable_id = parseInt(localStorage.getItem('timetable_id') ?? '', 0);
     this.getAllSchedulesSolutions();
   }
 
   getDayIndex(day: string): number {
     const daysOfWeek: { [key: string]: number } = {
-      Domingo: 0,
-      Lunes: 1,
-      Martes: 2,
-      Miércoles: 3,
-      Jueves: 4,
-      Viernes: 5,
-      Sábado: 6,
+      domingo: 0,
+      lunes: 1,
+      maretes: 2,
+      miercoles: 3,
+      jueves: 4,
+      viernes: 5,
+      sabado: 6,
     };
     return daysOfWeek[day] ?? 1;
   }
