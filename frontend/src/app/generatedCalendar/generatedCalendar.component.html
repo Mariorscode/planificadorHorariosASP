@@ -1,19 +1,14 @@
 <mat-sidenav-container class="example-container">
   <mat-sidenav #sidenav mode="over">
     <mat-nav-list>
-      <a mat-list-item routerLink="/homepage" (click)="sidenav.close()"
-        >Horarios</a
-      >
-      <mat-divider></mat-divider>
-      <a mat-list-item routerLink="/workers" (click)="sidenav.close()"
-        >Trabajadores</a
-      >
-      <mat-divider></mat-divider>
-      <a mat-list-item routerLink="/spaces" (click)="sidenav.close()"
-        >Espacios</a
-      >
-      <mat-divider></mat-divider>
-      <a mat-list-item routerLink="/tasks" (click)="sidenav.close()">Tareas</a>
+      <ng-container *ngFor="let solution of displayedSolutions">
+        <mat-list-item (click)="selectSolution(solution)">
+          Solución {{ solution.solution_id }}
+        </mat-list-item>
+      </ng-container>
+      <mat-list-item *ngIf="currentIndex < solutions.length">
+        <button mat-button (click)="loadMoreSolutions()">Cargar más</button>
+      </mat-list-item>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -25,7 +20,7 @@
     </mat-toolbar>
     <!-- Contenido resto de pagina -->
     <div style="margin: 5px">
-      <app-generatedCalendarOption> </app-generatedCalendarOption>
+      <app-generatedCalendarOption></app-generatedCalendarOption>
     </div>
     <button mat-raised-button color="primary" class="save-button">
       Guardar calendario

@@ -188,18 +188,26 @@ class TimeTableViewSet(ModelViewSet, Clingo):
 
         self.load_knowledge(FactBase(fact_list))
 
+        # solutions = list(self.get_solutions())
+        # all_solutions = []
+
+        # for index, solution in enumerate(solutions):
+        #     query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
+        #     solution_dict = {
+        #         'solution_id': index + 1,  
+        #         'schedules': [str(q) for q in query]
+        #     }
+        #     all_solutions.append(solution_dict)
+
+        # return Response({"solutions": all_solutions}, status=status.HTTP_200_OK)
         solutions = list(self.get_solutions())
-        all_solutions = []
+        # print(solutions)
+        solution = solutions[1]
 
-        for index, solution in enumerate(solutions):
-            query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
-            solution_dict = {
-                'solution_id': index + 1,  
-                'schedules': [str(q) for q in query]
-            }
-            all_solutions.append(solution_dict)
 
-        return Response({"solutions": all_solutions}, status=status.HTTP_200_OK)
+        query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
+
+        return Response({"query": str(query)}, status=status.HTTP_200_OK)
 
 
  
