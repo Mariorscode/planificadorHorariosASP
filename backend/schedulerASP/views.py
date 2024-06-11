@@ -98,7 +98,7 @@ class TimeTableViewSet(ModelViewSet, Clingo):
     
     permission_classes = [AllowAny]
     
-    DAYS_OF_WEEK = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
+    DAYS_OF_WEEK = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
     
     def convert_start_time_to_number(turns):
     # Ordenar los turnos por `startTime`
@@ -114,20 +114,27 @@ class TimeTableViewSet(ModelViewSet, Clingo):
 
         fact_list = [
             # Terms.TurnsPerDay(2),
-            Terms.UnavailableDay(day="Martes"),
-            Terms.UnavailableDay(day="Miercoles"),
-            Terms.UnavailableDay(day="Jueves"),
-            Terms.UnavailableDay(day="Viernes"),
-            Terms.UnavailableDay(day="Sabado"),
-            Terms.UnavailableDay(day="Domingo"),
-            Terms.TaskName(name="task1"),
-            Terms.TaskName(name="task2"),
-            Terms.Worker(name="john"),
-            Terms.Space(name="space1"),
-            Terms.SpaceCapacity(space="space1", capacity=10),
-            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
-            Terms.SchedulableTask(taskname="task2", worker="john", space="space1"),
-            Terms.TaskSize(taskname="task1", size=5)
+            # Terms.UnavailableDay(day="tuesday"),
+            # Terms.UnavailableDay(day="wednesday"),
+            # Terms.UnavailableDay(day="thursday"),
+            # Terms.UnavailableDay(day="friday"),
+            # Terms.UnavailableDay(day="saturday"),
+            # Terms.UnavailableDay(day="sunday"),
+            # Terms.UnavailableDay(day="martes"),
+            # Terms.UnavailableDay(day="miercoles"),
+            # Terms.UnavailableDay(day="jueves"),
+            # Terms.UnavailableDay(day="viernes"),
+            # Terms.UnavailableDay(day="sabado"),
+            # Terms.UnavailableDay(day="domingo"),
+            # Terms.FreeTimeTurn(day="monday", number=1),
+            # Terms.TaskName(name="task1"),
+            # Terms.TaskName(name="task2"),
+            # Terms.Worker(name="john"),
+            # Terms.Space(name="space1"),
+            # Terms.SpaceCapacity(space="space1", capacity=10),
+            # Terms.SchedulableTask(taskname="task1", worker="john", space="espacio1"),
+            # Terms.SchedulableTask(taskname="task2", worker="john", space="espacio1"),
+            # Terms.TaskSize(taskname="task1", size=5)
         ]
         # ID específico de TimeTable que quieres obtener
         timetable_id = 40
@@ -138,6 +145,57 @@ class TimeTableViewSet(ModelViewSet, Clingo):
             turnsPerDay = timetable.turnsPerDay
             fact_list.append(Terms.TurnsPerDay(turnsPerDay))
             
+            
+        turns = Turn.objects.filter(timeTable_id=timetable_id)
+        
+        available_days = set(turn.day.lower() for turn in turns)
+        unavailable_days = [day for day in self.DAYS_OF_WEEK if day not in available_days]
+
+        for day in unavailable_days:
+            fact_list.append(Terms.UnavailableDay(day=day))
+
+        for turn in turns:
+            if turn.is_free_time == True:
+                fact_list.append(Terms.FreeTimeTurn(day=turn.day.lower(), number=int(turn.startTime)))
+        
+
+        Workers = Worker.objects.filter(timeTable_id=timetable_id)
+        
+        for worker in Workers:
+            fact_list.append(Terms.Worker(name=worker.name))
+            for restriction in worker.restrictionsWorker.all():
+                restrictionWorkerTurns = Turn.objects.filter(id=restriction) 
+                for restrictionWorkerTurns in restrictionWorkerTurns:
+                    fact_list.append(Terms.Restrictionworker(worker=worker.name, day=restrictionWorkerTurns.day, number=restrictionWorkerTurns.startTime))
+                    
+        Spaces = Space.objects.filter(timeTable_id=timetable_id)
+        
+        for space in Spaces:
+            fact_list.append(Terms.Space(name=space.name))
+            fact_list.append(Terms.SpaceCapacity(space=space.name, capacity=space.space_capacity))
+            for restriction in space.restrictionsSpace.all():
+                restrictionSpaceTurns = Turn.objects.filter(id=restriction)
+                for restrictionSpaceTurns in restrictionSpaceTurns:
+                    fact_list.append(Terms.Restrictionspace(space=space.name, day=restrictionSpaceTurns.day, number=restrictionSpaceTurns.startTime))
+            
+        ScheduableTasks = ScheduableTask.objects.filter(timeTable_id=timetable_id)
+        
+        for scheduableTask in ScheduableTasks:
+            fact_list.append(Terms.TaskName(name=scheduableTask.name))
+            fact_list.append(Terms.TaskSize(taskname=scheduableTask.name, size=scheduableTask.task_size))
+            
+            fact_list.append(Terms.SchedulableTask(taskname=scheduableTask.name, worker=scheduableTask.task_worker.name, space=scheduableTask.task_spaces.name))
+      
+            for tag in scheduableTask.task_tags:
+                fact_list.append(Terms.Tag(name=tag))
+                fact_list.append(Terms.Tags(taskname=scheduableTask.name, tag=tag))
+            
+            for restriction in scheduableTask.task_restrictions.all():
+                restrictionTaskTurns = Turn.objects.filter(id=restriction)
+                for restrictionTaskTurns in restrictionTaskTurns:
+                    fact_list.append(Terms.Restrictiontask(taskname=scheduableTask.name, day=restrictionTaskTurns.day, number=restrictionTaskTurns.startTime))
+
+
 
         # if not timetable_id:
         #     return Response({"error": "timetable_id is required"}, status=status.HTTP_400_BAD_REQUEST)
