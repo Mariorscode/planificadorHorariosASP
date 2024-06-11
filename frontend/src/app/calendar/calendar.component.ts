@@ -36,8 +36,8 @@ interface apiEvents {
 })
 export class CalendarComponent implements OnInit {
   timetable_id = 0;
-  timetableStartTime = '';
-  timetableDuration = 0;
+  timetableStartTime = '09:00'; // Asignar un valor de ejemplo
+  timetableDuration = 60; // Asignar un valor de ejemplo (en minutos)
   apischedules: apiEvents[] = [];
   INITIAL_EVENTS: EventInput[] = INITIAL_EVENTS;
   events: EventInput[] = [];
@@ -45,7 +45,9 @@ export class CalendarComponent implements OnInit {
   calendarVisible = signal(true);
   calendarOptions = signal<CalendarOptions>({
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
-    headerToolbar: {},
+    headerToolbar: {
+      center: 'title',
+    },
     views: {
       dayGridWeek: {
         dayHeaderFormat: {
@@ -61,13 +63,18 @@ export class CalendarComponent implements OnInit {
   });
   currentEvents = signal<EventApi[]>([]);
 
+  constructor(
+    private changeDetector: ChangeDetectorRef,
+    private schedulerASP: schedulerASP,
+    private route: ActivatedRoute
+  ) {}
+
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.timetable_id = +params['timetable_id'];
-      // load events based on timetable_id
+      // Lógica para cargar eventos basados en timetable_id
+      this.getAllSchedules();
     });
-
-    this.getAllSchedules();
   }
 
   eventosNuevos() {
@@ -75,7 +82,7 @@ export class CalendarComponent implements OnInit {
       {
         id: createEventId(),
         title: 'EVENTO NUEVO',
-        daysOfWeek: [1],
+        daysOfWeek: [1], // Lunes
         startTime: '10:00:00',
         endTime: '14:00:00',
       },
@@ -85,6 +92,7 @@ export class CalendarComponent implements OnInit {
 
     this.changeDetector.detectChanges();
   }
+
   getDayIndex(day: string): number {
     const daysOfWeek: { [key: string]: number } = {
       Domingo: 0,
@@ -103,21 +111,21 @@ export class CalendarComponent implements OnInit {
       (response) => {
         console.log('Response all schedules:', response);
         this.apischedules = response;
-        this.events = []; // Reload events
+        this.events = []; // Reiniciar eventos para evitar duplicados
 
         this.apischedules.forEach((apiWorker) => {
-          // transform timetableStartTime to minutes
+          // Convertir timetableStartTime a minutos
           const [startHour, startMinutes] = this.timetableStartTime
             .split(':')
             .map(Number);
           let startTimeInMinutes = startHour * 60 + startMinutes;
 
-          // Calculate startTime y endTime
-          startTimeInMinutes += this.timetableDuration * (apiWorker.number - 1);
+          // Calcular el nuevo startTime y endTime
+          startTimeInMinutes += this.timetableDuration * (apiWorker.number - 1); // -1 porque empieza desde 0
 
           const endTimeInMinutes = startTimeInMinutes + this.timetableDuration;
 
-          // transform startTime y endTime to HH:mm:ss format
+          // Convertir minutos de vuelta a hh:mm
           const newStartHour = Math.floor(startTimeInMinutes / 60)
             .toString()
             .padStart(2, '0');
@@ -134,15 +142,16 @@ export class CalendarComponent implements OnInit {
           const apiEvent: EventInput = {
             id: createEventId(),
             title: apiWorker.name,
-            daysOfWeek: [this.getDayIndex(apiWorker.day)], // assign day to event based on day name
+            daysOfWeek: [this.getDayIndex(apiWorker.day)], // Asignar el día de la semana correctamente
             startTime: `${newStartHour}:${newStartMinutes}:00`,
             endTime: `${newEndHour}:${newEndMinutes}:00`,
+            allDay: false, // Asegurarse de que el evento no sea de todo el día
           };
 
           this.events.push(apiEvent);
         });
 
-        // Update calendar events
+        // Actualizar los eventos en el calendario
         this.calendarOptions().events = this.events;
         this.changeDetector.detectChanges();
       },
@@ -151,10 +160,4 @@ export class CalendarComponent implements OnInit {
       }
     );
   }
-
-  constructor(
-    private changeDetector: ChangeDetectorRef,
-    private schedulerASP: schedulerASP,
-    private route: ActivatedRoute
-  ) {}
 }
