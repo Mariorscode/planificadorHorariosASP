@@ -77,6 +77,17 @@ export class schedulerASP {
       headers,
     });
   }
+
+  generateTimetable(timetable_id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.get(
+      `${this.apiUrl}timetables/generateTimetable/?timetable_id=${timetable_id}`,
+      { headers }
+    );
+  }
+
   // ---------/Timetable
 
   // ---------Turns

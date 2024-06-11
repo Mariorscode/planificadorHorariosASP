@@ -114,7 +114,7 @@ class TimeTableViewSet(ModelViewSet, Clingo):
 
         fact_list = []
         # ID específico de TimeTable que quieres obtener
-        timetable_id = 44
+        timetable_id = int(request.query_params.get('timetable_id'))
         
         TimeTables = TimeTable.objects.filter(id=timetable_id)
         

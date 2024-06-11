@@ -884,6 +884,18 @@ export class StteperFormComponent {
       (response) => {
         console.log('Response:', response);
         this.apiScheduableTasks = response;
+        this.getGeneratedSchedules();
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  getGeneratedSchedules() {
+    this.schedulerASP.generateTimetable(this.apiTimeTable.id).subscribe(
+      (response) => {
+        console.log('SCHEDULES:', response);
       },
       (error) => {
         console.error('Error:', error);
