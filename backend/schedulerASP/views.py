@@ -100,13 +100,13 @@ class TimeTableViewSet(ModelViewSet, Clingo):
     
     DAYS_OF_WEEK = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
     
-    def convert_start_time_to_number(turns):
-    # Ordenar los turnos por `startTime`
-        turns.sort(key=lambda x: datetime.strptime(x['startTime'], '%H:%M'))
-    # Asignar un número secuencial a cada turno
-        for number, turn in enumerate(turns, start=1):
-         turn['number'] = number
-        return turns
+    # def convert_start_time_to_number(turns):
+    # # Ordenar los turnos por `startTime`
+    #     turns.sort(key=lambda x: datetime.strptime(x['startTime'], '%H:%M'))
+    # # Asignar un número secuencial a cada turno
+    #     for number, turn in enumerate(turns, start=1):
+    #      turn['number'] = number
+    #     return turns
 
     @action(detail=False, methods=['get'])
     def generateTimetable(self, request):
@@ -188,26 +188,26 @@ class TimeTableViewSet(ModelViewSet, Clingo):
 
         self.load_knowledge(FactBase(fact_list))
 
-        # solutions = list(self.get_solutions())
-        # all_solutions = []
-
-        # for index, solution in enumerate(solutions):
-        #     query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
-        #     solution_dict = {
-        #         'solution_id': index + 1,  
-        #         'schedules': [str(q) for q in query]
-        #     }
-        #     all_solutions.append(solution_dict)
-
-        # return Response({"solutions": all_solutions}, status=status.HTTP_200_OK)
         solutions = list(self.get_solutions())
-        # print(solutions)
-        solution = solutions[1]
+        all_solutions = []
+
+        for index, solution in enumerate(solutions):
+            query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
+            solution_dict = {
+                'solution_id': index + 1,  
+                'schedules': [str(q) for q in query]
+            }
+            all_solutions.append(solution_dict)
+
+        return Response({"solutions": all_solutions}, status=status.HTTP_200_OK)
+        # solutions = list(self.get_solutions())
+        # # print(solutions)
+        # solution = solutions[1]
 
 
-        query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
+        # query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
 
-        return Response({"query": str(query)}, status=status.HTTP_200_OK)
+        # return Response({"query": str(query)}, status=status.HTTP_200_OK)
 
 
  

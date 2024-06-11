@@ -19,17 +19,6 @@
         </mat-form-field>
       </div>
       <div class="column">
-        <mat-form-field appearance="outline" *ngIf="!isCommon">
-          <mat-label>Días de la semana (restriccion)</mat-label>
-          <mat-select multiple>
-            <mat-option
-              *ngFor="let turn of data.turns"
-              [value]="turn"
-              (onSelectionChange)="onSelectionTurn(turn)"
-              >{{ turn.day }}, {{ turn.startTime }}</mat-option
-            >
-          </mat-select>
-        </mat-form-field>
         <br />
         <mat-form-field appearance="outline" *ngIf="!isCommon">
           <mat-label>Trabajador</mat-label>

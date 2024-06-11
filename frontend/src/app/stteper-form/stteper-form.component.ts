@@ -162,7 +162,7 @@ export class StteperFormComponent {
     scheduableTasks: [this.scheduableTasks, Validators.required],
   });
 
-  isLinear = false;
+  isLinear = true;
 
   //--------------------/Form Steps --------------------
 
