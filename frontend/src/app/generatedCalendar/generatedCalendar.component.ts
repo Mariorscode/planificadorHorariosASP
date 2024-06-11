@@ -2,18 +2,33 @@ import { Component, OnInit } from '@angular/core';
 import { schedulerASP } from '../schedulerASP.service';
 import { Router } from '@angular/router';
 
+interface apiEvents {
+  name: string;
+  day: string;
+  number: number;
+  schedule_space: string;
+  schedule_worker: string;
+  timeTable_schedule: number;
+}
+interface Solution {
+  solution_id: number;
+  schedules: string[];
+}
 @Component({
   selector: 'app-generatedCalendar',
   templateUrl: './generatedCalendar.component.html',
   styleUrls: ['./generatedCalendar.component.css'],
 })
 export class GeneratedCalendarComponent implements OnInit {
+  apiSchedules: apiEvents[] = [];
   solutions: any[] = [];
   displayedSolutions: any[] = [];
   currentIndex = 0;
   pageSize = 10;
-  solution_id: number | null = null;
+  solution_id: number = 1;
   reloadCalendarOption = false; // Agrega una bandera para indicar la recarga del componente
+
+  timetable_id = parseInt(localStorage.getItem('timetable_id') ?? '', 0);
 
   constructor(private schedulerASP: schedulerASP, private router: Router) {}
 
@@ -30,6 +45,7 @@ export class GeneratedCalendarComponent implements OnInit {
       (response) => {
         console.log('Generated schedules:', response);
         this.solutions = response.solutions;
+        console.log('Solutions:', this.solutions);
         this.loadMoreSolutions();
       },
       (error) => {
@@ -50,7 +66,43 @@ export class GeneratedCalendarComponent implements OnInit {
     this.solution_id = solution.solution_id;
     localStorage.setItem('solution_id', solution.solution_id);
     console.log('Solution selected:', solution.solution_id);
-    this.reloadCalendarOption = !this.reloadCalendarOption; // Cambia la bandera para forzar la recarga
+
     this.ngOnInit();
+  }
+
+  saveSolution() {
+    const selectedSolution = this.solutions.find(
+      (solution: Solution) => solution.solution_id === this.solution_id
+    );
+
+    if (selectedSolution) {
+      this.apiSchedules = selectedSolution.schedules.map(
+        (scheduleString: string) => {
+          const [day, number, name, schedule_worker, schedule_space] =
+            scheduleString.replace('schedule(', '').replace(')', '').split(',');
+
+          return {
+            name,
+            day,
+            number: parseInt(number, 10),
+            schedule_space,
+            schedule_worker,
+            timeTable_schedule: this.timetable_id,
+          } as apiEvents;
+        }
+      );
+
+      console.log('SchedulesGUARDADOS:', this.apiSchedules);
+
+      this.schedulerASP.createAllSchedules(this.apiSchedules).subscribe(
+        (response) => {
+          console.log('Schedules saved:', response);
+          this.router.navigate(['/timetable']);
+        },
+        (error) => {
+          console.error('Error:', error);
+        }
+      );
+    }
   }
 }

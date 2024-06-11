@@ -15,7 +15,7 @@ import { ScheduableTaskDialogComponent } from '../dialog/scheduableTaskDialog/sc
 import { co, s } from '@fullcalendar/core/internal-common';
 import { schedulerASP } from '../schedulerASP.service';
 import { empty } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 export interface Turn {
   day: String;
@@ -896,6 +896,8 @@ export class StteperFormComponent {
     this.schedulerASP.generateTimetable(this.apiTimeTable.id).subscribe(
       (response) => {
         console.log('SCHEDULES:', response);
+        this.router.navigate(['/generatedCalendar']);
+        // this.router.navigate(['/stteperform']);
       },
       (error) => {
         console.error('Error:', error);
@@ -907,6 +909,7 @@ export class StteperFormComponent {
     private _formBuilder: FormBuilder,
     public dialog: MatDialog,
     private schedulerASP: schedulerASP,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 }

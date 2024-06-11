@@ -142,7 +142,12 @@ export class GeneratedCalendarOptionComponent implements OnInit {
 
             const apiEvent: EventInput = {
               id: createEventId(),
-              title: apiWorker.name,
+              title:
+                apiWorker.name +
+                ' - ' +
+                apiWorker.schedule_space +
+                ' - ' +
+                apiWorker.schedule_worker,
               daysOfWeek: [this.getDayIndex(apiWorker.day)],
               startTime: `${newStartHour}:${newStartMinutes}:00`,
               endTime: `${newEndHour}:${newEndMinutes}:00`,
