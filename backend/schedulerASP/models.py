@@ -1,5 +1,7 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import User
 from django.db import models
+
+
 
 # class UserManager(BaseUserManager):
 #     def create_user(self, email, password=None, **extra_fields):
@@ -31,13 +33,13 @@ from django.db import models
 #     def __str__(self):
 #         return self.email
 # Create your models here.
-class User(models.Model):
-    username = models.CharField(max_length=70, blank=False, default='')
-    password = models.CharField(max_length=70, blank=False, default='')
-    email = models.CharField(max_length=70, blank=False, default='')
+# class User(models.Model):
+#     username = models.CharField(max_length=70, blank=False, default='')
+#     password = models.CharField(max_length=70, blank=False, default='')
+#     email = models.CharField(max_length=70, blank=False, default='')
     
-    def __str__(self):
-        return self.username
+#     def __str__(self):
+#         return self.username
     
 class TimeTable(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')
