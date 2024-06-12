@@ -36,8 +36,8 @@ interface apiEvents {
 })
 export class CalendarComponent implements OnInit {
   timetable_id = 0;
-  timetableStartTime = '09:00'; // Asignar un valor de ejemplo
-  timetableDuration = 60; // Asignar un valor de ejemplo (en minutos)
+  timetableStartTime = '00:00'; // Valor por defecto
+  timetableDuration = 60; // Valor por defecto
   apischedules: apiEvents[] = [];
   INITIAL_EVENTS: EventInput[] = INITIAL_EVENTS;
   events: EventInput[] = [];
@@ -72,7 +72,8 @@ export class CalendarComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.timetable_id = +params['timetable_id'];
-      // Lógica para cargar eventos basados en timetable_id
+      console.log('Timetable ID:', this.timetable_id); // Para depuración
+      this.getTimeTableByID(); // Obtener start_time y duration
       this.getAllSchedules();
     });
   }
@@ -95,15 +96,30 @@ export class CalendarComponent implements OnInit {
 
   getDayIndex(day: string): number {
     const daysOfWeek: { [key: string]: number } = {
-      Domingo: 0,
-      Lunes: 1,
-      Martes: 2,
-      Miércoles: 3,
-      Jueves: 4,
-      Viernes: 5,
-      Sábado: 6,
+      domingo: 0,
+      lunes: 1,
+      martes: 2,
+      miercoles: 3,
+      jueves: 4,
+      viernes: 5,
+      sabado: 6,
     };
-    return daysOfWeek[day] ?? 1;
+    return daysOfWeek[day.toLowerCase()] ?? 1;
+  }
+
+  getTimeTableByID() {
+    this.schedulerASP.getTimetable(this.timetable_id).subscribe(
+      (response: { start_time: string; duration: number }) => {
+        console.log('Response:', response);
+        this.timetableStartTime = response.start_time || '00:00'; // Valor por defecto si start_time es undefined
+        this.timetableDuration = response.duration || 60; // Valor por defecto si duration es undefined
+        console.log('Timetable Start Time:', this.timetableStartTime);
+        console.log('Timetable Duration:', this.timetableDuration);
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
   }
 
   getAllSchedules() {
@@ -114,18 +130,19 @@ export class CalendarComponent implements OnInit {
         this.events = []; // Reiniciar eventos para evitar duplicados
 
         this.apischedules.forEach((apiWorker) => {
-          // Convertir timetableStartTime a minutos
+          if (!this.timetableStartTime) {
+            console.error('timetableStartTime is undefined');
+            return;
+          }
+
           const [startHour, startMinutes] = this.timetableStartTime
             .split(':')
             .map(Number);
           let startTimeInMinutes = startHour * 60 + startMinutes;
 
-          // Calcular el nuevo startTime y endTime
-          startTimeInMinutes += this.timetableDuration * (apiWorker.number - 1); // -1 porque empieza desde 0
+          startTimeInMinutes += this.timetableDuration * (apiWorker.number - 1);
 
           const endTimeInMinutes = startTimeInMinutes + this.timetableDuration;
-
-          // Convertir minutos de vuelta a hh:mm
           const newStartHour = Math.floor(startTimeInMinutes / 60)
             .toString()
             .padStart(2, '0');
@@ -142,10 +159,10 @@ export class CalendarComponent implements OnInit {
           const apiEvent: EventInput = {
             id: createEventId(),
             title: apiWorker.name,
-            daysOfWeek: [this.getDayIndex(apiWorker.day)], // Asignar el día de la semana correctamente
+            daysOfWeek: [this.getDayIndex(apiWorker.day)],
             startTime: `${newStartHour}:${newStartMinutes}:00`,
             endTime: `${newEndHour}:${newEndMinutes}:00`,
-            allDay: false, // Asegurarse de que el evento no sea de todo el día
+            allDay: false,
           };
 
           this.events.push(apiEvent);

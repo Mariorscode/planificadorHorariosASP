@@ -69,6 +69,15 @@ export class schedulerASP {
     });
   }
 
+  getTimetable(timetableId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    });
+    return this.http.get(this.apiUrl + 'timetables/' + timetableId + '/', {
+      headers,
+    });
+  }
+
   deleteTimetable(timetableId: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('token')}`,
