@@ -51,9 +51,9 @@ export class GeneratedCalendarOptionComponent implements OnInit {
   calendarVisible = signal(true);
   calendarOptions = signal<CalendarOptions>({
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
-    headerToolbar: {
-      center: 'title',
-    },
+    // headerToolbar: {
+    //   center: 'title',
+    // },
     views: {
       dayGridWeek: {
         dayHeaderFormat: {

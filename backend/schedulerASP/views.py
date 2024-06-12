@@ -190,29 +190,35 @@ class TimeTableViewSet(ModelViewSet, Clingo):
 
         # --------------All solutions----------------
 
-        solutions = list(self.get_solutions())
-        all_solutions = []
+        # solutions = list(self.get_solutions())
+        all_solutions = [] 
 
-        for index, solution in enumerate(solutions):
-            query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
-            solution_dict = {
-                'solution_id': index + 1,  
-                'schedules': [str(q) for q in query]
-            }
-            all_solutions.append(solution_dict)
+        # for index, solution in enumerate(solutions):
+        #     query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
+        #     solution_dict = {
+        #         'solution_id': index + 1,  
+        #         'schedules': [str(q) for q in query]
+        #     }
+        #     all_solutions.append(solution_dict)
 
-        return Response({"solutions": all_solutions}, status=status.HTTP_200_OK)
+        # return Response({"solutions": all_solutions}, status=status.HTTP_200_OK)
         
         # --------------/All solutions----------------
         
         # --------------One solution----------------
-        # solutions = list(self.get_solutions())
-        # solution = solutions[0]
+        solutions = list(self.get_solutions())
+        solution = solutions[0]
 
 
-        # query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
+        query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
+        solution_dict = {
+                'solution_id': 1,  
+                'schedules': [str(q) for q in query]
+            }
         
-        # return Response({"query": str(query)}, status=status.HTTP_200_OK)
+        all_solutions.append(solution_dict)
+        
+        return Response({"solutions": all_solutions}, status=status.HTTP_200_OK)
     
         # --------------/One solution----------------
     

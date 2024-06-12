@@ -14,7 +14,7 @@
             *ngFor="let turn of data.turns"
             [value]="turn"
             (onSelectionChange)="onSelectionChange(turn)"
-            >{{ turn.day }}, {{ turn.startTime }}</mat-option
+            >{{ turn.day }}, {{ turn.displayTime }}</mat-option
           >
         </mat-select>
       </mat-form-field>
