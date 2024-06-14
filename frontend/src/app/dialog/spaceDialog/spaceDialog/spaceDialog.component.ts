@@ -1,11 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 
 import { Space } from 'src/app/stteper-form/stteper-form.component';
 import { Turn } from 'src/app/stteper-form/stteper-form.component';
-import { Dialog } from '@angular/cdk/dialog';
-import { S } from '@fullcalendar/core/internal-common';
 
 @Component({
   selector: 'app-spaceDialog',
@@ -18,8 +16,9 @@ export class SpaceDialogComponent {
 
   spaceForm = this.fb.group({
     name: [this.data.spaceName || '', Validators.required],
-    spaceCapacity: [this.data.spaceCapacity, Validators.required],
-    restrictionsSpace: [this.restrictionsSpace, Validators.required],
+    spaceCapacity: [this.data.spaceCapacity || 0, Validators.required],
+    // Se eliminó la validación obligatoria para restrictionsSpace
+    restrictionsSpace: [this.restrictionsSpace],
   });
 
   constructor(
@@ -36,9 +35,8 @@ export class SpaceDialogComponent {
   ) {}
 
   ngOnInit(): void {
-    // Set the form value based on data.space
-    // this.spaceForm.get('name')?.setValue(this.data.space.name);
-
+    // Set the form value based on data
+    this.spaceForm.get('name')?.setValue(this.data.spaceName);
     this.spaceForm.get('spaceCapacity')?.setValue(this.data.spaceCapacity);
   }
 
@@ -47,20 +45,19 @@ export class SpaceDialogComponent {
   }
 
   saveSpace(): void {
-    this.dialogRef.close(this.spaceForm.value);
+    if (this.spaceForm.valid) {
+      this.dialogRef.close(this.spaceForm.value);
+    }
   }
 
   onSelectionChange(turn: Turn) {
-    // Verify if the turn is already selected
     const index = this.restrictionsSpace.findIndex(
       (t) => t.day === turn.day && t.startTime === turn.startTime
     );
 
     if (index === -1) {
-      // if it is not selected, add it to the list
       this.restrictionsSpace.push(turn);
     } else {
-      // if it is selected, remove it from the list
       this.restrictionsSpace.splice(index, 1);
     }
   }

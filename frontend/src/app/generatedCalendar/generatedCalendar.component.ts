@@ -97,7 +97,7 @@ export class GeneratedCalendarComponent implements OnInit {
       this.schedulerASP.createAllSchedules(this.apiSchedules).subscribe(
         (response) => {
           console.log('Schedules saved:', response);
-          this.router.navigate(['/timetable']);
+          this.router.navigate(['/']);
         },
         (error) => {
           console.error('Error:', error);

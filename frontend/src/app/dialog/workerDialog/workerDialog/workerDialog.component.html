@@ -1,9 +1,12 @@
-<h1 mat-dialog-title>Introduzca la Información del espacio</h1>
+<h1 mat-dialog-title>Introduzca la Información del Trabajador</h1>
 <div mat-dialog-content>
   <form [formGroup]="workerForm" style="margin: 10px">
     <mat-form-field appearance="outline" color="primary">
-      <mat-label>Nombre del Trabajor</mat-label>
+      <mat-label>Nombre del Trabajador</mat-label>
       <input matInput formControlName="name" placeholder="" />
+      <mat-error *ngIf="workerForm.get('name')?.hasError('required')">
+        El nombre del trabajador es obligatorio
+      </mat-error>
     </mat-form-field>
     <br />
     <div>
@@ -23,7 +26,12 @@
 </div>
 <div mat-dialog-actions>
   <button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>
-  <button mat-raised-button color="primary" (click)="saveSpace()">
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="saveWorker()"
+    [disabled]="workerForm.invalid"
+  >
     Guardar
   </button>
 </div>

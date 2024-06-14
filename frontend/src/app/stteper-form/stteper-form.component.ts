@@ -808,7 +808,7 @@ export class StteperFormComponent {
   }
 
   getAllCommonTasks() {
-    this.schedulerASP.getAllCommonTasks().subscribe(
+    this.schedulerASP.getCommonTasksByUserId().subscribe(
       (response) => {
         console.log('Response all common task:', response);
         this.apiScheduableTasks = response;

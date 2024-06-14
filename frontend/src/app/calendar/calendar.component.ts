@@ -2,22 +2,23 @@ import {
   Component,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  signal,
   OnInit,
+  signal,
 } from '@angular/core';
 import {
   CalendarOptions,
-  DateSelectArg,
-  EventClickArg,
+  EventInput,
   EventApi,
+  EventClickArg,
 } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import { EventInput } from '@fullcalendar/core';
-import { createEventId, INITIAL_EVENTS } from './event-utils';
 import { schedulerASP } from '../schedulerASP.service';
 import { ActivatedRoute } from '@angular/router';
+import { createEventId, INITIAL_EVENTS } from './event-utils';
+import { MatDialog } from '@angular/material/dialog';
+import { EventDetailsComponent } from '../event-details/event-details.component';
 
 interface apiEvents {
   name: string;
@@ -45,9 +46,6 @@ export class CalendarComponent implements OnInit {
   calendarVisible = signal(true);
   calendarOptions = signal<CalendarOptions>({
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
-    // headerToolbar: {
-    //   center: 'title',
-    // },
     views: {
       dayGridWeek: {
         dayHeaderFormat: {
@@ -60,13 +58,15 @@ export class CalendarComponent implements OnInit {
     initialView: 'timeGridWeek',
     initialEvents: this.INITIAL_EVENTS,
     weekends: true,
+    eventClick: this.handleEventClick.bind(this),
   });
   currentEvents = signal<EventApi[]>([]);
 
   constructor(
     private changeDetector: ChangeDetectorRef,
     private schedulerASP: schedulerASP,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -76,22 +76,6 @@ export class CalendarComponent implements OnInit {
       this.getTimeTableByID(); // Obtener start_time y duration
       this.getAllSchedules();
     });
-  }
-
-  eventosNuevos() {
-    const nuevosEventos: EventInput[] = [
-      {
-        id: createEventId(),
-        title: 'EVENTO NUEVO',
-        daysOfWeek: [1], // Lunes
-        startTime: '10:00:00',
-        endTime: '14:00:00',
-      },
-    ];
-
-    this.calendarOptions().events = nuevosEventos;
-
-    this.changeDetector.detectChanges();
   }
 
   getDayIndex(day: string): number {
@@ -109,10 +93,10 @@ export class CalendarComponent implements OnInit {
 
   getTimeTableByID() {
     this.schedulerASP.getTimetable(this.timetable_id).subscribe(
-      (response: { start_time: string; duration: number }) => {
+      (response: { start_time: string; turnsDuration: number }) => {
         console.log('Response:', response);
-        this.timetableStartTime = response.start_time || '00:00'; // Valor por defecto si start_time es undefined
-        this.timetableDuration = response.duration || 60; // Valor por defecto si duration es undefined
+        this.timetableStartTime = response.start_time || '00:00';
+        this.timetableDuration = response.turnsDuration || 60;
         console.log('Timetable Start Time:', this.timetableStartTime);
         console.log('Timetable Duration:', this.timetableDuration);
       },
@@ -127,7 +111,7 @@ export class CalendarComponent implements OnInit {
       (response) => {
         console.log('Response all schedules:', response);
         this.apischedules = response;
-        this.events = []; // Reiniciar eventos para evitar duplicados
+        this.events = [];
 
         this.apischedules.forEach((apiWorker) => {
           if (!this.timetableStartTime) {
@@ -163,6 +147,10 @@ export class CalendarComponent implements OnInit {
             startTime: `${newStartHour}:${newStartMinutes}:00`,
             endTime: `${newEndHour}:${newEndMinutes}:00`,
             allDay: false,
+            extendedProps: {
+              worker: apiWorker.schedule_worker,
+              space: apiWorker.schedule_space,
+            },
           };
 
           this.events.push(apiEvent);
@@ -176,5 +164,20 @@ export class CalendarComponent implements OnInit {
         console.error('Error:', error);
       }
     );
+  }
+  handleEventClick(eventClickInfo: EventClickArg) {
+    const event: EventApi = eventClickInfo.event;
+    console.log('Event clicked:', event);
+
+    // Acceder a las propiedades usando corchetes
+    const dialogRef = this.dialog.open(EventDetailsComponent, {
+      data: {
+        title: event.title,
+        startTime: event.startStr,
+        endTime: event.endStr,
+        worker: event.extendedProps['worker'],
+        space: event.extendedProps['space'],
+      },
+    });
   }
 }

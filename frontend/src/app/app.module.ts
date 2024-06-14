@@ -53,9 +53,10 @@ import { s } from '@fullcalendar/core/internal-common';
 // import { CalendarWeekComponent } from './calendarWeek/calendarWeek.component';
 import { NavBarComponent } from './navBar/navBar.component';
 import { GeneratedCalendarOptionComponent } from './generatedCalendarOption/generatedCalendarOption.component';
+import { EventDetailsComponent } from './event-details/event-details.component';
 
 @NgModule({
-  declarations: [	
+  declarations: [		
     AppComponent,
     CalendarComponent,
     StteperFormComponent,
@@ -71,7 +72,8 @@ import { GeneratedCalendarOptionComponent } from './generatedCalendarOption/gene
     RegisterComponent,
     NavBarComponent,
     GeneratedCalendarComponent,
-      GeneratedCalendarOptionComponent
+      GeneratedCalendarOptionComponent,
+      EventDetailsComponent
    ],
   imports: [
     BrowserModule,

@@ -5,13 +5,20 @@ import {
   signal,
   OnInit,
 } from '@angular/core';
-import { CalendarOptions, EventInput, EventApi } from '@fullcalendar/core';
+import {
+  CalendarOptions,
+  EventInput,
+  EventApi,
+  EventClickArg,
+} from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { createEventId, INITIAL_EVENTS } from './event-utils';
 import { schedulerASP } from '../schedulerASP.service';
 import { ActivatedRoute } from '@angular/router';
+import { EventDetailsComponent } from '../event-details/event-details.component';
+import { MatDialog } from '@angular/material/dialog';
 
 interface apiEvents {
   name: string;
@@ -36,7 +43,8 @@ export class GeneratedCalendarOptionComponent implements OnInit {
   constructor(
     private changeDetector: ChangeDetectorRef,
     private schedulerASP: schedulerASP,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dialog: MatDialog
   ) {}
 
   timetable_id = 0;
@@ -66,6 +74,7 @@ export class GeneratedCalendarOptionComponent implements OnInit {
     initialView: 'timeGridWeek',
     initialEvents: this.INITIAL_EVENTS,
     weekends: true,
+    eventClick: this.handleEventClick.bind(this),
   });
   currentEvents = signal<EventApi[]>([]);
 
@@ -75,8 +84,8 @@ export class GeneratedCalendarOptionComponent implements OnInit {
       localStorage.getItem('timetable_id') ?? '',
       10
     );
-    console.log('Solution ID:', this.solution_id); // Agregado para depuración
-    console.log('Timetable ID:', this.timetable_id); // Agregado para depuración
+    console.log('Solution ID:', this.solution_id);
+    console.log('Timetable ID:', this.timetable_id);
     this.getTimeTableByID();
     this.getAllSchedulesSolutions();
   }
@@ -96,10 +105,11 @@ export class GeneratedCalendarOptionComponent implements OnInit {
 
   getTimeTableByID() {
     this.schedulerASP.getTimetable(this.timetable_id).subscribe(
-      (response: { start_time: string; duration: number }) => {
+      (response: { start_time: string; turnsDuration: number }) => {
         console.log('Response:', response);
-        this.timetableStartTime = response.start_time || '00:00'; // Valor por defecto si start_time es undefined
-        this.timetableDuration = response.duration || 60; // Valor por defecto si duration es undefined
+        this.timetableStartTime = response.start_time || '00:00';
+        console.log('Timetable DURATION:', response.turnsDuration);
+        this.timetableDuration = response.turnsDuration || 60;
         console.log('Timetable Start Time:', this.timetableStartTime);
         console.log('Timetable Duration:', this.timetableDuration);
       },
@@ -113,25 +123,22 @@ export class GeneratedCalendarOptionComponent implements OnInit {
     this.schedulerASP.generateTimetable(this.timetable_id).subscribe(
       (response: { solutions: Solution[]; start_time: string }) => {
         console.log('Generated schedulesIN:', response);
-        console.log('Solutions Array:', response.solutions); // Agregado para depuración
+        console.log('Solutions Array:', response.solutions);
 
-        // Actualizar timetableStartTime con los datos recibidos
-        // this.timetableStartTime = response.start_time || '10:00'; // Valor por defecto si start_time es undefined
-        console.log('Timetable Start Time:', this.timetableStartTime); // Agregado para depuración
+        console.log('Timetable Start Time:', this.timetableStartTime);
 
-        // Verifica que solution_id está bien definido
         console.log('Checking solution_id:', this.solution_id);
-        console.log('Type of solution_id:', typeof this.solution_id); // Agregado para depuración
+        console.log('Type of solution_id:', typeof this.solution_id);
 
         const selectedSolution = response.solutions.find(
           (solution: Solution) => {
             console.log('Comparing with solution_id:', solution.solution_id);
-            console.log('Type of solution_id:', typeof solution.solution_id); // Agregado para depuración
+            console.log('Type of solution_id:', typeof solution.solution_id);
             return solution.solution_id === this.solution_id;
           }
         );
 
-        console.log('Selected solution:', selectedSolution); // Agregado para depuración
+        console.log('Selected solution:', selectedSolution);
         if (selectedSolution) {
           this.apischedules = selectedSolution.schedules.map(
             (scheduleString: string) => {
@@ -170,6 +177,7 @@ export class GeneratedCalendarOptionComponent implements OnInit {
 
             const endTimeInMinutes =
               startTimeInMinutes + this.timetableDuration;
+
             const newStartHour = Math.floor(startTimeInMinutes / 60)
               .toString()
               .padStart(2, '0');
@@ -190,12 +198,20 @@ export class GeneratedCalendarOptionComponent implements OnInit {
               startTime: `${newStartHour}:${newStartMinutes}:00`,
               endTime: `${newEndHour}:${newEndMinutes}:00`,
               allDay: false,
+              extendedProps: {
+                worker: apiWorker.schedule_worker,
+                space: apiWorker.schedule_space,
+              },
             };
 
             this.events.push(apiEvent);
           });
 
-          // Actualizamos la propiedad events de calendarOptions
+          this.calendarOptions.update((options) => ({
+            ...options,
+            events: this.events,
+          }));
+
           this.calendarOptions.update((options) => ({
             ...options,
             events: this.events,
@@ -203,12 +219,26 @@ export class GeneratedCalendarOptionComponent implements OnInit {
 
           this.changeDetector.detectChanges();
         } else {
-          console.log('No solution found with ID:', this.solution_id); // Agregado para depuración
+          console.log('No solution found with ID:', this.solution_id);
         }
       },
       (error) => {
         console.error('Error:', error);
       }
     );
+  }
+  handleEventClick(eventClickInfo: EventClickArg) {
+    const event: EventApi = eventClickInfo.event;
+    console.log('Event clicked:', event);
+
+    const dialogRef = this.dialog.open(EventDetailsComponent, {
+      data: {
+        title: event.title,
+        startTime: event.startStr,
+        endTime: event.endStr,
+        worker: event.extendedProps['worker'],
+        space: event.extendedProps['space'],
+      },
+    });
   }
 }

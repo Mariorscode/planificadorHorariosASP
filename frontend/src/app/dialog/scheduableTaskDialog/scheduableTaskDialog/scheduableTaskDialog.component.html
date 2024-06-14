@@ -6,6 +6,11 @@
         <mat-form-field appearance="outline" color="primary">
           <mat-label>Nombre de la tarea</mat-label>
           <input matInput formControlName="name" placeholder="" />
+          <mat-error
+            *ngIf="scheduableTaskForm.get('name')?.hasError('required')"
+          >
+            El nombre de la tarea es obligatorio
+          </mat-error>
         </mat-form-field>
         <br />
         <mat-form-field appearance="outline" color="primary">
@@ -16,6 +21,11 @@
             placeholder=""
             type="number"
           />
+          <mat-error
+            *ngIf="scheduableTaskForm.get('taskSize')?.hasError('required')"
+          >
+            El tamaño de la tarea es obligatorio
+          </mat-error>
         </mat-form-field>
       </div>
       <div class="column">
@@ -63,7 +73,7 @@
     mat-raised-button
     color="primary"
     (click)="saveScheduableTask()"
-    [disabled]="tags.length !== 3 && tags.length !== 0"
+    [disabled]="scheduableTaskForm.invalid"
   >
     Guardar
   </button>
