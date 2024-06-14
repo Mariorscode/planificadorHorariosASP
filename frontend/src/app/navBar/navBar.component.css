@@ -1,7 +1,7 @@
 .example-container {
-    height: 100%;
-  }
-  
+  height: 100%;
+}
+
 mat-toolbar {
   position: sticky;
   top: 0;
@@ -10,7 +10,7 @@ mat-toolbar {
 
 .example-sidenav {
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: center;
   width: 200px;
   background: rgba(255, 0, 0, 0.5);
@@ -22,11 +22,22 @@ mat-toolbar {
   color: inherit;
 }
 
-.logout{
-  margin-left: auto; 
-  cursor: pointer
+.logout {
+  margin-left: auto;
+  cursor: pointer;
 }
 
-.logout:hover{
+.logout:hover {
   color: red;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  font-size: 1.25em;
+  padding: 8px 16px;
+}
+
+.menu-item mat-icon {
+  margin-right: 8px;
 }

@@ -44,10 +44,6 @@ INSTALLED_APPS = [
     'corsheaders', 
     'rest_framework',
     'rest_framework_simplejwt',
-    'horarios1',
-    'horariosASP',
-    'eventos',
-    'assigmentsASP',
     'schedulerASP',
     'django_filters',
 ]

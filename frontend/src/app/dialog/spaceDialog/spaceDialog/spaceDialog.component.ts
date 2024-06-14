@@ -17,7 +17,7 @@ export class SpaceDialogComponent {
   spaceForm = this.fb.group({
     name: [this.data.spaceName || '', Validators.required],
     spaceCapacity: [this.data.spaceCapacity || 0, Validators.required],
-    // Se eliminó la validación obligatoria para restrictionsSpace
+
     restrictionsSpace: [this.restrictionsSpace],
   });
 
@@ -35,7 +35,6 @@ export class SpaceDialogComponent {
   ) {}
 
   ngOnInit(): void {
-    // Set the form value based on data
     this.spaceForm.get('name')?.setValue(this.data.spaceName);
     this.spaceForm.get('spaceCapacity')?.setValue(this.data.spaceCapacity);
   }

@@ -41,6 +41,7 @@ class TurnViewSet(ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         else:
             return Response({'error': 'Expected a list of items'}, status=status.HTTP_400_BAD_REQUEST)
+        
 
 class WorkerViewSet(ModelViewSet):
     serializer_class = WorkerSerializer
@@ -188,44 +189,20 @@ class TimeTableViewSet(ModelViewSet, Clingo):
 
         self.load_knowledge(FactBase(fact_list))
 
-        # --------------All solutions----------------
 
-        # solutions = list(self.get_solutions())
+        solutions = self.get_solutions()
         all_solutions = [] 
 
-        # for index, solution in enumerate(solutions):
-        #     query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
-        #     solution_dict = {
-        #         'solution_id': index + 1,  
-        #         'schedules': [str(q) for q in query]
-        #     }
-        #     all_solutions.append(solution_dict)
-
-        # return Response({"solutions": all_solutions}, status=status.HTTP_200_OK)
-        
-        # --------------/All solutions----------------
-        
-        # --------------One solution----------------
-        solutions = list(self.get_solutions())
-        solution = solutions[0]
-
-
-        query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
-        solution_dict = {
-                'solution_id': 1,  
+        for index, solution in enumerate(solutions):
+            query = list(solution.facts(atoms=True).query(Terms.Schedule).all())
+            solution_dict = {
+                'solution_id': index + 1,  
                 'schedules': [str(q) for q in query]
             }
-        
-        all_solutions.append(solution_dict)
-        
+            all_solutions.append(solution_dict)
+
         return Response({"solutions": all_solutions}, status=status.HTTP_200_OK)
-    
-        # --------------/One solution----------------
-    
-
-
- 
-
+        
 class SpaceViewSet(ModelViewSet):
     queryset = Space.objects.all()
     serializer_class = SpaceSerializer
@@ -337,16 +314,6 @@ class scheduleViewSet(ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         else:
             return Response({'error': 'Expected a list of items'}, status=status.HTTP_400_BAD_REQUEST)
-# class UserViewSet(ModelViewSet):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
-#     permission_classes = [AllowAny]
-    
-    
-#     class Meta:
-#         model = User
-#         fields = ['id', 'name', 'email', 'password']
-#         extra_kwargs = {'password': {'write_only': True}}
 
 User = get_user_model()
 

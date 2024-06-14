@@ -27,7 +27,7 @@ export class ScheduableTaskDialogComponent {
   scheduableTaskForm = this.fb.group({
     name: [this.data.taskName || '', Validators.required],
     taskSize: [this.data.taskSize || 0, Validators.required],
-    // Se eliminaron las validaciones obligatorias de los demás campos
+
     restrictions: [this.restrictions],
     workers: [this.workers],
     spaces: [this.spaces],

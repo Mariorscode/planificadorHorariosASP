@@ -897,12 +897,25 @@ export class StteperFormComponent {
       (response) => {
         console.log('SCHEDULES:', response);
         this.router.navigate(['/generatedCalendar']);
-        // this.router.navigate(['/stteperform']);
       },
       (error) => {
         console.error('Error:', error);
       }
     );
+  }
+
+  cleanSpaces() {
+    this.spaces = [];
+    this.loadSpaceCards();
+  }
+  cleanWorkers() {
+    this.workers = [];
+    this.loadWorkerCards();
+  }
+
+  cleanTasks() {
+    this.scheduableTasks = [];
+    this.loadTaskCards();
   }
 
   constructor(

@@ -2,18 +2,32 @@
   <mat-sidenav #sidenav mode="over">
     <mat-nav-list>
       <a mat-list-item routerLink="/homepage" (click)="sidenav.close()"
-        >Horarios</a
+        ><span class="menu-item">
+          <mat-icon>event_note</mat-icon>
+          <span>Tareas</span>
+        </span></a
       >
       <mat-divider></mat-divider>
       <a mat-list-item routerLink="/workers" (click)="sidenav.close()"
-        >Trabajadores</a
+        ><span class="menu-item">
+          <mat-icon>business_center</mat-icon>
+          <span>Trabajadores</span>
+        </span></a
       >
       <mat-divider></mat-divider>
       <a mat-list-item routerLink="/spaces" (click)="sidenav.close()"
-        >Espacios</a
+        ><span class="menu-item">
+          <mat-icon>location_on</mat-icon>
+          <span>Espacios</span>
+        </span></a
       >
       <mat-divider></mat-divider>
-      <a mat-list-item routerLink="/tasks" (click)="sidenav.close()">Tareas</a>
+      <a mat-list-item routerLink="/tasks" (click)="sidenav.close()"
+        ><span class="menu-item">
+          <mat-icon>task_alt</mat-icon>
+          <span>Tareas</span>
+        </span></a
+      >
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

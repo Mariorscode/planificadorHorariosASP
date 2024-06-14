@@ -15,7 +15,7 @@ export class WorkerDialogComponent {
 
   workerForm = this.fb.group({
     name: [this.data.workerName || '', Validators.required],
-    // Se eliminó la validación obligatoria para restrictionsWorker
+
     restrictionsWorker: [this.restrictionsWorker],
   });
 
@@ -32,7 +32,6 @@ export class WorkerDialogComponent {
   ) {}
 
   ngOnInit(): void {
-    // Set the form value based on data
     this.workerForm.get('name')?.setValue(this.data.workerName);
   }
 

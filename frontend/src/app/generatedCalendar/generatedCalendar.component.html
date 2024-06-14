@@ -2,7 +2,10 @@
   <mat-sidenav #sidenav mode="over">
     <mat-nav-list>
       <ng-container *ngFor="let solution of displayedSolutions">
-        <mat-list-item (click)="selectSolution(solution)">
+        <mat-list-item
+          (click)="selectSolution(solution)"
+          (click)="sidenav.close()"
+        >
           Solución {{ solution.solution_id }}
         </mat-list-item>
       </ng-container>
@@ -18,7 +21,6 @@
       </button>
       <span class="home-link" routerLink="/homepage">Scheduler ASP</span>
     </mat-toolbar>
-    <!-- Contenido resto de pagina -->
     <div style="margin: 5px">
       <app-generatedCalendarOption></app-generatedCalendarOption>
     </div>
@@ -30,6 +32,5 @@
     >
       Guardar calendario
     </button>
-    <!-- /Contenido resto de pagina -->
   </mat-sidenav-content>
 </mat-sidenav-container>

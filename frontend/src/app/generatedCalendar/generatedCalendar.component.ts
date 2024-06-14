@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { schedulerASP } from '../schedulerASP.service';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 interface apiEvents {
   name: string;
@@ -26,11 +27,15 @@ export class GeneratedCalendarComponent implements OnInit {
   currentIndex = 0;
   pageSize = 10;
   solution_id: number = 1;
-  reloadCalendarOption = false; // Agrega una bandera para indicar la recarga del componente
+  reloadCalendarOption = false;
 
   timetable_id = parseInt(localStorage.getItem('timetable_id') ?? '', 0);
 
-  constructor(private schedulerASP: schedulerASP, private router: Router) {}
+  constructor(
+    private schedulerASP: schedulerASP,
+    private router: Router,
+    private location: Location
+  ) {}
 
   ngOnInit() {
     this.getGeneratedSchedules();
@@ -67,13 +72,16 @@ export class GeneratedCalendarComponent implements OnInit {
     localStorage.setItem('solution_id', solution.solution_id);
     console.log('Solution selected:', solution.solution_id);
 
-    this.ngOnInit();
+    this.location.go(this.location.path());
+    location.reload();
   }
 
   saveSolution() {
+    let solution_id = parseInt(localStorage.getItem('solution_id') || '0', 0);
     const selectedSolution = this.solutions.find(
-      (solution: Solution) => solution.solution_id === this.solution_id
+      (solution: Solution) => solution.solution_id === solution_id
     );
+    console.log('Solution selected save:', selectedSolution);
 
     if (selectedSolution) {
       this.apiSchedules = selectedSolution.schedules.map(

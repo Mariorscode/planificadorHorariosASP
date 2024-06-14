@@ -37,8 +37,8 @@ interface apiEvents {
 })
 export class CalendarComponent implements OnInit {
   timetable_id = 0;
-  timetableStartTime = '00:00'; // Valor por defecto
-  timetableDuration = 60; // Valor por defecto
+  timetableStartTime = '00:00';
+  timetableDuration = 60;
   apischedules: apiEvents[] = [];
   INITIAL_EVENTS: EventInput[] = INITIAL_EVENTS;
   events: EventInput[] = [];
@@ -72,8 +72,8 @@ export class CalendarComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.timetable_id = +params['timetable_id'];
-      console.log('Timetable ID:', this.timetable_id); // Para depuración
-      this.getTimeTableByID(); // Obtener start_time y duration
+      console.log('Timetable ID:', this.timetable_id);
+      this.getTimeTableByID();
       this.getAllSchedules();
     });
   }
@@ -156,7 +156,6 @@ export class CalendarComponent implements OnInit {
           this.events.push(apiEvent);
         });
 
-        // Actualizar los eventos en el calendario
         this.calendarOptions().events = this.events;
         this.changeDetector.detectChanges();
       },
@@ -169,7 +168,6 @@ export class CalendarComponent implements OnInit {
     const event: EventApi = eventClickInfo.event;
     console.log('Event clicked:', event);
 
-    // Acceder a las propiedades usando corchetes
     const dialogRef = this.dialog.open(EventDetailsComponent, {
       data: {
         title: event.title,
