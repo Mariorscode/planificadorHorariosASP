@@ -29,7 +29,6 @@
         </mat-form-field>
       </div>
       <div class="column">
-        <br />
         <mat-form-field appearance="outline" *ngIf="!isCommon">
           <mat-label>Trabajador</mat-label>
           <mat-select>
@@ -73,7 +72,7 @@
     mat-raised-button
     color="primary"
     (click)="saveScheduableTask()"
-    [disabled]="scheduableTaskForm.invalid"
+    [disabled]="tags.length !== 0 && tags.length !== 3"
   >
     Guardar
   </button>
