@@ -27,15 +27,11 @@ export class HomePageComponent {
   apiTimetables: Timetable[] = [];
   timetableCards: timetableCards[] = [];
 
-  // user_id = 1;
-
   ngOnInit(): void {
-    // console.log('User ID:', this.user_id);
-    console.log('User ID:', localStorage.getItem('userId'));
     this.getAllTimetables();
     this.schedulerASP.getAllTimetablesByUserId().subscribe(
       (data: any) => {
-        console.log('AAAAAAAAA:', data);
+        console.log(data);
       },
       (error: any) => {
         console.error('Error:', error);
@@ -64,8 +60,6 @@ export class HomePageComponent {
         console.error('Error:', error);
       }
     );
-    console.log('Timetables');
-    console.log('Timetables:', this.timetables);
   }
 
   deleteTimetable(deleteTimetable: number): void {

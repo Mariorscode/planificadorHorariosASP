@@ -50,7 +50,7 @@ export class GeneratedCalendarOptionComponent implements OnInit {
   timetable_id = 0;
   solution_id = 0;
 
-  timetableStartTime = '00:00'; // Valor por defecto
+  timetableStartTime = '00:00';
   timetableDuration = 60;
   apischedules: apiEvents[] = [];
   INITIAL_EVENTS: EventInput[] = INITIAL_EVENTS;
@@ -59,9 +59,7 @@ export class GeneratedCalendarOptionComponent implements OnInit {
   calendarVisible = signal(true);
   calendarOptions = signal<CalendarOptions>({
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
-    // headerToolbar: {
-    //   center: 'title',
-    // },
+
     views: {
       dayGridWeek: {
         dayHeaderFormat: {
@@ -84,8 +82,7 @@ export class GeneratedCalendarOptionComponent implements OnInit {
       localStorage.getItem('timetable_id') ?? '',
       10
     );
-    console.log('Solution ID:', this.solution_id);
-    console.log('Timetable ID:', this.timetable_id);
+
     this.getTimeTableByID();
     this.getAllSchedulesSolutions();
   }
@@ -106,12 +103,8 @@ export class GeneratedCalendarOptionComponent implements OnInit {
   getTimeTableByID() {
     this.schedulerASP.getTimetable(this.timetable_id).subscribe(
       (response: { start_time: string; turnsDuration: number }) => {
-        console.log('Response:', response);
         this.timetableStartTime = response.start_time || '00:00';
-        console.log('Timetable DURATION:', response.turnsDuration);
         this.timetableDuration = response.turnsDuration || 60;
-        console.log('Timetable Start Time:', this.timetableStartTime);
-        console.log('Timetable Duration:', this.timetableDuration);
       },
       (error) => {
         console.error('Error:', error);
@@ -122,23 +115,12 @@ export class GeneratedCalendarOptionComponent implements OnInit {
   getAllSchedulesSolutions() {
     this.schedulerASP.generateTimetable(this.timetable_id).subscribe(
       (response: { solutions: Solution[]; start_time: string }) => {
-        console.log('Generated schedulesIN:', response);
-        console.log('Solutions Array:', response.solutions);
-
-        console.log('Timetable Start Time:', this.timetableStartTime);
-
-        console.log('Checking solution_id:', this.solution_id);
-        console.log('Type of solution_id:', typeof this.solution_id);
-
         const selectedSolution = response.solutions.find(
           (solution: Solution) => {
-            console.log('Comparing with solution_id:', solution.solution_id);
-            console.log('Type of solution_id:', typeof solution.solution_id);
             return solution.solution_id === this.solution_id;
           }
         );
 
-        console.log('Selected solution:', selectedSolution);
         if (selectedSolution) {
           this.apischedules = selectedSolution.schedules.map(
             (scheduleString: string) => {
@@ -163,7 +145,6 @@ export class GeneratedCalendarOptionComponent implements OnInit {
 
           this.apischedules.forEach((apiWorker) => {
             if (!this.timetableStartTime) {
-              console.error('timetableStartTime is undefined');
               return;
             }
 
@@ -229,7 +210,6 @@ export class GeneratedCalendarOptionComponent implements OnInit {
   }
   handleEventClick(eventClickInfo: EventClickArg) {
     const event: EventApi = eventClickInfo.event;
-    console.log('Event clicked:', event);
 
     const dialogRef = this.dialog.open(EventDetailsComponent, {
       data: {

@@ -81,7 +81,6 @@ export class GeneratedCalendarComponent implements OnInit {
     const selectedSolution = this.solutions.find(
       (solution: Solution) => solution.solution_id === solution_id
     );
-    console.log('Solution selected save:', selectedSolution);
 
     if (selectedSolution) {
       this.apiSchedules = selectedSolution.schedules.map(
@@ -100,11 +99,8 @@ export class GeneratedCalendarComponent implements OnInit {
         }
       );
 
-      console.log('SchedulesGUARDADOS:', this.apiSchedules);
-
       this.schedulerASP.createAllSchedules(this.apiSchedules).subscribe(
         (response) => {
-          console.log('Schedules saved:', response);
           this.router.navigate(['/']);
         },
         (error) => {

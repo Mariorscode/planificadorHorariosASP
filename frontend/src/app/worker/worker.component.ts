@@ -148,13 +148,8 @@ export class WorkerComponent {
   getCommonWorkersbyID() {
     this.schedulerASP.getCommonWorkersByUserId().subscribe(
       (response) => {
-        console.log('Response all common workers:', response);
         this.apiWorkers = response;
         this.apiWorkers.forEach((apiWorker) => {
-          // let auxIds: number[] = [];
-
-          // auxIds = apiWorker.restrictionsWorker;
-
           const newWorker: Worker = {
             name: apiWorker.name,
           };

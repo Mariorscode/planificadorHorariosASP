@@ -72,7 +72,6 @@ export class CalendarComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.timetable_id = +params['timetable_id'];
-      console.log('Timetable ID:', this.timetable_id);
       this.getTimeTableByID();
       this.getAllSchedules();
     });
@@ -94,11 +93,8 @@ export class CalendarComponent implements OnInit {
   getTimeTableByID() {
     this.schedulerASP.getTimetable(this.timetable_id).subscribe(
       (response: { start_time: string; turnsDuration: number }) => {
-        console.log('Response:', response);
         this.timetableStartTime = response.start_time || '00:00';
         this.timetableDuration = response.turnsDuration || 60;
-        console.log('Timetable Start Time:', this.timetableStartTime);
-        console.log('Timetable Duration:', this.timetableDuration);
       },
       (error) => {
         console.error('Error:', error);
@@ -109,7 +105,6 @@ export class CalendarComponent implements OnInit {
   getAllSchedules() {
     this.schedulerASP.getAllSchedulesByTimeTableId(this.timetable_id).subscribe(
       (response) => {
-        console.log('Response all schedules:', response);
         this.apischedules = response;
         this.events = [];
 
@@ -166,7 +161,6 @@ export class CalendarComponent implements OnInit {
   }
   handleEventClick(eventClickInfo: EventClickArg) {
     const event: EventApi = eventClickInfo.event;
-    console.log('Event clicked:', event);
 
     const dialogRef = this.dialog.open(EventDetailsComponent, {
       data: {

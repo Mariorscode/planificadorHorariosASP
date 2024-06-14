@@ -170,14 +170,6 @@ export class StteperFormComponent {
 
   // excute at the load of the component
   ngOnInit(): void {
-    // load the space cards
-    // this.getAllTimetables();
-    // this.route.queryParams.subscribe((params) => {
-    //   this.userid = +params['user_id'] || 0;
-    //   console.log('User ID:', this.userid);
-    //   // Lógica para manejar el user_id
-    // });
-
     this.getAllCommonSpaces();
     this.getAllCommonWorkers();
     this.getAllCommonTasks();
@@ -291,8 +283,6 @@ export class StteperFormComponent {
     this.firstFormGroup.patchValue({ numberOfTurns: this.numberOfTurns });
     this.secondFormGroup.patchValue({ turns: this.turns });
     this.createTimeTable();
-    console.log('Turnos llenados:', this.turns);
-    console.log('Turnos auxiliares llenados:', this.auxTurns); // Log the auxiliary turns for debugging
   }
 
   // Function to handle the selection of a turn
@@ -428,7 +418,6 @@ export class StteperFormComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       this.loadTags(result);
-      // console.log('Todas las tags:', this.tags);
     });
   }
   openScheduableTaskDialog(scheduableTask?: ScheduableTask) {
@@ -608,13 +597,10 @@ export class StteperFormComponent {
       user_id: parseInt(localStorage.getItem('userId') ?? '', 0),
     };
 
-    console.log('data sent timetable:', data);
-
     this.schedulerASP.createTimeTable(data).subscribe(
       (response) => {
         console.log('Response:', response.id);
         this.apiTimeTable = response;
-        console.log('TimeTable:', this.apiTimeTable);
         localStorage.setItem(
           'timetable_id',
           this.apiTimeTable.id.toString() ?? ''
@@ -625,17 +611,6 @@ export class StteperFormComponent {
       }
     );
   }
-
-  // getAllTimetables() {
-  //   this.schedulerASP.getAllTimetables().subscribe(
-  //     (response) => {
-  //       this.apiTimeTable = response;
-  //     },
-  //     (error) => {
-  //       console.error('Error:', error);
-  //     }
-  //   );
-  // }
 
   createAllTurns() {
     const auxTurn = this.secondFormGroup.get('turns')?.value ?? [];
@@ -713,7 +688,6 @@ export class StteperFormComponent {
       };
     });
 
-    console.log('Data2:', data2);
     this.schedulerASP.createAllCommonSpace(data2).subscribe(
       (response) => {
         console.log('Response:', response);
@@ -723,7 +697,6 @@ export class StteperFormComponent {
       }
     );
 
-    console.log('Data:', data);
     this.schedulerASP.createAllSpace(data).subscribe(
       (response) => {
         console.log('Response:', response);
@@ -841,8 +814,6 @@ export class StteperFormComponent {
         ?.id;
     });
 
-    console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAA', this.apiTimeTable.id);
-
     const data = auxTask.map((task: ScheduableTask) => {
       return {
         name: task.name,
@@ -879,7 +850,6 @@ export class StteperFormComponent {
         console.error('Error:', error);
       }
     );
-    console.log('DATAAAA:', data);
     this.schedulerASP.createAllscheduableTasks(data).subscribe(
       (response) => {
         console.log('Response:', response);
@@ -895,7 +865,6 @@ export class StteperFormComponent {
   getGeneratedSchedules() {
     this.schedulerASP.generateTimetable(this.apiTimeTable.id).subscribe(
       (response) => {
-        console.log('SCHEDULES:', response);
         this.router.navigate(['/generatedCalendar']);
       },
       (error) => {

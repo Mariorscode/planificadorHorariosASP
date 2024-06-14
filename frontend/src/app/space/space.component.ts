@@ -158,10 +158,6 @@ export class SpaceComponent {
         console.log('Response all common workers:', response);
         this.apiSpaces = response;
         this.apiSpaces.forEach((apiSpace) => {
-          // let auxIds: number[] = [];
-
-          // auxIds = apiSpace.restrictionsWorker;
-
           const newSpace: Space = {
             name: apiSpace.name,
             spaceCapacity: apiSpace.space_capacity,

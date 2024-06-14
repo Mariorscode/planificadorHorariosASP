@@ -31,7 +31,6 @@ export class LoginComponent {
 
     this.schedulerASP.createToken(data).subscribe(
       (data) => {
-        console.log(data);
         const token = data.access;
         const expirationDate = new Date();
         expirationDate.setHours(expirationDate.getHours() + 1);
@@ -43,19 +42,16 @@ export class LoginComponent {
         if (username) {
           this.schedulerASP.getUserByUserName(username).subscribe(
             (data) => {
-              console.log(data);
               localStorage.setItem('userId', data.id);
               this.router.navigate(['/homepage']);
             },
             (error) => {
-              console.log(error);
               this.loginError = true;
             }
           );
         }
       },
       (error) => {
-        console.log(error);
         this.loginError = true;
         this.snackBar.open(
           'Hay un error con las credenciales introducidas, revisa tu usuario y contraseña. Si no tienes cuenta, regístrate.',

@@ -35,8 +35,6 @@ export class RegisterComponent {
 
     this.schedulerASP.createToken(data).subscribe(
       (data) => {
-        console.log(data);
-        console.log(data.access);
         localStorage.setItem('token', data.access);
         this.router.navigate(['/login']); // Redirige al login después de obtener el token
       },
@@ -69,10 +67,8 @@ export class RegisterComponent {
       username: this.loginForm.get('username')?.value,
     };
 
-    console.log(data);
     this.schedulerASP.createUser(data).subscribe(
       (data) => {
-        console.log(data.id);
         localStorage.setItem('userId', data.id);
         this.getToken(); // Obtén el token después del registro exitoso
       },

@@ -34,7 +34,6 @@ export class TagsDialogComponent {
   addTag(name: string) {
     // Verify if the tag already exists if not add it
     const auxTag = { name: name };
-    console.log('TAGS', name);
     const index = this.tagsToAdd.findIndex((t) => t.name === name);
     if (index === -1) {
       this.tagsToAdd.push(auxTag);

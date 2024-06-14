@@ -16,7 +16,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from eventos.api.router import router_evento
 from schedulerASP.router import router
 # from AssigmentsASP import AssigmentsASP
 
@@ -29,10 +28,7 @@ from schedulerASP .views import Home
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('horarios/', include('horariosASP.urls')),
-    path('eventos/', include(router_evento.urls)),
-    path('assigmentsASP/', include('assigmentsASP.urls')),
+    
     path('schedulerASP/', include(router.urls)),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
