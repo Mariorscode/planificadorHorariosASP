@@ -863,14 +863,14 @@ export class StteperFormComponent {
   }
 
   getGeneratedSchedules() {
-    this.schedulerASP.generateTimetable(this.apiTimeTable.id).subscribe(
-      (response) => {
-        this.router.navigate(['/generatedCalendar']);
-      },
-      (error) => {
-        console.error('Error:', error);
-      }
-    );
+    this.router.navigate(['/generatedCalendar']);
+    // this.schedulerASP.generateTimetable(this.apiTimeTable.id).subscribe(
+    //   (response) => {
+    //   },
+    //   (error) => {
+    //     console.error('Error:', error);
+    //   }
+    // );
   }
 
   cleanSpaces() {

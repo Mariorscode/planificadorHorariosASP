@@ -51,7 +51,24 @@ export class GeneratedCalendarComponent implements OnInit {
         console.log('Generated schedules:', response);
         this.solutions = response.solutions;
         console.log('Solutions:', this.solutions);
-        this.loadMoreSolutions();
+        const allSchedulesEmpty = this.solutions.every(
+          (solution) => solution.schedules.length === 0
+        );
+
+        if (allSchedulesEmpty) {
+          alert('No hay ninguna opción posible para los datos introducidos.');
+          this.schedulerASP.deleteTimetable(timetable_id).subscribe(
+            (response) => {
+              this.router.navigate(['/']);
+            },
+            (error) => {
+              console.error('Error:', error);
+            }
+          );
+        } else {
+          console.log('Solutions:', this.solutions);
+          this.loadMoreSolutions();
+        }
       },
       (error) => {
         console.error('Error:', error);

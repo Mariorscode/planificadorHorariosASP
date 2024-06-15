@@ -42,7 +42,7 @@ export class TaskComponent {
           taskName: scheduableTask.name,
           taskSize: scheduableTask.size,
           isCommon: true,
-          eliminate: this.deletetask.bind(this),
+          eliminate: this.deleteTask.bind(this),
         },
       });
     } else {
@@ -51,7 +51,7 @@ export class TaskComponent {
           taskName: null,
           taskSize: null,
           isCommon: true,
-          eliminate: this.deletetask.bind(this),
+          eliminate: this.deleteTask.bind(this),
         },
       });
     }
@@ -93,8 +93,8 @@ export class TaskComponent {
     });
   }
 
-  deletetask(deleteTask: String): void {
-    // Find the index of the worker to delete
+  deleteTask(deleteTask: String): void {
+    // Find the index of the task to delete
     const index = this.scheduableTasks.findIndex(
       (task) => task.name === deleteTask
     );
@@ -103,16 +103,27 @@ export class TaskComponent {
       (task) => task.name === deleteTask
     );
 
-    // Delete the worker from the workers array
-    this.scheduableTasks.splice(index, 1);
+    if (apiIndex !== -1) {
+      // Delete the task from the scheduableTasks array
+      this.scheduableTasks.splice(index, 1);
 
-    this.schedulerASP
-      .deleteCommonTasksById(this.apiTasks[apiIndex].id)
-      .subscribe((response) => {
-        console.log('Response:', response);
-      });
+      this.schedulerASP
+        .deleteCommonTasksById(this.apiTasks[apiIndex].id)
+        .subscribe(
+          (response) => {
+            console.log('Response:', response);
+            // Remove the task from the apiTasks array after successful deletion
+            this.apiTasks.splice(apiIndex, 1);
+          },
+          (error) => {
+            console.error('Error:', error);
+          }
+        );
+    } else {
+      console.error('Error: Task not found');
+    }
 
-    // Reload the worker cards
+    // Reload the task cards
     this.loadTaskCards();
   }
 
@@ -137,6 +148,7 @@ export class TaskComponent {
     this.schedulerASP.createCommonTasks(data).subscribe(
       (response) => {
         console.log('Response:', response);
+        this.apiTasks.push(response);
       },
       (error) => {
         console.error('Error:', error);
@@ -148,6 +160,8 @@ export class TaskComponent {
     this.schedulerASP.updateCommonTasks(taskId, data).subscribe(
       (response) => {
         console.log('Response:', response);
+        const apiIndex = this.apiTasks.findIndex((task) => task.id === taskId);
+        this.apiTasks[apiIndex] = response;
       },
       (error) => {
         console.error('Error:', error);

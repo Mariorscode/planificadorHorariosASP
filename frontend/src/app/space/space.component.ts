@@ -92,23 +92,34 @@ export class SpaceComponent {
   }
 
   deleteSpace(deleteSpace: String): void {
-    // Find the index of the worker to delete
+    // Find the index of the space to delete
     const index = this.spaces.findIndex((space) => space.name === deleteSpace);
 
     const apiIndex = this.apiSpaces.findIndex(
       (space) => space.name === deleteSpace
     );
 
-    // Delete the worker from the workers array
-    this.spaces.splice(index, 1);
+    if (apiIndex !== -1) {
+      // Delete the space from the spaces array
+      this.spaces.splice(index, 1);
 
-    this.schedulerASP
-      .deleteCommonSpaceById(this.apiSpaces[apiIndex].id)
-      .subscribe((response) => {
-        console.log('Response:', response);
-      });
+      this.schedulerASP
+        .deleteCommonSpaceById(this.apiSpaces[apiIndex].id)
+        .subscribe(
+          (response) => {
+            console.log('Response:', response);
+            // Remove the space from the apiSpaces array after successful deletion
+            this.apiSpaces.splice(apiIndex, 1);
+          },
+          (error) => {
+            console.error('Error:', error);
+          }
+        );
+    } else {
+      console.error('Error: Space not found');
+    }
 
-    // Reload the worker cards
+    // Reload the space cards
     this.loadSpaceCards();
   }
 
@@ -134,6 +145,7 @@ export class SpaceComponent {
     this.schedulerASP.createCommonSpace(data).subscribe(
       (response) => {
         console.log('Response:', response);
+        this.apiSpaces.push(response);
       },
       (error) => {
         console.error('Error:', error);
@@ -145,6 +157,10 @@ export class SpaceComponent {
     this.schedulerASP.updateCommonSpace(spaceID, data).subscribe(
       (response) => {
         console.log('Response:', response);
+        const apiIndex = this.apiSpaces.findIndex(
+          (space) => space.id === spaceID
+        );
+        this.apiSpaces[apiIndex] = response;
       },
       (error) => {
         console.error('Error:', error);

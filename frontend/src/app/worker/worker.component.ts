@@ -93,14 +93,25 @@ export class WorkerComponent {
       (worker) => worker.name === deleteWorker
     );
 
-    // Delete the worker from the workers array
-    this.workers.splice(index, 1);
+    if (apiIndex !== -1) {
+      // Delete the worker from the workers array
+      this.workers.splice(index, 1);
 
-    this.schedulerASP
-      .deleteCommonWorkerById(this.apiWorkers[apiIndex].id)
-      .subscribe((response) => {
-        console.log('Response:', response);
-      });
+      this.schedulerASP
+        .deleteCommonWorkerById(this.apiWorkers[apiIndex].id)
+        .subscribe(
+          (response) => {
+            console.log('Response:', response);
+            // Remove the worker from the apiWorkers array after successful deletion
+            this.apiWorkers.splice(apiIndex, 1);
+          },
+          (error) => {
+            console.error('Error:', error);
+          }
+        );
+    } else {
+      console.error('Error: Worker not found');
+    }
 
     // Reload the worker cards
     this.loadWorkerCards();
@@ -127,6 +138,7 @@ export class WorkerComponent {
     this.schedulerASP.createCommonWorker(data).subscribe(
       (response) => {
         console.log('Response:', response);
+        this.apiWorkers.push(response);
       },
       (error) => {
         console.error('Error:', error);
@@ -138,6 +150,10 @@ export class WorkerComponent {
     this.schedulerASP.updateCommonWorker(workerId, data).subscribe(
       (response) => {
         console.log('Response:', response);
+        const apiIndex = this.apiWorkers.findIndex(
+          (worker) => worker.id === response.id
+        );
+        this.apiWorkers[apiIndex] = response;
       },
       (error) => {
         console.error('Error:', error);
