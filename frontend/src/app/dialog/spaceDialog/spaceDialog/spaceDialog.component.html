@@ -37,7 +37,7 @@
         style="width: 100%"
       >
         <mat-label>Turnos con restricciones ></mat-label>
-        <mat-select multiple>
+        <mat-select multiple [value]="this.data.restrictionTurns">
           <mat-option
             *ngFor="let turn of data.turns"
             [value]="turn"

@@ -394,6 +394,7 @@ export class StteperFormComponent {
           spaceName: space.name,
           spaceCapacity: space.spaceCapacity,
           turns: this.turns,
+          restrictionTurns: space.restrictionsSpace,
           eliminate: this.deleteSpace.bind(this),
         },
       });
@@ -446,6 +447,7 @@ export class StteperFormComponent {
         data: {
           workerName: worker.name,
           turns: this.turns,
+          restrictionTurns: worker.restrictionsWorker,
           eliminate: this.deleteWorker.bind(this),
         },
       });

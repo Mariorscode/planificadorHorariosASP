@@ -29,6 +29,7 @@ export class SpaceDialogComponent {
       spaceCapacity: number;
       turns: Turn[];
       isCommon?: boolean;
+      restrictionTurns: Turn[];
       eliminate: (spaceToEliminate: String) => void;
     },
     private fb: FormBuilder

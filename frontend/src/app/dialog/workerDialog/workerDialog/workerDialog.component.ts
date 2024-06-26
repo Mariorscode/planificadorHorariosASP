@@ -26,6 +26,7 @@ export class WorkerDialogComponent {
       workerName: string;
       turns: Turn[];
       isCommon?: boolean;
+      restrictionTurns: Turn[];
       eliminate: (workerToEliminate: String) => void;
     },
     private fb: FormBuilder
