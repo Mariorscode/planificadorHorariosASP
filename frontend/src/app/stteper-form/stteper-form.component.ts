@@ -166,10 +166,10 @@ export class StteperFormComponent {
     scheduableTasks: [this.scheduableTasks, Validators.required],
   });
 
-  isLinear = false;
+  isLinear = true;
 
   //--------------------/Form Steps --------------------
-
+  disableStepHeaders: boolean = true;
   //-------------------- Methods --------------------
 
   // excute at the load of the component
