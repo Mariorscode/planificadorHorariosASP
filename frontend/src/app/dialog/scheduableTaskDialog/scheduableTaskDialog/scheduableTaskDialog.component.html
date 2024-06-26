@@ -1,59 +1,87 @@
 <h1 mat-dialog-title>Introduzca la Información de la tarea</h1>
 <div mat-dialog-content>
   <form [formGroup]="scheduableTaskForm" style="margin: 10px">
-    <div style="display: flex">
-      <div class="column">
-        <mat-form-field appearance="outline" color="primary">
-          <mat-label>Nombre de la tarea</mat-label>
-          <input matInput formControlName="name" placeholder="" />
-          <mat-error
-            *ngIf="scheduableTaskForm.get('name')?.hasError('required')"
+    <div style="width: auto">
+      <p class="fieldname">Nombre de la tarea</p>
+      <mat-form-field appearance="outline" color="primary" style="width: 100%">
+        <mat-label>Nombre de la tarea</mat-label>
+        <input matInput formControlName="name" placeholder="" />
+        <mat-error *ngIf="scheduableTaskForm.get('name')?.hasError('required')">
+          El nombre de la tarea es obligatorio
+        </mat-error>
+      </mat-form-field>
+      <br />
+      <p>
+        Seleccione un espacio
+        <mat-icon
+          matTooltip="El espacio seleccionado será el asignado a la tarea,en caso de no seleccionar un espacio no deberá introducir el tamaño necesario de la tarea"
+          >help</mat-icon
+        >
+      </p>
+      <mat-form-field
+        appearance="outline"
+        *ngIf="!isCommon"
+        style="width: 100%"
+      >
+        <mat-label>Espacio</mat-label>
+        <mat-select>
+          <mat-option>No asignar espacio</mat-option>
+          <mat-option
+            *ngFor="let space of data.dataSpaces"
+            [value]="space"
+            (onSelectionChange)="onSelectionSpace(space)"
+            >{{ space.name }}</mat-option
           >
-            El nombre de la tarea es obligatorio
-          </mat-error>
-        </mat-form-field>
-        <br />
-        <mat-form-field appearance="outline" color="primary">
-          <mat-label>Tamaño requerido</mat-label>
-          <input
-            matInput
-            formControlName="taskSize"
-            placeholder=""
-            type="number"
-          />
-          <mat-error
-            *ngIf="scheduableTaskForm.get('taskSize')?.hasError('required')"
+        </mat-select>
+      </mat-form-field>
+      <br />
+      <p>
+        Introduzca el tamaño necesario de la tarea
+        <mat-icon
+          matTooltip="Se asiganará automáticamente un espacio donde esta tarea quepa"
+          >help</mat-icon
+        >
+      </p>
+      <mat-form-field
+        style="margin-top: 5px; width: 100%"
+        appearance="outline"
+        color="primary"
+      >
+        <mat-label>Tamaño requerido</mat-label>
+        <input
+          matInput
+          formControlName="taskSize"
+          placeholder=""
+          type="number"
+          [disabled]="scheduableTaskForm.get('selectedSpace')?.value !== null"
+        />
+      </mat-form-field>
+      <br />
+      <p>
+        Seleccione un Trabajador
+        <mat-icon
+          matTooltip="Puede no seleccionar un trabajador, en ese caso se asignará automáticamente un trabajador a la tarea"
+          >help</mat-icon
+        >
+      </p>
+      <mat-form-field
+        appearance="outline"
+        *ngIf="!isCommon"
+        style="margin-top: 5px; width: 100%"
+      >
+        <mat-label>Trabajador</mat-label>
+        <mat-select>
+          <mat-option>No asignar trabajador</mat-option>
+          <mat-option
+            *ngFor="let worker of data.dataWorkers"
+            [value]="worker"
+            (onSelectionChange)="onSelectionWorker(worker)"
+            >{{ worker.name }}</mat-option
           >
-            El tamaño de la tarea es obligatorio
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <div class="column">
-        <mat-form-field appearance="outline" *ngIf="!isCommon">
-          <mat-label>Trabajador</mat-label>
-          <mat-select>
-            <mat-option
-              *ngFor="let worker of data.dataWorkers"
-              [value]="worker"
-              (onSelectionChange)="onSelectionWorker(worker)"
-              >{{ worker.name }}</mat-option
-            >
-          </mat-select>
-        </mat-form-field>
-        <br />
-        <mat-form-field appearance="outline" *ngIf="!isCommon">
-          <mat-label>Espacio</mat-label>
-          <mat-select>
-            <mat-option
-              *ngFor="let space of data.dataSpaces"
-              [value]="space"
-              (onSelectionChange)="onSelectionSpace(space)"
-              >{{ space.name }}</mat-option
-            >
-          </mat-select>
-        </mat-form-field>
-      </div>
+        </mat-select>
+      </mat-form-field>
     </div>
+
     <h4 *ngIf="!isCommon">Tags disponibles:</h4>
     <mat-chip-listbox multiple="true" *ngIf="!isCommon">
       <mat-chip-option
@@ -72,7 +100,9 @@
     mat-raised-button
     color="primary"
     (click)="saveScheduableTask()"
-    [disabled]="tags.length !== 0 && tags.length !== 3"
+    [disabled]="
+      (tags.length !== 0 && tags.length !== 3) || scheduableTaskForm.invalid
+    "
   >
     Guardar
   </button>
