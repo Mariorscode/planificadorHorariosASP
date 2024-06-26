@@ -1,6 +1,7 @@
 <h1 mat-dialog-title>Introduzca la Información del espacio</h1>
 <div mat-dialog-content>
   <form [formGroup]="spaceForm" style="margin: 10px">
+    <p class="fieldname">Nombre del espacio</p>
     <mat-form-field appearance="outline" color="primary">
       <mat-label>Nombre del espacio</mat-label>
       <input matInput formControlName="name" placeholder="" />
@@ -9,6 +10,7 @@
       </mat-error>
     </mat-form-field>
     <br />
+    <p class="fieldname">Capacidad del espacio</p>
     <mat-form-field appearance="outline" color="primary">
       <mat-label>Capacidad del espacio</mat-label>
       <input
@@ -22,8 +24,15 @@
       </mat-error>
     </mat-form-field>
     <div>
+      <p class="fieldname">
+        Turnos con restricciones
+        <mat-icon
+          matTooltip="Seleccione los turnos en los que el espacio no estará disponible"
+          >help</mat-icon
+        >
+      </p>
       <mat-form-field appearance="outline" *ngIf="!isCommon">
-        <mat-label>Días de la semana</mat-label>
+        <mat-label>Turnos con restricciones ></mat-label>
         <mat-select multiple>
           <mat-option
             *ngFor="let turn of data.turns"
