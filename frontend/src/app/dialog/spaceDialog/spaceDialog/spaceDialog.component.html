@@ -2,7 +2,7 @@
 <div mat-dialog-content>
   <form [formGroup]="spaceForm" style="margin: 10px">
     <p class="fieldname">Nombre del espacio</p>
-    <mat-form-field appearance="outline" color="primary">
+    <mat-form-field appearance="outline" color="primary" style="width: 100%">
       <mat-label>Nombre del espacio</mat-label>
       <input matInput formControlName="name" placeholder="" />
       <mat-error *ngIf="spaceForm.get('name')?.hasError('required')">
@@ -11,7 +11,7 @@
     </mat-form-field>
     <br />
     <p class="fieldname">Capacidad del espacio</p>
-    <mat-form-field appearance="outline" color="primary">
+    <mat-form-field appearance="outline" color="primary" style="width: 100%">
       <mat-label>Capacidad del espacio</mat-label>
       <input
         matInput
@@ -31,7 +31,11 @@
           >help</mat-icon
         >
       </p>
-      <mat-form-field appearance="outline" *ngIf="!isCommon">
+      <mat-form-field
+        appearance="outline"
+        *ngIf="!isCommon"
+        style="width: 100%"
+      >
         <mat-label>Turnos con restricciones ></mat-label>
         <mat-select multiple>
           <mat-option
