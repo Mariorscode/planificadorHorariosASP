@@ -360,9 +360,10 @@
         </button>
         <button
           mat-raised-button
-          style="background-color: rgb(77, 163, 37); color: white; margin: 5px"
           matStepperNext
+          color="accent"
           (click)="createAllTasksAndCommonTasks()"
+          [disabled]="this.scheduableTasks.length === 0"
         >
           Generar horario
         </button>
