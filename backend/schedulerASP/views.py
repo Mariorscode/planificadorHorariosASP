@@ -25,6 +25,8 @@ from collections import defaultdict
 from operator import itemgetter
 from datetime import datetime
 
+import logging
+
 class TurnViewSet(ModelViewSet):
     serializer_class = TurnSerializer
     queryset = Turn.objects.all()
@@ -138,24 +140,25 @@ class TimeTableViewSet(ModelViewSet, Clingo):
         
 
         Workers = Worker.objects.filter(timeTable_id=timetable_id)
-        
+
+                    
         for worker in Workers:
             fact_list.append(Terms.Worker(name=worker.name))
             for restriction in worker.restrictionsWorker.all():
-                restrictionWorkerTurns = Turn.objects.filter(id=restriction.id)
-                for restrictionWorkerTurn in restrictionWorkerTurns:
-                    fact_list.append(Terms.Restrictionworker(worker=worker.name, day=restrictionWorkerTurn.day, number=int(restrictionWorkerTurn.startTime)))
+                print(restriction.day.lower())
+               
+                fact_list.append(Terms.Restrictionworker(worker=worker.name, day=restriction.day.lower(), number=int(restriction.startTime)))    
+                    
                     
         Spaces = Space.objects.filter(timeTable_id=timetable_id)
+        
         
         for space in Spaces:
             fact_list.append(Terms.Space(name=space.name))
             fact_list.append(Terms.SpaceCapacity(space=space.name, capacity=space.space_capacity))
             
             for restriction in space.restrictionsSpace.all():
-                restrictionSpaceTurns = Turn.objects.filter(id=restriction.id)
-                for restrictionSpaceTurns in restrictionSpaceTurns:
-                    fact_list.append(Terms.Restrictionspace(space=space.name, day=restrictionSpaceTurns.day, number=int(restrictionSpaceTurns.startTime)))
+                fact_list.append(Terms.Restrictionspace(space=space.name, day=restriction.day.lower(), number=int(restriction.startTime)))
             
         ScheduableTasks = ScheduableTask.objects.filter(timeTable_id=timetable_id)
         
