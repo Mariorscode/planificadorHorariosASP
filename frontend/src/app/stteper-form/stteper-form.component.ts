@@ -179,6 +179,11 @@ export class StteperFormComponent {
     this.getAllCommonTasks();
   }
 
+  ngAfterViewInit(): void {
+    // Trigger validation on load
+    this.firstFormGroup.markAllAsTouched();
+  }
+
   timeValidator(firstFormGroup: FormGroup) {
     const firstTurnTime = firstFormGroup.get('firstTurnTime')?.value;
     const lastTurnTime = firstFormGroup.get('lastTurnTime')?.value;

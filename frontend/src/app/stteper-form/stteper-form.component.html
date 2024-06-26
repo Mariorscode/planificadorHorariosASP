@@ -55,40 +55,6 @@
               </span>
             </label>
           </div>
-          <p class="fieldname">
-            Intervalo de horas en las que el horario tiene lugar (formato 24h)
-            <mat-icon
-              matTooltip="Los turnnos se generarán en el intervalo de horas seleccionado."
-              >help</mat-icon
-            >
-          </p>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Hora Inicio primer turno</mat-label>
-            <input
-              matInput
-              formControlName="firstTurnTime"
-              type="time"
-              placeholder="Selecciona una hora"
-            />
-          </mat-form-field>
-          <mat-form-field appearance="outline" color="primary">
-            <mat-label>Hora Inicio último turno</mat-label>
-            <input
-              matInput
-              type="time"
-              formControlName="lastTurnTime"
-              placeholder="Selecciona una hora"
-              (change)="validateTime()"
-            />
-            <mat-error
-              *ngIf="
-                firstFormGroup.get('lastTurnTime')?.hasError('invalidTimeRange')
-              "
-            >
-              El último turno debe ser posterior al primer turno.
-            </mat-error>
-          </mat-form-field>
           <br />
           <p class="fieldname">Duración de los turnos en minutos</p>
           <mat-form-field appearance="outline" color="primary">
@@ -109,6 +75,58 @@
               La duración del turno debe ser menor o igual al intervalo entre el
               primer y último turno.
             </mat-error>
+            <mat-error
+              style="background-color: rgb(255, 255, 255)"
+              *ngIf="firstFormGroup.get('turnDuration')?.hasError('required')"
+            >
+              La duración del turno es obligatoria
+            </mat-error>
+          </mat-form-field>
+          <p class="fieldname">
+            Intervalo de horas en las que el horario tiene lugar (formato 24h)
+            <mat-icon
+              matTooltip="Los turnnos se generarán en el intervalo de horas seleccionado."
+              >help</mat-icon
+            >
+          </p>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Hora Inicio primer turno</mat-label>
+            <input
+              matInput
+              formControlName="firstTurnTime"
+              type="time"
+              placeholder="Selecciona una hora"
+            />
+            <mat-error
+              style="background-color: rgb(255, 255, 255)"
+              *ngIf="firstFormGroup.get('firstTurnTime')?.hasError('required')"
+            >
+              Este campo es obligatorio
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" color="primary">
+            <mat-label>Hora Inicio último turno</mat-label>
+            <input
+              matInput
+              type="time"
+              formControlName="lastTurnTime"
+              placeholder="Selecciona una hora"
+              (change)="validateTime()"
+            />
+            <mat-error
+              *ngIf="
+                firstFormGroup.get('lastTurnTime')?.hasError('invalidTimeRange')
+              "
+            >
+              El último turno debe ser posterior al primer turno.
+            </mat-error>
+            <mat-error
+              style="background-color: rgb(255, 255, 255)"
+              *ngIf="firstFormGroup.get('lastTurnTime')?.hasError('required')"
+            >
+              Este campo es obligatorio
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -118,7 +136,7 @@
           color="primary"
           matStepperNext
           (click)="fillTurns()"
-          [disabled]="!firstFormGroup.valid || !lastTurnTimeCompleted"
+          [disabled]="firstFormGroup.invalid || !lastTurnTimeCompleted"
         >
           Siguiente
         </button>
