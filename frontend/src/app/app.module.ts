@@ -32,6 +32,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { schedulerASP } from './schedulerASP.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -56,7 +57,7 @@ import { GeneratedCalendarOptionComponent } from './generatedCalendarOption/gene
 import { EventDetailsComponent } from './event-details/event-details.component';
 
 @NgModule({
-  declarations: [		
+  declarations: [
     AppComponent,
     CalendarComponent,
     StteperFormComponent,
@@ -72,9 +73,9 @@ import { EventDetailsComponent } from './event-details/event-details.component';
     RegisterComponent,
     NavBarComponent,
     GeneratedCalendarComponent,
-      GeneratedCalendarOptionComponent,
-      EventDetailsComponent
-   ],
+    GeneratedCalendarOptionComponent,
+    EventDetailsComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -99,6 +100,8 @@ import { EventDetailsComponent } from './event-details/event-details.component';
     MatSidenavModule,
     MatToolbarModule,
     MatSnackBarModule,
+    BrowserAnimationsModule,
+    MatTooltipModule,
   ],
   providers: [schedulerASP, AuthGuard],
   bootstrap: [AppComponent],

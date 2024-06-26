@@ -58,3 +58,13 @@ ul {
   list-style-type: none;
   margin-top: 4px;
 }
+
+.fieldname{
+  margin-left: 5px;
+}
+
+.fieldname mat-icon {
+  cursor: pointer;
+  vertical-align: middle;
+}
+

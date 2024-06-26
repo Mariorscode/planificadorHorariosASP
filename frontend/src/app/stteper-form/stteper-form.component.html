@@ -5,39 +5,64 @@
       <h2>Información del horario</h2>
       <div style="display: flex">
         <div class="column">
+          <p class="fieldname">Nombre del horario</p>
           <mat-form-field appearance="outline" color="primary">
             <mat-label>Nombre del horario</mat-label>
             <input matInput formControlName="scheduleName" placeholder="" />
+            <mat-error
+              *ngIf="firstFormGroup.get('scheduleName')?.hasError('required')"
+            >
+              El nombre del horario es obligatorio</mat-error
+            >
           </mat-form-field>
           <div>
+            <p class="fieldname">
+              Días de la semana en los que el horario tiene lugar
+            </p>
             <mat-form-field appearance="outline">
               <mat-label>Días de la semana</mat-label>
-              <mat-select [formControl]="weekDays" multiple>
+              <mat-select formControlName="weekDays" multiple>
                 <mat-option *ngFor="let day of daysOfWeek" [value]="day">{{
                   day
                 }}</mat-option>
               </mat-select>
+              <mat-error
+                *ngIf="firstFormGroup.get('weekDays')?.hasError('required')"
+              >
+                Debe seleccionar al menos un día
+              </mat-error>
             </mat-form-field>
 
-            <label *ngIf="weekDays.value && weekDays.value.length > 0">
+            <label
+              *ngIf="
+                firstFormGroup.get('weekDays')?.value &&
+                firstFormGroup.get('weekDays')?.value.length > 0
+              "
+            >
               Días seleccionados:
-              <span *ngFor="let selectedDay of weekDays.value">
+              <span
+                *ngFor="
+                  let selectedDay of firstFormGroup.get('weekDays')?.value
+                "
+              >
                 {{ selectedDay }}
-                <ng-container *ngIf="!isLast(selectedDay, weekDays.value)"
+                <ng-container
+                  *ngIf="
+                    !isLast(selectedDay, firstFormGroup.get('weekDays')?.value)
+                  "
                   >,
                 </ng-container>
               </span>
             </label>
           </div>
-          <mat-form-field appearance="outline" color="primary">
-            <mat-label>Duración de los turnos</mat-label>
-            <input
-              matInput
-              formControlName="turnDuration"
-              type="number"
-              placeholder=""
-            />
-          </mat-form-field>
+          <p class="fieldname">
+            Intervalo de horas en las que el horario tiene lugar (formato 24h)
+            <mat-icon
+              matTooltip="Los turnnos se generarán en el intervalo de horas seleccionado."
+              >help</mat-icon
+            >
+          </p>
+
           <mat-form-field appearance="outline">
             <mat-label>Hora Inicio primer turno</mat-label>
             <input
@@ -47,7 +72,7 @@
               placeholder="Selecciona una hora"
             />
           </mat-form-field>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" color="primary">
             <mat-label>Hora Inicio último turno</mat-label>
             <input
               matInput
@@ -56,6 +81,34 @@
               placeholder="Selecciona una hora"
               (change)="validateTime()"
             />
+            <mat-error
+              *ngIf="
+                firstFormGroup.get('lastTurnTime')?.hasError('invalidTimeRange')
+              "
+            >
+              El último turno debe ser posterior al primer turno.
+            </mat-error>
+          </mat-form-field>
+          <br />
+          <p class="fieldname">Duración de los turnos en minutos</p>
+          <mat-form-field appearance="outline" color="primary">
+            <mat-label>Duración de los turnos</mat-label>
+            <input
+              matInput
+              formControlName="turnDuration"
+              type="number"
+              placeholder=""
+            />
+
+            <mat-error
+              style="background-color: rgb(255, 255, 255)"
+              *ngIf="
+                firstFormGroup.get('turnDuration')?.hasError('invalidDuration')
+              "
+            >
+              La duración del turno debe ser menor o igual al intervalo entre el
+              primer y último turno.
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -78,11 +131,16 @@
     label="Restricciones y revisión horario"
   >
     <form [formGroup]="secondFormGroup">
-      <h3>
-        Seleccione los turnos de descanso(puede seleccionar varios o ningnuno)
-      </h3>
+      <h3>Seleccione los turnos no asignables</h3>
+      <p>
+        De los turnos generados para cada día, seleccione aquellos en los que no
+        quiere asignar tareas
+      </p>
       <div style="display: flex">
-        <div *ngFor="let day of weekDays.value" class="column">
+        <div
+          *ngFor="let day of firstFormGroup.get('weekDays')?.value"
+          class="column"
+        >
           <h2>{{ day }}</h2>
           <mat-selection-list>
             <div class="card-container">
@@ -104,6 +162,7 @@
           color="primary"
           matStepperNext
           (click)="createAllTurns()"
+          [disabled]="allDaysSelected == true"
         >
           Siguiente
         </button>

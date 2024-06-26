@@ -6,6 +6,9 @@ import {
   ReactiveFormsModule,
   FormControl,
   FormGroup,
+  AbstractControl,
+  ValidationErrors,
+  ValidatorFn,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { SpaceDialogComponent } from '../dialog/spaceDialog/spaceDialog/spaceDialog.component';
@@ -16,6 +19,7 @@ import { co, s } from '@fullcalendar/core/internal-common';
 import { schedulerASP } from '../schedulerASP.service';
 import { empty } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface Turn {
   day: String;
@@ -105,7 +109,7 @@ export class StteperFormComponent {
     'Sábado',
     'Domingo',
   ];
-  weekDays = new FormControl();
+  // weekDays = new FormControl();
   numberOfTurns: number = 0;
   weekDaysRestriction = new FormControl();
   turns: Turn[] = [];
@@ -135,7 +139,7 @@ export class StteperFormComponent {
   firstFormGroup = this._formBuilder.group(
     {
       scheduleName: ['', Validators.required],
-      weekDays: this.weekDays,
+      weekDays: ['', Validators.required],
       turnDuration: ['', Validators.required],
       firstTurnTime: ['', Validators.required],
       lastTurnTime: ['', Validators.required],
@@ -143,7 +147,7 @@ export class StteperFormComponent {
       // dayTimerestriction: ['', Validators.required],
       numberOfTurns: this.numberOfTurns,
     },
-    { validator: this.timeValidator }
+    { validator: [this.timeValidator, this.durationValidator] }
   );
   // Second formStep
   secondFormGroup = this._formBuilder.group({
@@ -179,10 +183,17 @@ export class StteperFormComponent {
     const firstTurnTime = firstFormGroup.get('firstTurnTime')?.value;
     const lastTurnTime = firstFormGroup.get('lastTurnTime')?.value;
 
-    if (firstTurnTime && lastTurnTime && firstTurnTime > lastTurnTime) {
-      firstFormGroup.get('lastTurnTime')?.setErrors({ invalidTime: true });
-    } else {
-      firstFormGroup.get('lastTurnTime')?.setErrors(null);
+    if (firstTurnTime && lastTurnTime) {
+      const firstTime = new Date(`2022-01-01T${firstTurnTime}`);
+      const lastTime = new Date(`2022-01-01T${lastTurnTime}`);
+
+      if (lastTime <= firstTime) {
+        firstFormGroup
+          .get('lastTurnTime')
+          ?.setErrors({ invalidTimeRange: true });
+      } else {
+        firstFormGroup.get('lastTurnTime')?.setErrors(null);
+      }
     }
   }
   lastTurnTimeCompleted: boolean = false;
@@ -190,6 +201,64 @@ export class StteperFormComponent {
   validateTime() {
     this.timeValidator(this.firstFormGroup);
     this.lastTurnTimeCompleted = true;
+  }
+
+  durationValidator(firstFormGroup: FormGroup) {
+    const firstTurnTime = firstFormGroup.get('firstTurnTime')?.value;
+    const lastTurnTime = firstFormGroup.get('lastTurnTime')?.value;
+    const turnDuration = firstFormGroup.get('turnDuration')?.value;
+
+    if (
+      firstTurnTime &&
+      lastTurnTime &&
+      turnDuration !== null &&
+      turnDuration !== undefined
+    ) {
+      const firstTime = new Date(`2022-01-01T${firstTurnTime}`);
+      const lastTime = new Date(`2022-01-01T${lastTurnTime}`);
+
+      // Calculate the time difference in minutes
+      const timeDifferenceMinutes =
+        (lastTime.getTime() - firstTime.getTime()) / (1000 * 60);
+
+      if (turnDuration > timeDifferenceMinutes) {
+        firstFormGroup
+          .get('turnDuration')
+          ?.setErrors({ invalidDuration: true });
+      } else {
+        firstFormGroup.get('turnDuration')?.setErrors(null);
+      }
+    }
+  }
+
+  checkAllDaysSelected(): boolean {
+    let i: number = 0;
+    for (const tun of this.turns) {
+      if (tun.is_free_time === true) {
+        i++;
+      }
+    }
+    if (i === this.turns.length) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  allDaysSelected: boolean = false;
+  showAlertIfAllDaysSelected() {
+    if (this.checkAllDaysSelected()) {
+      this.allDaysSelected = true;
+      this.snackBar.open(
+        'No puedes seleccionar todos los turnos, al menos debe haber un turno libre',
+        'Cerrar',
+        {
+          duration: 3000,
+        }
+      );
+    } else {
+      this.allDaysSelected = false;
+    }
   }
 
   remove(tag: Tag): void {
@@ -251,7 +320,7 @@ export class StteperFormComponent {
     this.auxTurns = []; // Array to store the auxiliary turns
 
     // iterate over the selected days
-    const selectedDays = this.weekDays.value;
+    const selectedDays = this.firstFormGroup.get('weekDays')?.value;
     for (const day of selectedDays) {
       // get the number of turns per day
       this.numberOfTurns = this.calculateTurnsPerDay();
@@ -299,6 +368,11 @@ export class StteperFormComponent {
       console.error('Turno no encontrado:', turn);
     }
     this.secondFormGroup.patchValue({ turns: this.turns });
+    console.log('length', this.turns.length);
+    console.log('selected', this.selectedTurns.length);
+    console.log('antes de entrar', this.allDaysSelected);
+    this.showAlertIfAllDaysSelected();
+    console.log('despues', this.allDaysSelected);
   }
 
   spaceCards: Space[] = [];
@@ -864,13 +938,6 @@ export class StteperFormComponent {
 
   getGeneratedSchedules() {
     this.router.navigate(['/generatedCalendar']);
-    // this.schedulerASP.generateTimetable(this.apiTimeTable.id).subscribe(
-    //   (response) => {
-    //   },
-    //   (error) => {
-    //     console.error('Error:', error);
-    //   }
-    // );
   }
 
   cleanSpaces() {
@@ -892,6 +959,7 @@ export class StteperFormComponent {
     public dialog: MatDialog,
     private schedulerASP: schedulerASP,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 }
