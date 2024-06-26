@@ -1,18 +1,26 @@
-<h1 mat-dialog-title>Introduzca tags que desee tener</h1>
+<h1 mat-dialog-title>Introduzca el nombre de la tag</h1>
 <div mat-dialog-content style="display: flex; max-width: 500px">
-  <mat-form-field appearance="outline" color="primary">
-    <mat-label>Nombre de la tag</mat-label>
-    <input matInput [(ngModel)]="name" placeholder="" />
-  </mat-form-field>
-  <br />
+  <form [formGroup]="tagForm" style="margin: 10px">
+    <mat-form-field appearance="outline" color="primary">
+      <mat-label>Nombre de la tag</mat-label>
+      <input matInput formControlName="name" placeholder="" />
+      <mat-error *ngIf="tagForm.get('name')?.hasError('tagExists')">
+        La tag introducida ya existe
+      </mat-error>
+      <mat-error *ngIf="tagForm.get('name')?.hasError('required')">
+        El campo nombre no puede estar vacío
+      </mat-error>
+    </mat-form-field>
+    <br />
+  </form>
 </div>
 <div mat-dialog-actions>
   <button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>
   <button
     mat-raised-button
     color="primary"
-    (click)="addTag(name)"
     (click)="saveTags()"
+    [disabled]="!tagForm.valid"
   >
     Guardar
   </button>

@@ -485,13 +485,15 @@ export class StteperFormComponent {
   openTagsDialog() {
     let dialogRef = this.dialog.open(TagsDialogComponent, {
       data: {
-        spaceName: this.firstFormGroup.get('scheduleName')?.value,
-        eliminate: this.deleteSpace.bind(this),
+        tags: this.taskTags,
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      this.loadTags(result);
+      console.log('result', result);
+      const auxTag: Tag = { name: '' };
+      auxTag.name = result.name;
+      this.loadTags(auxTag);
     });
   }
   openScheduableTaskDialog(scheduableTask?: ScheduableTask) {
@@ -588,18 +590,17 @@ export class StteperFormComponent {
     });
   }
 
-  loadTags(tags: Tag[]): void {
+  loadTags(newTag: Tag): void {
     // iterate over the workers array and create a card for each worker
-    tags.forEach((tag: Tag) => {
-      // Create a new card object with the worker data
-      const newTag = {
-        name: tag.name,
-      };
+    // tags.forEach((tag: Tag) => {
+    //   // Create a new card object with the worker data
+    //   const newTag = {
+    //     name: tag.name,
+    //   };
 
-      // Add the card to the workerCards array
-      this.taskTags.push(newTag);
-      this.availableTags.push(newTag);
-    });
+    // Add the card to the workerCards array
+    this.taskTags.push(newTag);
+    this.availableTags.push(newTag);
   }
 
   loadTaskCards(): void {
