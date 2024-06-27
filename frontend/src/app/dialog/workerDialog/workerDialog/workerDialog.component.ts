@@ -36,6 +36,11 @@ export class WorkerDialogComponent {
     this.workerForm.get('name')?.setValue(this.data.workerName);
   }
 
+  ngAfterViewInit(): void {
+    // Trigger validation on load
+    this.workerForm.markAllAsTouched();
+  }
+
   onNoClick(): void {
     this.dialogRef.close();
   }

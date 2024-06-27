@@ -132,6 +132,14 @@
       </div>
       <div class="button-container">
         <button
+          style="margin-right: 5px"
+          mat-raised-button
+          color="warn"
+          (click)="endform(first)"
+        >
+          Salir
+        </button>
+        <button
           mat-raised-button
           color="primary"
           matStepperNext
@@ -176,6 +184,14 @@
       </div>
       <div class="button-container">
         <button
+          style="margin-right: 5px"
+          mat-raised-button
+          color="warn"
+          (click)="endform()"
+        >
+          Salir
+        </button>
+        <button
           mat-raised-button
           color="primary"
           matStepperNext
@@ -190,7 +206,7 @@
   <!------------------------------------ Step 3 -------------------------------------->
 
   <mat-step [stepControl]="thirdFormGroup" label="Espacios disponibles">
-    <form>
+    <form [formGroup]="thirdFormGroup">
       <h2>Espacios disponibles</h2>
       <button
         mat-raised-button
@@ -254,10 +270,19 @@
     </form>
     <div class="button-container">
       <button
+        style="margin-right: 5px"
+        mat-raised-button
+        color="warn"
+        (click)="endform()"
+      >
+        Salir
+      </button>
+      <button
         mat-raised-button
         color="primary"
         matStepperNext
         (click)="createAllSpacesAndCommonSpace()"
+        [disabled]="this.spaceCards.length === 0"
       >
         Siguiente
       </button>
@@ -265,7 +290,7 @@
   </mat-step>
   <!------------------------------------ Step 4 -------------------------------------->
   <mat-step [stepControl]="fourthFormGroup" label="Trabajadores disponibles">
-    <form>
+    <form [formGroup]="fourthFormGroup">
       <h2>Trabajadores disponibles</h2>
       <button
         mat-raised-button
@@ -325,10 +350,19 @@
     </form>
     <div class="button-container">
       <button
+        style="margin-right: 5px"
+        mat-raised-button
+        color="warn"
+        (click)="endform()"
+      >
+        Salir
+      </button>
+      <button
         mat-raised-button
         color="primary"
         matStepperNext
         (click)="createAllWorkersAndCommonWorkers()"
+        [disabled]="this.workers.length === 0"
       >
         Siguiente
       </button>
@@ -337,7 +371,7 @@
 
   <!------------------------------------ Step 5 -------------------------------------->
   <mat-step [stepControl]="fithFormGroup" label="Tareas programables">
-    <form>
+    <form [formGroup]="fithFormGroup">
       <div style="display: flex">
         <h2>Tags disponibles</h2>
         <button
@@ -449,6 +483,15 @@
         </div>
       </div>
     </form>
-    <div class="button-container"></div>
+    <div class="button-container">
+      <button
+        style="margin-right: 5px"
+        mat-raised-button
+        color="warn"
+        (click)="endform()"
+      >
+        Salir
+      </button>
+    </div>
   </mat-step>
 </mat-stepper>

@@ -11,7 +11,7 @@
     </mat-form-field>
     <br />
     <div>
-      <p class="fieldname">
+      <p class="fieldname" *ngIf="!isCommon">
         Turnos con restricciones
         <mat-icon
           matTooltip="Seleccione los turnos en los que el trabajador no estará disponible"

@@ -11,7 +11,7 @@
         </mat-error>
       </mat-form-field>
       <br />
-      <p>
+      <p *ngIf="!isCommon">
         Seleccione un espacio
         <mat-icon
           matTooltip="El espacio seleccionado será el asignado a la tarea,en caso de no seleccionar un espacio no deberá introducir el tamaño necesario de la tarea"
@@ -57,7 +57,7 @@
         />
       </mat-form-field>
       <br />
-      <p>
+      <p *ngIf="!isCommon">
         Seleccione un Trabajador
         <mat-icon
           matTooltip="Puede no seleccionar un trabajador, en ese caso se asignará automáticamente un trabajador a la tarea"

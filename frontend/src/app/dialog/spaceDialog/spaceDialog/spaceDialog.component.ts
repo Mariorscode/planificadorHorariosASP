@@ -40,6 +40,11 @@ export class SpaceDialogComponent {
     this.spaceForm.get('spaceCapacity')?.setValue(this.data.spaceCapacity);
   }
 
+  ngAfterViewInit(): void {
+    // Trigger validation on load
+    this.spaceForm.markAllAsTouched();
+  }
+
   onNoClick(): void {
     this.dialogRef.close();
   }

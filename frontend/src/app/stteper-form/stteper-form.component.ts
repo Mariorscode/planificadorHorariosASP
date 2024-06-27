@@ -156,14 +156,14 @@ export class StteperFormComponent {
   });
   // Third formStep
   thirdFormGroup = this._formBuilder.group({
-    spaces: [this.spaces, Validators.required],
+    spaces: [this.spaces],
   });
   // Fourth formStep
   fourthFormGroup = this._formBuilder.group({
-    workers: [this.workers, Validators.required],
+    workers: [this.workers],
   });
   fithFormGroup = this._formBuilder.group({
-    scheduableTasks: [this.scheduableTasks, Validators.required],
+    scheduableTasks: [this.scheduableTasks],
   });
 
   isLinear = true;
@@ -177,7 +177,57 @@ export class StteperFormComponent {
     this.getAllCommonSpaces();
     this.getAllCommonWorkers();
     this.getAllCommonTasks();
+    // this.observeWorkerCards();
+    // this.observeSpaceCards();
+    // this.observeTaskCards();
   }
+
+  // showAlert = false;
+  // private observeWorkerCards() {
+  //   setTimeout(() => {
+  //     if (this.workerCards.length === 0 && !this.showAlert) {
+  //       this.showAlert = true;
+  //       this.snackBar.open(
+  //         'Debes introducir al menos un trabajador',
+  //         'Quitar',
+  //         {
+  //           duration: 5000,
+  //         }
+  //       );
+  //     } else if (this.workerCards.length > 0 && this.showAlert) {
+  //       this.showAlert = false;
+  //     }
+  //     this.observeWorkerCards();
+  //   }, 1000);
+  // }
+
+  // private observeSpaceCards() {
+  //   setTimeout(() => {
+  //     if (this.spaceCards.length === 0 && !this.showAlert) {
+  //       this.showAlert = true;
+  //       this.snackBar.open('Debes introducir al menos un espacio', 'Quitar', {
+  //         duration: 5000,
+  //       });
+  //     } else if (this.spaceCards.length > 0 && this.showAlert) {
+  //       this.showAlert = false;
+  //     }
+  //     this.observeSpaceCards();
+  //   }, 1000);
+  // }
+
+  // private observeTaskCards() {
+  //   setTimeout(() => {
+  //     if (this.taskCards.length === 0 && !this.showAlert) {
+  //       this.showAlert = true;
+  //       this.snackBar.open('Debes introducir al menos una tarea', 'Quitar', {
+  //         duration: 5000,
+  //       });
+  //     } else if (this.taskCards.length > 0 && this.showAlert) {
+  //       this.showAlert = false;
+  //     }
+  //     this.observeTaskCards();
+  //   }, 1000);
+  // }
 
   ngAfterViewInit(): void {
     // Trigger validation on load
@@ -566,6 +616,12 @@ export class StteperFormComponent {
     // delete the existing space cards
     this.spaceCards = [];
 
+    if (this.spaces.length === 0) {
+      this.snackBar.open('Debes introducir al menos un espacio', 'Quitar', {
+        duration: 5000,
+      });
+    }
+
     // iterate over the spaces array and create a card for each space
     this.spaces.forEach((space: Space) => {
       // Create a new card object with the space data
@@ -583,6 +639,12 @@ export class StteperFormComponent {
   loadWorkerCards(): void {
     // delete the existing worker cards
     this.workerCards = [];
+
+    if (this.workers.length === 0) {
+      this.snackBar.open('Debes introducir al menos un trabajador', 'Quitar', {
+        duration: 5000,
+      });
+    }
 
     // iterate over the workers array and create a card for each worker
     this.workers.forEach((worker: Worker) => {
@@ -613,6 +675,12 @@ export class StteperFormComponent {
   loadTaskCards(): void {
     // delete the existing space cards
     this.taskCards = [];
+
+    if (this.scheduableTasks.length === 0) {
+      this.snackBar.open('Debes introducir al menos una tarea', 'Quitar', {
+        duration: 5000,
+      });
+    }
 
     // iterate over the spaces array and create a card for each space
     this.scheduableTasks.forEach((task: ScheduableTask) => {
@@ -960,6 +1028,23 @@ export class StteperFormComponent {
   cleanTasks() {
     this.scheduableTasks = [];
     this.loadTaskCards();
+  }
+
+  first: boolean = true;
+
+  endform(first?: boolean) {
+    if (!first) {
+      this.schedulerASP.deleteTimetable(this.apiTimeTable.id).subscribe(
+        (response) => {
+          this.router.navigate(['/']);
+        },
+        (error) => {
+          console.error('Error:', error);
+        }
+      );
+    } else {
+      this.router.navigate(['/']);
+    }
   }
 
   constructor(
