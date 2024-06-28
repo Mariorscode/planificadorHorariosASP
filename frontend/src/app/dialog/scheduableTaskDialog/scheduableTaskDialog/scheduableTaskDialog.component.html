@@ -96,14 +96,7 @@
 </div>
 <div mat-dialog-actions>
   <button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>
-  <button
-    mat-raised-button
-    color="primary"
-    (click)="saveScheduableTask()"
-    [disabled]="
-      (tags.length !== 0 && tags.length !== 3) || scheduableTaskForm.invalid
-    "
-  >
+  <button mat-raised-button color="primary" (click)="saveScheduableTask()">
     Guardar
   </button>
 </div>
