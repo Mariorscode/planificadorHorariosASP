@@ -152,10 +152,7 @@
     </form>
   </mat-step>
   <!------------------------------------ Step 2 -------------------------------------->
-  <mat-step
-    [stepControl]="secondFormGroup"
-    label="Restricciones y revisión horario"
-  >
+  <mat-step [stepControl]="secondFormGroup" label="Turnos libres">
     <form [formGroup]="secondFormGroup">
       <h3>Seleccione los turnos no asignables</h3>
       <p>
