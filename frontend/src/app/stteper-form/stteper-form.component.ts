@@ -177,57 +177,7 @@ export class StteperFormComponent {
     this.getAllCommonSpaces();
     this.getAllCommonWorkers();
     this.getAllCommonTasks();
-    // this.observeWorkerCards();
-    // this.observeSpaceCards();
-    // this.observeTaskCards();
   }
-
-  // showAlert = false;
-  // private observeWorkerCards() {
-  //   setTimeout(() => {
-  //     if (this.workerCards.length === 0 && !this.showAlert) {
-  //       this.showAlert = true;
-  //       this.snackBar.open(
-  //         'Debes introducir al menos un trabajador',
-  //         'Quitar',
-  //         {
-  //           duration: 5000,
-  //         }
-  //       );
-  //     } else if (this.workerCards.length > 0 && this.showAlert) {
-  //       this.showAlert = false;
-  //     }
-  //     this.observeWorkerCards();
-  //   }, 1000);
-  // }
-
-  // private observeSpaceCards() {
-  //   setTimeout(() => {
-  //     if (this.spaceCards.length === 0 && !this.showAlert) {
-  //       this.showAlert = true;
-  //       this.snackBar.open('Debes introducir al menos un espacio', 'Quitar', {
-  //         duration: 5000,
-  //       });
-  //     } else if (this.spaceCards.length > 0 && this.showAlert) {
-  //       this.showAlert = false;
-  //     }
-  //     this.observeSpaceCards();
-  //   }, 1000);
-  // }
-
-  // private observeTaskCards() {
-  //   setTimeout(() => {
-  //     if (this.taskCards.length === 0 && !this.showAlert) {
-  //       this.showAlert = true;
-  //       this.snackBar.open('Debes introducir al menos una tarea', 'Quitar', {
-  //         duration: 5000,
-  //       });
-  //     } else if (this.taskCards.length > 0 && this.showAlert) {
-  //       this.showAlert = false;
-  //     }
-  //     this.observeTaskCards();
-  //   }, 1000);
-  // }
 
   ngAfterViewInit(): void {
     // Trigger validation on load
@@ -660,13 +610,6 @@ export class StteperFormComponent {
   }
 
   loadTags(newTag: Tag): void {
-    // iterate over the workers array and create a card for each worker
-    // tags.forEach((tag: Tag) => {
-    //   // Create a new card object with the worker data
-    //   const newTag = {
-    //     name: tag.name,
-    //   };
-
     // Add the card to the workerCards array
     this.taskTags.push(newTag);
     this.availableTags.push(newTag);

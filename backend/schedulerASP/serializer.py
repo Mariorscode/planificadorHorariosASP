@@ -12,7 +12,7 @@ class TurnSerializer(serializers.ModelSerializer):
         fields = ['id', 'day', 'startTime', 'is_free_time', 'timeTable_id']
 
 class WorkerSerializer(serializers.ModelSerializer):
-    # restrictionsWorker = TurnSerializer(many=True, read_only=True)
+    
 
     class Meta:
         model = Worker
@@ -26,14 +26,14 @@ class CommonWorkerSerializer(serializers.ModelSerializer):
 
 
 class SpaceSerializer(serializers.ModelSerializer):
-    # restrictionsSpace = TurnSerializer(many=True, read_only=True)
+    
 
     class Meta:
         model = Space
         fields = ['id', 'name', 'space_capacity', 'restrictionsSpace', 'timeTable_id']
         
 class CommonSpaceSerializer(serializers.ModelSerializer):
-    # restrictionsSpace = TurnSerializer(many=True, read_only=True)
+    
 
     class Meta:
         model = CommonSpace
@@ -69,6 +69,3 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email', 'password',]  
         
-    # def create(self, validated_data):
-    #     user = User.objects.create_user(**validated_data)
-    #     return user

@@ -12,8 +12,6 @@ import { GeneratedCalendarComponent } from './generatedCalendar/generatedCalenda
 
 import { AuthGuard } from './auth.guard';
 
-// import { CalendarWeekComponent } from './calendarWeek/calendarWeek.component';
-
 const routes: Routes = [
   { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard] },
   {
@@ -30,7 +28,6 @@ const routes: Routes = [
     component: GeneratedCalendarComponent,
     canActivate: [AuthGuard],
   },
-  // { path: 'calendarWeek', component: CalendarWeekComponent },
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },

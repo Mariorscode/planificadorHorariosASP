@@ -26,7 +26,7 @@ turn(D, 1..NUM_TURNS) :- day(D),  not unavailableDay(D), turnsPerDay(NUM_TURNS).
 
 countTag(T,Numtag) :- tags(T,Ta), #count{Ta1: tags(T,Ta1)} = Numtag.
 
-smallerNumTags(T1,T2,Numtag1) :- countTag(T1,Numtag1),countTag(T2,Numtag2),Numtag1 < Numtag2.
+smallerNumTags(T1,T2,Numtag1) :- countTag(T1,Numtag1),countTag(T2,Numtag2),Numtag1 <= Numtag2.
 
 
 % Two schedules cannot have the same tags and be in the same day and turn
