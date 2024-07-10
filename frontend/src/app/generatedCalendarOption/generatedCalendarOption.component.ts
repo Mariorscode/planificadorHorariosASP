@@ -1,9 +1,12 @@
+// generated-calendar-option.component.ts
 import {
   Component,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  signal,
+  Input,
   OnInit,
+  SimpleChanges,
+  signal,
 } from '@angular/core';
 import {
   CalendarOptions,
@@ -17,8 +20,8 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import { createEventId, INITIAL_EVENTS } from './event-utils';
 import { schedulerASP } from '../schedulerASP.service';
 import { ActivatedRoute } from '@angular/router';
-import { EventDetailsComponent } from '../event-details/event-details.component';
 import { MatDialog } from '@angular/material/dialog';
+import { EventDetailsComponent } from '../event-details/event-details.component';
 
 interface apiEvents {
   name: string;
@@ -40,6 +43,8 @@ interface Solution {
   styleUrls: ['./generatedCalendarOption.component.css'],
 })
 export class GeneratedCalendarOptionComponent implements OnInit {
+  @Input() selectedSolution: Solution | null = null; // Input para recibir la solución seleccionada
+
   constructor(
     private changeDetector: ChangeDetectorRef,
     private schedulerASP: schedulerASP,
@@ -59,7 +64,6 @@ export class GeneratedCalendarOptionComponent implements OnInit {
   calendarVisible = signal(true);
   calendarOptions = signal<CalendarOptions>({
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
-
     views: {
       dayGridWeek: {
         dayHeaderFormat: {
@@ -74,7 +78,7 @@ export class GeneratedCalendarOptionComponent implements OnInit {
     weekends: true,
     eventClick: this.handleEventClick.bind(this),
   });
-  currentEvents = signal<EventApi[]>([]);
+  currentEvents: EventApi[] = [];
 
   ngOnInit() {
     this.solution_id = parseInt(localStorage.getItem('solution_id') ?? '', 10);
@@ -84,7 +88,12 @@ export class GeneratedCalendarOptionComponent implements OnInit {
     );
 
     this.getTimeTableByID();
-    this.getAllSchedulesSolutions();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['selectedSolution'] && this.selectedSolution) {
+      this.loadSolution(this.selectedSolution);
+    }
   }
 
   getDayIndex(day: string): number {
@@ -112,102 +121,73 @@ export class GeneratedCalendarOptionComponent implements OnInit {
     );
   }
 
-  getAllSchedulesSolutions() {
-    this.schedulerASP.generateTimetable(this.timetable_id).subscribe(
-      (response: { solutions: Solution[]; start_time: string }) => {
-        const selectedSolution = response.solutions.find(
-          (solution: Solution) => {
-            return solution.solution_id === this.solution_id;
-          }
-        );
+  loadSolution(solution: Solution) {
+    this.apischedules = solution.schedules.map((scheduleString: string) => {
+      const [day, number, name, schedule_worker, schedule_space] =
+        scheduleString.replace('schedule(', '').replace(')', '').split(',');
 
-        if (selectedSolution) {
-          this.apischedules = selectedSolution.schedules.map(
-            (scheduleString: string) => {
-              const [day, number, name, schedule_worker, schedule_space] =
-                scheduleString
-                  .replace('schedule(', '')
-                  .replace(')', '')
-                  .split(',');
+      return {
+        name,
+        day,
+        number: parseInt(number, 10),
+        schedule_space,
+        schedule_worker,
+        timeTable_schedule: this.solution_id,
+      } as apiEvents;
+    });
 
-              return {
-                name,
-                day,
-                number: parseInt(number, 10),
-                schedule_space,
-                schedule_worker,
-                timeTable_schedule: this.solution_id,
-              } as apiEvents;
-            }
-          );
+    this.events = [];
 
-          this.events = [];
-
-          this.apischedules.forEach((apiWorker) => {
-            if (!this.timetableStartTime) {
-              return;
-            }
-
-            const [startHour, startMinutes] = this.timetableStartTime
-              .split(':')
-              .map(Number);
-
-            let startTimeInMinutes = startHour * 60 + startMinutes;
-            startTimeInMinutes +=
-              this.timetableDuration * (apiWorker.number - 1);
-
-            const endTimeInMinutes =
-              startTimeInMinutes + this.timetableDuration;
-
-            const newStartHour = Math.floor(startTimeInMinutes / 60)
-              .toString()
-              .padStart(2, '0');
-            const newStartMinutes = (startTimeInMinutes % 60)
-              .toString()
-              .padStart(2, '0');
-            const newEndHour = Math.floor(endTimeInMinutes / 60)
-              .toString()
-              .padStart(2, '0');
-            const newEndMinutes = (endTimeInMinutes % 60)
-              .toString()
-              .padStart(2, '0');
-
-            const apiEvent: EventInput = {
-              id: createEventId(),
-              title: `${apiWorker.name} - ${apiWorker.schedule_space} - ${apiWorker.schedule_worker}`,
-              daysOfWeek: [this.getDayIndex(apiWorker.day)],
-              startTime: `${newStartHour}:${newStartMinutes}:00`,
-              endTime: `${newEndHour}:${newEndMinutes}:00`,
-              allDay: false,
-              extendedProps: {
-                worker: apiWorker.schedule_worker,
-                space: apiWorker.schedule_space,
-              },
-            };
-
-            this.events.push(apiEvent);
-          });
-
-          this.calendarOptions.update((options) => ({
-            ...options,
-            events: this.events,
-          }));
-
-          this.calendarOptions.update((options) => ({
-            ...options,
-            events: this.events,
-          }));
-
-          this.changeDetector.detectChanges();
-        } else {
-          console.log('No solution found with ID:', this.solution_id);
-        }
-      },
-      (error) => {
-        console.error('Error:', error);
+    this.apischedules.forEach((apiWorker) => {
+      if (!this.timetableStartTime) {
+        return;
       }
-    );
+
+      const [startHour, startMinutes] = this.timetableStartTime
+        .split(':')
+        .map(Number);
+
+      let startTimeInMinutes = startHour * 60 + startMinutes;
+      startTimeInMinutes += this.timetableDuration * (apiWorker.number - 1);
+
+      const endTimeInMinutes = startTimeInMinutes + this.timetableDuration;
+
+      const newStartHour = Math.floor(startTimeInMinutes / 60)
+        .toString()
+        .padStart(2, '0');
+      const newStartMinutes = (startTimeInMinutes % 60)
+        .toString()
+        .padStart(2, '0');
+      const newEndHour = Math.floor(endTimeInMinutes / 60)
+        .toString()
+        .padStart(2, '0');
+      const newEndMinutes = (endTimeInMinutes % 60).toString().padStart(2, '0');
+
+      const apiEvent: EventInput = {
+        id: createEventId(),
+        title: `${apiWorker.name} - ${apiWorker.schedule_space} - ${apiWorker.schedule_worker}`,
+        daysOfWeek: [this.getDayIndex(apiWorker.day)],
+        startTime: `${newStartHour}:${newStartMinutes}:00`,
+        endTime: `${newEndHour}:${newEndMinutes}:00`,
+        allDay: false,
+        extendedProps: {
+          worker: apiWorker.schedule_worker,
+          space: apiWorker.schedule_space,
+        },
+      };
+
+      this.events.push(apiEvent);
+    });
+
+    this.calendarOptions.update((options) => ({
+      ...options,
+
+      events: this.events,
+    }));
+
+    this.changeDetector.detectChanges();
   }
+
   handleEventClick(eventClickInfo: EventClickArg) {
     const event: EventApi = eventClickInfo.event;
 
