@@ -1,7 +1,8 @@
 <h1 mat-dialog-title>Introduzca la Información del Trabajador</h1>
 <div mat-dialog-content>
   <form [formGroup]="workerForm" style="margin: 10px">
-    <mat-form-field appearance="outline" color="primary">
+    <p class="fieldname">Nombre del trabajador</p>
+    <mat-form-field appearance="outline" color="primary" style="width: 100%">
       <mat-label>Nombre del Trabajador</mat-label>
       <input matInput formControlName="name" placeholder="" />
       <mat-error *ngIf="workerForm.get('name')?.hasError('required')">
@@ -10,9 +11,20 @@
     </mat-form-field>
     <br />
     <div>
-      <mat-form-field appearance="outline" *ngIf="!isCommon">
-        <mat-label>Días de la semana</mat-label>
-        <mat-select multiple>
+      <p class="fieldname" *ngIf="!isCommon">
+        Turnos con restricciones
+        <mat-icon
+          matTooltip="Seleccione los turnos en los que el trabajador no estará disponible"
+          >help</mat-icon
+        >
+      </p>
+      <mat-form-field
+        style="margin-top: 5px; width: 100%"
+        appearance="outline"
+        *ngIf="!isCommon"
+      >
+        <mat-label>Turnos con restricciones </mat-label>
+        <mat-select multiple [value]="this.data.restrictionTurns">
           <mat-option
             *ngFor="let turn of data.turns"
             [value]="turn"

@@ -54,6 +54,10 @@ export class ScheduableTaskDialogComponent {
     this.scheduableTaskForm.get('name')?.setValue(this.data.taskName);
     this.scheduableTaskForm.get('taskSize')?.setValue(this.data.taskSize);
   }
+  ngAfterViewInit(): void {
+    // Trigger validation on load
+    this.scheduableTaskForm.markAllAsTouched();
+  }
 
   onSelectionTurn(turn: Turn) {
     const index = this.restrictions.findIndex(
@@ -77,13 +81,21 @@ export class ScheduableTaskDialogComponent {
     }
   }
 
+  spaceSelected: boolean = false;
   onSelectionSpace(space: Space) {
     const index = this.spaces.findIndex((t) => t.name === space.name);
 
+    if (space) {
+      this.scheduableTaskForm.get('taskSize')?.disable();
+      this.scheduableTaskForm.get('taskSize')?.setValue(0);
+    }
+
     if (index === -1) {
       this.spaces.push(space);
+      this.spaceSelected = true;
     } else {
       this.spaces.splice(index, 1);
+      this.spaceSelected = false;
     }
   }
 

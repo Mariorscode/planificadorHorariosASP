@@ -27,6 +27,8 @@ from datetime import datetime
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 class TurnViewSet(ModelViewSet):
     serializer_class = TurnSerializer
     queryset = Turn.objects.all()
@@ -116,6 +118,7 @@ class TimeTableViewSet(ModelViewSet, Clingo):
         self.clingo_setup()
 
         fact_list = []
+        tag_set = set()
         # ID específico de TimeTable que quieres obtener
         timetable_id = int(request.query_params.get('timetable_id'))
         
@@ -185,11 +188,17 @@ class TimeTableViewSet(ModelViewSet, Clingo):
                     tag_name = tag.get('name')
                 else:
                     tag_name = str(tag)
+                    
+                logger.warning(f"Tag name: {tag_name}")
                 
-                fact_list.append(Terms.Tag(name=tag_name))
+                if tag_name not in tag_set:
+                    tag_set.add(tag_name)  # Añadir la tag al conjunto
+                    fact_list.append(Terms.Tag(name=tag_name))
+                    
                 fact_list.append(Terms.Tags(taskname=scheduableTask.name, tag=tag_name))
             
-
+        logger.warning(f"Fact list: {fact_list}")
+        
         self.load_knowledge(FactBase(fact_list))
 
 

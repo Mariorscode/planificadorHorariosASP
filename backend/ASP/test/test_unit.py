@@ -26,7 +26,7 @@ class TestTurns(TestCase, ClingoTest):
     # If there is one unavailableDay and no turns per day there should be no turns
     def test_no_turnsPerDay_with_an_unavailableDay_no_turns(self):
         self.load_knowledge(FactBase([
-            Terms.UnavailableDay(day="monday")
+            Terms.UnavailableDay(day="lunes")
         ]))
 
         solutions = list(self.get_solutions())
@@ -56,13 +56,13 @@ class TestTurns(TestCase, ClingoTest):
         )
 
         expected = [
-            Terms.Turn(day="monday", number=1),
-            Terms.Turn(day="tuesday", number=1),
-            Terms.Turn(day="wednesday", number=1),
-            Terms.Turn(day="thursday", number=1),
-            Terms.Turn(day="friday", number=1),
-            Terms.Turn(day="saturday", number=1),
-            Terms.Turn(day="sunday", number=1)
+            Terms.Turn(day="lunes", number=1),
+            Terms.Turn(day="martes", number=1),
+            Terms.Turn(day="miercoles", number=1),
+            Terms.Turn(day="jueves", number=1),
+            Terms.Turn(day="viernes", number=1),
+            Terms.Turn(day="sabado", number=1),
+            Terms.Turn(day="domingo", number=1)
         ]
 
         self.assertCountEqual(query, expected)
@@ -71,13 +71,13 @@ class TestTurns(TestCase, ClingoTest):
     def test_1_turnPerDay_and_7_unavailableDays_no_turns(self):
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(1),
-            Terms.UnavailableDay(day="monday"),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday")
+            Terms.UnavailableDay(day="lunes"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo")
         ]))
 
         solutions = list(self.get_solutions())
@@ -95,8 +95,8 @@ class TestTurns(TestCase, ClingoTest):
     def test_2_turnPerDay_and_2_unavailableDays_10_turns(self):
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(2),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday")
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo")
         ]))
 
         solutions = list(self.get_solutions())
@@ -109,16 +109,16 @@ class TestTurns(TestCase, ClingoTest):
         )
 
         expected = [
-            Terms.Turn(day="monday", number=1),
-            Terms.Turn(day="monday", number=2),
-            Terms.Turn(day="tuesday", number=1),
-            Terms.Turn(day="tuesday", number=2),
-            Terms.Turn(day="wednesday", number=1),
-            Terms.Turn(day="wednesday", number=2),
-            Terms.Turn(day="thursday", number=1),
-            Terms.Turn(day="thursday", number=2),
-            Terms.Turn(day="friday", number=1),
-            Terms.Turn(day="friday", number=2)
+            Terms.Turn(day="lunes", number=1),
+            Terms.Turn(day="lunes", number=2),
+            Terms.Turn(day="martes", number=1),
+            Terms.Turn(day="martes", number=2),
+            Terms.Turn(day="miercoles", number=1),
+            Terms.Turn(day="miercoles", number=2),
+            Terms.Turn(day="jueves", number=1),
+            Terms.Turn(day="jueves", number=2),
+            Terms.Turn(day="viernes", number=1),
+            Terms.Turn(day="viernes", number=2)
         ]
 
         self.assertCountEqual(query, expected)
@@ -135,12 +135,12 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(1),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.TaskName(name="task1"),
             Terms.Worker(name="john"),
             Terms.Space(name="space1"),
@@ -154,7 +154,7 @@ class TestSchedule(TestCase, ClingoTest):
         solution = solutions[0]
         
         expected = [
-            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1")
+            Terms.Schedule(day="lunes", number=1, taskname="task1", worker="john", space="space1")
         ]
         
         query = solution.facts(atoms=True).query(Terms.Schedule).all()
@@ -167,12 +167,12 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(1),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.TaskName(name="task1"),
             Terms.Worker(name="john"),
             Terms.Space(name="space1"),
@@ -192,12 +192,12 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(2),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.TaskName(name="task1"),
             Terms.Worker(name="john"),
             Terms.Space(name="space1"),
@@ -211,7 +211,7 @@ class TestSchedule(TestCase, ClingoTest):
         solution = solutions[0]
         
         expected = [
-            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1")
+            Terms.Schedule(day="lunes", number=1, taskname="task1", worker="john", space="space1")
         ]
         
         query = solution.facts(atoms=True).query(Terms.Schedule).all()
@@ -223,21 +223,21 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(2),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.TaskName(name="task1"),
             Terms.Worker(name="john"),
             Terms.Space(name="space1"),
             Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
-            Terms.Restrictionworker(worker="john", day="monday", number=2)
+            Terms.Restrictionworker(worker="john", day="lunes", number=2)
         ]))
         
         expected = [
-            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1")
+            Terms.Schedule(day="lunes", number=1, taskname="task1", worker="john", space="space1")
         ]
         
         solutions = list(self.get_solutions())
@@ -254,21 +254,21 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(2),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.TaskName(name="task1"),
             Terms.Worker(name="john"),
             Terms.Space(name="space1"),
             Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
-            Terms.Restrictionspace(space="space1", day="monday", number=2)
+            Terms.Restrictionspace(space="space1", day="lunes", number=2)
         ]))
         
         expected = [
-            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1")
+            Terms.Schedule(day="lunes", number=1, taskname="task1", worker="john", space="space1")
         ]
         
         solutions = list(self.get_solutions())
@@ -286,12 +286,12 @@ class TestSchedule(TestCase, ClingoTest):
             
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(3),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.TaskName(name="task1"),
             Terms.TaskName(name="task2"),
             Terms.Worker(name="john"),
@@ -316,12 +316,12 @@ class TestSchedule(TestCase, ClingoTest):
             
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(1),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.TaskName(name="task1"),
             Terms.TaskName(name="task2"),
             Terms.Worker(name="john"),
@@ -340,12 +340,12 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(2),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.TaskName(name="task1"),
             Terms.TaskName(name="task2"),
             Terms.Worker(name="john"),
@@ -371,12 +371,12 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(2),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.TaskName(name="task1"),
             Terms.TaskName(name="task2"),
             Terms.Worker(name="john"),
@@ -386,14 +386,14 @@ class TestSchedule(TestCase, ClingoTest):
             Terms.SpaceCapacity(space="space2", capacity=10),
             Terms.TaskSize(taskname="task1", size=4),
             Terms.TaskSize(taskname="task2", size=6),
-            Terms.Restrictionspace(space="space2", day="monday", number=1),
+            Terms.Restrictionspace(space="space2", day="lunes", number=1),
             Terms.TaskUnknownSpace(taskname="task2", worker="john"),
             Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),            
         ]))
     
         expected = [
-            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1"),
-            Terms.Schedule(day="monday", number=2, taskname="task2", worker="john", space="space2"),
+            Terms.Schedule(day="lunes", number=1, taskname="task1", worker="john", space="space1"),
+            Terms.Schedule(day="lunes", number=2, taskname="task2", worker="john", space="space2"),
         ]
         
         solutions = list(self.get_solutions())
@@ -409,12 +409,12 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(2),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.TaskName(name="task1"),
             Terms.TaskName(name="task2"),
             Terms.Worker(name="john"),
@@ -426,8 +426,8 @@ class TestSchedule(TestCase, ClingoTest):
         ]))
         
         expected = [
-            Terms.Schedule(day="monday", number=2, taskname="task2", worker="john", space="space2"),
-            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1"),
+            Terms.Schedule(day="lunes", number=2, taskname="task2", worker="john", space="space2"),
+            Terms.Schedule(day="lunes", number=1, taskname="task1", worker="john", space="space1"),
         ]
         
         solutions = list(self.get_solutions())
@@ -443,28 +443,28 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(2),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.TaskName(name="task1"),
             Terms.TaskName(name="task2"),
             Terms.Worker(name="john"),
             Terms.Worker(name="jane"),
             Terms.Space(name="space1"),
             Terms.Space(name="space2"),
-            Terms.Restrictionworker(worker="john", day="monday", number=2),
-            Terms.Restrictionspace(space="space2", day="monday", number=1),
+            Terms.Restrictionworker(worker="john", day="lunes", number=2),
+            Terms.Restrictionspace(space="space2", day="lunes", number=1),
             Terms.TaskUnknownWorker(taskname="task2", space="space2"),
             Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
             
         ]))
         
         expected = [
-            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1"),
-            Terms.Schedule(day="monday", number=2, taskname="task2", worker="jane", space="space2"),
+            Terms.Schedule(day="lunes", number=1, taskname="task1", worker="john", space="space1"),
+            Terms.Schedule(day="lunes", number=2, taskname="task2", worker="jane", space="space2"),
         ]
         
         # the two solutions are the same, but in different order
@@ -480,12 +480,12 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(2),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.TaskName(name="task1"),
             Terms.TaskName(name="task2"),
             Terms.Worker(name="john"),
@@ -496,8 +496,8 @@ class TestSchedule(TestCase, ClingoTest):
         ]))
 
         expected = [
-            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1"),
-            Terms.Schedule(day="monday", number=2, taskname="task2", worker="john", space="space1"),
+            Terms.Schedule(day="lunes", number=1, taskname="task1", worker="john", space="space1"),
+            Terms.Schedule(day="lunes", number=2, taskname="task2", worker="john", space="space1"),
         ]
         
         # the two solutions are the same, but in different order
@@ -514,12 +514,12 @@ class TestSchedule(TestCase, ClingoTest):
     def test_mix_of_all_possible_unknowns_and_restrictions(self):
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(3),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.TaskName(name="task1"),
             Terms.TaskName(name="task2"),
             Terms.TaskName(name="task3"),
@@ -546,12 +546,12 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(2),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.Tag(name="groupA"),
             Terms.Tag(name="theory"),
             Terms.Tag(name="1"),
@@ -575,7 +575,7 @@ class TestSchedule(TestCase, ClingoTest):
         solutions = list(self.get_solutions())
         solution = solutions[0]
         
-        solutions = list(self.get_solutions())
+        solutions = self.get_solutions()
         for solution in solutions:
             query1 = list(solution.facts(atoms=True)
                 .query(Terms.Schedule)
@@ -590,12 +590,12 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(1),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.Tag(name="groupA"),
             Terms.Tag(name="theory"),
             Terms.Tag(name="practice"),
@@ -618,8 +618,8 @@ class TestSchedule(TestCase, ClingoTest):
         ]))
         
         expected = [
-            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1"),
-            Terms.Schedule(day="monday", number=1, taskname="task2", worker="jane", space="space2")
+            Terms.Schedule(day="lunes", number=1, taskname="task1", worker="john", space="space1"),
+            Terms.Schedule(day="lunes", number=1, taskname="task2", worker="jane", space="space2")
         ]
         
         
@@ -637,12 +637,12 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(1),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.Tag(name="groupA"),
             Terms.Tag(name="theory"),
             Terms.Tag(name="practice"),
@@ -665,8 +665,8 @@ class TestSchedule(TestCase, ClingoTest):
         ]))
         
         expected = [
-            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1"),
-            Terms.Schedule(day="monday", number=1, taskname="task2", worker="jane", space="space2")
+            Terms.Schedule(day="lunes", number=1, taskname="task1", worker="john", space="space1"),
+            Terms.Schedule(day="lunes", number=1, taskname="task2", worker="jane", space="space2")
         ]
         
         
@@ -684,22 +684,22 @@ class TestSchedule(TestCase, ClingoTest):
             
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(2),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.TaskName(name="task1"),
             Terms.Worker(name="john"),
             Terms.Space(name="space1"),
-            Terms.FreeTimeTurn(day="monday", number=2),
+            Terms.FreeTimeTurn(day="lunes", number=2),
             Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
             
         ]))
         
         expected = [
-            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1"),
+            Terms.Schedule(day="lunes", number=1, taskname="task1", worker="john", space="space1"),
         
         ]
         
@@ -718,12 +718,12 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.load_knowledge(FactBase([
             Terms.TurnsPerDay(2),
-            Terms.UnavailableDay(day="tuesday"),
-            Terms.UnavailableDay(day="wednesday"),
-            Terms.UnavailableDay(day="thursday"),
-            Terms.UnavailableDay(day="friday"),
-            Terms.UnavailableDay(day="saturday"),
-            Terms.UnavailableDay(day="sunday"),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
             Terms.Tag(name="groupA"),
             Terms.Tag(name="theory"),
             Terms.Tag(name="practice"),
@@ -742,13 +742,13 @@ class TestSchedule(TestCase, ClingoTest):
             Terms.Tags(taskname="task2",tag = "1"),
             Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
             Terms.TaskUnknownWorkerAndSpace(taskname="task2"),
-            Terms.FreeTimeTurn(day="monday", number=2),
+            Terms.FreeTimeTurn(day="lunes", number=2),
             
         ]))
         
         expected = [
-            Terms.Schedule(day="monday", number=1, taskname="task1", worker="john", space="space1"),
-            Terms.Schedule(day="monday", number=1, taskname="task2", worker="jane", space="space2")
+            Terms.Schedule(day="lunes", number=1, taskname="task1", worker="john", space="space1"),
+            Terms.Schedule(day="lunes", number=1, taskname="task2", worker="jane", space="space2")
         ]
         
         
@@ -761,3 +761,97 @@ class TestSchedule(TestCase, ClingoTest):
         
         self.assertCountEqual(query, expected)
             
+    def test_two_schedule_same_time_not_same_tags_diferent_number(self):
+        
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(2),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
+            Terms.Tag(name="groupA"),
+            Terms.Tag(name="theory"),
+            Terms.Tag(name="1"),
+            Terms.Tag(name="extraTag"),
+            Terms.TaskName(name="task1"),
+            Terms.TaskName(name="task2"),
+            Terms.Worker(name="john"),
+            Terms.Worker(name="jane"),
+            Terms.Space(name="space1"),
+            Terms.Space(name="space2"),
+            Terms.Tags(taskname="task1", tag="groupA"),
+            Terms.Tags(taskname="task1", tag="theory"),
+            Terms.Tags(taskname="task1", tag="1"),
+            Terms.Tags(taskname="task1", tag="extraTag"),
+            Terms.Tags(taskname="task2", tag="theory"),
+            Terms.Tags(taskname="task2", tag="groupA"),
+            Terms.Tags(taskname="task2", tag="1"),
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            Terms.SchedulableTask(taskname="task2", worker="jane", space="space2"),
+            
+        ]))
+               
+        solutions = list(self.get_solutions())
+        solution = solutions[0]
+        
+        solutions = self.get_solutions()
+        for solution in solutions:
+            query1 = list(solution.facts(atoms=True)
+                .query(Terms.Schedule)
+                .where(Terms.Schedule.number == 1)
+                .all()
+            )
+      
+            self.assertEqual(len(query1),1)
+            
+             # two schedules with same time can have at least one tag different
+    def test_two_schedule_atleast_one_tag_different_can_same_time_diferent_number(self):
+        
+        self.load_knowledge(FactBase([
+            Terms.TurnsPerDay(1),
+            Terms.UnavailableDay(day="martes"),
+            Terms.UnavailableDay(day="miercoles"),
+            Terms.UnavailableDay(day="jueves"),
+            Terms.UnavailableDay(day="viernes"),
+            Terms.UnavailableDay(day="sabado"),
+            Terms.UnavailableDay(day="domingo"),
+            Terms.Tag(name="groupA"),
+            Terms.Tag(name="theory"),
+            Terms.Tag(name="practice"),
+            Terms.Tag(name="1"),
+            Terms.Tag(name="extraTag"),            
+            Terms.TaskName(name="task1"),
+            Terms.TaskName(name="task2"),
+            Terms.Worker(name="john"),
+            Terms.Worker(name="jane"),
+            Terms.Space(name="space1"),
+            Terms.Space(name="space2"),
+            Terms.Tags(taskname="task1",tag = "groupA"),
+            Terms.Tags(taskname="task1",tag = "theory"),
+            Terms.Tags(taskname="task1",tag = "1"),
+            Terms.Tags(taskname="task1",tag = "extraTag"),
+            Terms.Tags(taskname="task2",tag = "groupA"),
+            Terms.Tags(taskname="task2",tag = "practice"),
+            Terms.Tags(taskname="task2",tag = "1"),
+            Terms.SchedulableTask(taskname="task1", worker="john", space="space1"),
+            Terms.SchedulableTask(taskname="task2", worker="jane", space="space2"),
+            
+        ]))
+        
+        expected = [
+            Terms.Schedule(day="lunes", number=1, taskname="task1", worker="john", space="space1"),
+            Terms.Schedule(day="lunes", number=1, taskname="task2", worker="jane", space="space2")
+        ]
+        
+        
+        solutions = list(self.get_solutions())
+        self.assertEqual(len(solutions), 1)
+        
+        solution = solutions[0]
+                
+        query = solution.facts(atoms=True).query(Terms.Schedule).all()
+        
+        self.assertCountEqual(query, expected)
+  

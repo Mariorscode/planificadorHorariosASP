@@ -16,3 +16,13 @@
     margin: 5px;
 }
 
+.fieldname{
+    margin-left: 5px;
+    margin-top: 10px;
+}
+  
+.fieldname mat-icon {
+    cursor: pointer;
+    vertical-align: middle;
+}
+  

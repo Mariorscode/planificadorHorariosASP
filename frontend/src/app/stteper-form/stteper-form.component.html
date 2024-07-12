@@ -55,40 +55,6 @@
               </span>
             </label>
           </div>
-          <p class="fieldname">
-            Intervalo de horas en las que el horario tiene lugar (formato 24h)
-            <mat-icon
-              matTooltip="Los turnnos se generarán en el intervalo de horas seleccionado."
-              >help</mat-icon
-            >
-          </p>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Hora Inicio primer turno</mat-label>
-            <input
-              matInput
-              formControlName="firstTurnTime"
-              type="time"
-              placeholder="Selecciona una hora"
-            />
-          </mat-form-field>
-          <mat-form-field appearance="outline" color="primary">
-            <mat-label>Hora Inicio último turno</mat-label>
-            <input
-              matInput
-              type="time"
-              formControlName="lastTurnTime"
-              placeholder="Selecciona una hora"
-              (change)="validateTime()"
-            />
-            <mat-error
-              *ngIf="
-                firstFormGroup.get('lastTurnTime')?.hasError('invalidTimeRange')
-              "
-            >
-              El último turno debe ser posterior al primer turno.
-            </mat-error>
-          </mat-form-field>
           <br />
           <p class="fieldname">Duración de los turnos en minutos</p>
           <mat-form-field appearance="outline" color="primary">
@@ -109,16 +75,76 @@
               La duración del turno debe ser menor o igual al intervalo entre el
               primer y último turno.
             </mat-error>
+            <mat-error
+              style="background-color: rgb(255, 255, 255)"
+              *ngIf="firstFormGroup.get('turnDuration')?.hasError('required')"
+            >
+              La duración del turno es obligatoria
+            </mat-error>
+          </mat-form-field>
+          <p class="fieldname">
+            Intervalo de horas en las que el horario tiene lugar (formato 24h)
+            <mat-icon
+              matTooltip="Los turnnos se generarán en el intervalo de horas seleccionado."
+              >help</mat-icon
+            >
+          </p>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Hora Inicio primer turno</mat-label>
+            <input
+              matInput
+              formControlName="firstTurnTime"
+              type="time"
+              placeholder="Selecciona una hora"
+            />
+            <mat-error
+              style="background-color: rgb(255, 255, 255)"
+              *ngIf="firstFormGroup.get('firstTurnTime')?.hasError('required')"
+            >
+              Este campo es obligatorio
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" color="primary">
+            <mat-label>Hora Inicio último turno</mat-label>
+            <input
+              matInput
+              type="time"
+              formControlName="lastTurnTime"
+              placeholder="Selecciona una hora"
+              (change)="validateTime()"
+            />
+            <mat-error
+              *ngIf="
+                firstFormGroup.get('lastTurnTime')?.hasError('invalidTimeRange')
+              "
+            >
+              El último turno debe ser posterior al primer turno.
+            </mat-error>
+            <mat-error
+              style="background-color: rgb(255, 255, 255)"
+              *ngIf="firstFormGroup.get('lastTurnTime')?.hasError('required')"
+            >
+              Este campo es obligatorio
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
       <div class="button-container">
         <button
+          style="margin-right: 5px"
+          mat-raised-button
+          color="warn"
+          (click)="endform(first)"
+        >
+          Salir
+        </button>
+        <button
           mat-raised-button
           color="primary"
           matStepperNext
           (click)="fillTurns()"
-          [disabled]="!firstFormGroup.valid || !lastTurnTimeCompleted"
+          [disabled]="firstFormGroup.invalid || !lastTurnTimeCompleted"
         >
           Siguiente
         </button>
@@ -126,10 +152,7 @@
     </form>
   </mat-step>
   <!------------------------------------ Step 2 -------------------------------------->
-  <mat-step
-    [stepControl]="secondFormGroup"
-    label="Restricciones y revisión horario"
-  >
+  <mat-step [stepControl]="secondFormGroup" label="Turnos libres">
     <form [formGroup]="secondFormGroup">
       <h3>Seleccione los turnos no asignables</h3>
       <p>
@@ -158,6 +181,14 @@
       </div>
       <div class="button-container">
         <button
+          style="margin-right: 5px"
+          mat-raised-button
+          color="warn"
+          (click)="endform()"
+        >
+          Salir
+        </button>
+        <button
           mat-raised-button
           color="primary"
           matStepperNext
@@ -172,7 +203,7 @@
   <!------------------------------------ Step 3 -------------------------------------->
 
   <mat-step [stepControl]="thirdFormGroup" label="Espacios disponibles">
-    <form>
+    <form [formGroup]="thirdFormGroup">
       <h2>Espacios disponibles</h2>
       <button
         mat-raised-button
@@ -194,7 +225,8 @@
                   >
                 </mat-card-header>
                 <mat-card-content>
-                  <ul>
+                  <ul *ngIf="space.restrictionsSpace.length">
+                    Restricciones:
                     <li *ngFor="let restriction of space.restrictionsSpace">
                       Día: {{ restriction.day }}, Hora:
                       {{ restriction.displayTime }}
@@ -235,10 +267,19 @@
     </form>
     <div class="button-container">
       <button
+        style="margin-right: 5px"
+        mat-raised-button
+        color="warn"
+        (click)="endform()"
+      >
+        Salir
+      </button>
+      <button
         mat-raised-button
         color="primary"
         matStepperNext
         (click)="createAllSpacesAndCommonSpace()"
+        [disabled]="this.spaceCards.length === 0"
       >
         Siguiente
       </button>
@@ -246,7 +287,7 @@
   </mat-step>
   <!------------------------------------ Step 4 -------------------------------------->
   <mat-step [stepControl]="fourthFormGroup" label="Trabajadores disponibles">
-    <form>
+    <form [formGroup]="fourthFormGroup">
       <h2>Trabajadores disponibles</h2>
       <button
         mat-raised-button
@@ -265,7 +306,7 @@
                   <mat-card-title>{{ worker.name }}</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                  <ul>
+                  <ul *ngIf="worker.restrictionsWorker.length">
                     <li *ngFor="let restriction of worker.restrictionsWorker">
                       Día: {{ restriction.day }}, Hora:
                       {{ restriction.displayTime }}
@@ -306,10 +347,19 @@
     </form>
     <div class="button-container">
       <button
+        style="margin-right: 5px"
+        mat-raised-button
+        color="warn"
+        (click)="endform()"
+      >
+        Salir
+      </button>
+      <button
         mat-raised-button
         color="primary"
         matStepperNext
         (click)="createAllWorkersAndCommonWorkers()"
+        [disabled]="this.workers.length === 0"
       >
         Siguiente
       </button>
@@ -318,7 +368,7 @@
 
   <!------------------------------------ Step 5 -------------------------------------->
   <mat-step [stepControl]="fithFormGroup" label="Tareas programables">
-    <form>
+    <form [formGroup]="fithFormGroup">
       <div style="display: flex">
         <h2>Tags disponibles</h2>
         <button
@@ -360,9 +410,10 @@
         </button>
         <button
           mat-raised-button
-          style="background-color: rgb(77, 163, 37); color: white; margin: 5px"
           matStepperNext
+          color="accent"
           (click)="createAllTasksAndCommonTasks()"
+          [disabled]="this.scheduableTasks.length === 0"
         >
           Generar horario
         </button>
@@ -429,6 +480,15 @@
         </div>
       </div>
     </form>
-    <div class="button-container"></div>
+    <div class="button-container">
+      <button
+        style="margin-right: 5px"
+        mat-raised-button
+        color="warn"
+        (click)="endform()"
+      >
+        Salir
+      </button>
+    </div>
   </mat-step>
 </mat-stepper>

@@ -1,45 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-
-
-# class UserManager(BaseUserManager):
-#     def create_user(self, email, password=None, **extra_fields):
-#         if not email:
-#             raise ValueError('El campo Email debe ser definido')
-#         email = self.normalize_email(email)
-#         user = self.model(email=email, **extra_fields)
-#         user.set_password(password)
-#         user.save(using=self._db)
-#         return user
-
-#     def create_superuser(self, email, password=None, **extra_fields):
-#         extra_fields.setdefault('is_staff', True)
-#         extra_fields.setdefault('is_superuser', True)
-
-#         return self.create_user(email, password, **extra_fields)
-
-# class User(AbstractBaseUser, PermissionsMixin):
-#     email = models.EmailField(unique=True)
-#     name = models.CharField(max_length=255)
-#     is_active = models.BooleanField(default=True)
-#     is_staff = models.BooleanField(default=False)
-
-#     objects = UserManager()
-
-#     USERNAME_FIELD = 'email'
-#     REQUIRED_FIELDS = ['name']
-
-#     def __str__(self):
-#         return self.email
-# Create your models here.
-# class User(models.Model):
-#     username = models.CharField(max_length=70, blank=False, default='')
-#     password = models.CharField(max_length=70, blank=False, default='')
-#     email = models.CharField(max_length=70, blank=False, default='')
-    
-#     def __str__(self):
-#         return self.username
     
 class TimeTable(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')
@@ -124,15 +85,7 @@ class CommonScheduableTask(models.Model):
     def __str__(self):
         return self.name
     
-    
-    
-#quizas no dejar con restricciones para que no afecte al alterar los otros elementos a los schedule, unica restriccion con timetable
-# class schedule(models.Model):
-#     name  =  models.CharField(max_length=70, blank=False, default='')
-#     turn_schedule = models.ForeignKey(Turn, related_name='turn_schedule', on_delete=models.CASCADE)
-#     space_schedule = models.ForeignKey(Space, related_name='space_schedule', on_delete=models.CASCADE)
-#     worker_schedule = models.ForeignKey(Worker, related_name='worker_schedule', on_delete=models.CASCADE)
-#     timeTable_schedule = models.ForeignKey(TimeTable, related_name='timeTable_schedule', on_delete=models.CASCADE)
+
     
 class Schedule(models.Model):
     name = models.CharField(max_length=70, blank=False, default='')

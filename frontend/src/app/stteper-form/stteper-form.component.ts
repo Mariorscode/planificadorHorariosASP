@@ -156,20 +156,20 @@ export class StteperFormComponent {
   });
   // Third formStep
   thirdFormGroup = this._formBuilder.group({
-    spaces: [this.spaces, Validators.required],
+    spaces: [this.spaces],
   });
   // Fourth formStep
   fourthFormGroup = this._formBuilder.group({
-    workers: [this.workers, Validators.required],
+    workers: [this.workers],
   });
   fithFormGroup = this._formBuilder.group({
-    scheduableTasks: [this.scheduableTasks, Validators.required],
+    scheduableTasks: [this.scheduableTasks],
   });
 
-  isLinear = false;
+  isLinear = true;
 
   //--------------------/Form Steps --------------------
-
+  disableStepHeaders: boolean = true;
   //-------------------- Methods --------------------
 
   // excute at the load of the component
@@ -177,6 +177,11 @@ export class StteperFormComponent {
     this.getAllCommonSpaces();
     this.getAllCommonWorkers();
     this.getAllCommonTasks();
+  }
+
+  ngAfterViewInit(): void {
+    // Trigger validation on load
+    this.firstFormGroup.markAllAsTouched();
   }
 
   timeValidator(firstFormGroup: FormGroup) {
@@ -389,6 +394,7 @@ export class StteperFormComponent {
           spaceName: space.name,
           spaceCapacity: space.spaceCapacity,
           turns: this.turns,
+          restrictionTurns: space.restrictionsSpace,
           eliminate: this.deleteSpace.bind(this),
         },
       });
@@ -441,6 +447,7 @@ export class StteperFormComponent {
         data: {
           workerName: worker.name,
           turns: this.turns,
+          restrictionTurns: worker.restrictionsWorker,
           eliminate: this.deleteWorker.bind(this),
         },
       });
@@ -485,13 +492,15 @@ export class StteperFormComponent {
   openTagsDialog() {
     let dialogRef = this.dialog.open(TagsDialogComponent, {
       data: {
-        spaceName: this.firstFormGroup.get('scheduleName')?.value,
-        eliminate: this.deleteSpace.bind(this),
+        tags: this.taskTags,
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      this.loadTags(result);
+      console.log('result', result);
+      const auxTag: Tag = { name: '' };
+      auxTag.name = result.name;
+      this.loadTags(auxTag);
     });
   }
   openScheduableTaskDialog(scheduableTask?: ScheduableTask) {
@@ -557,6 +566,12 @@ export class StteperFormComponent {
     // delete the existing space cards
     this.spaceCards = [];
 
+    if (this.spaces.length === 0) {
+      this.snackBar.open('Debes introducir al menos un espacio', 'Quitar', {
+        duration: 5000,
+      });
+    }
+
     // iterate over the spaces array and create a card for each space
     this.spaces.forEach((space: Space) => {
       // Create a new card object with the space data
@@ -575,6 +590,12 @@ export class StteperFormComponent {
     // delete the existing worker cards
     this.workerCards = [];
 
+    if (this.workers.length === 0) {
+      this.snackBar.open('Debes introducir al menos un trabajador', 'Quitar', {
+        duration: 5000,
+      });
+    }
+
     // iterate over the workers array and create a card for each worker
     this.workers.forEach((worker: Worker) => {
       // Create a new card object with the worker data
@@ -588,23 +609,21 @@ export class StteperFormComponent {
     });
   }
 
-  loadTags(tags: Tag[]): void {
-    // iterate over the workers array and create a card for each worker
-    tags.forEach((tag: Tag) => {
-      // Create a new card object with the worker data
-      const newTag = {
-        name: tag.name,
-      };
-
-      // Add the card to the workerCards array
-      this.taskTags.push(newTag);
-      this.availableTags.push(newTag);
-    });
+  loadTags(newTag: Tag): void {
+    // Add the card to the workerCards array
+    this.taskTags.push(newTag);
+    this.availableTags.push(newTag);
   }
 
   loadTaskCards(): void {
     // delete the existing space cards
     this.taskCards = [];
+
+    if (this.scheduableTasks.length === 0) {
+      this.snackBar.open('Debes introducir al menos una tarea', 'Quitar', {
+        duration: 5000,
+      });
+    }
 
     // iterate over the spaces array and create a card for each space
     this.scheduableTasks.forEach((task: ScheduableTask) => {
@@ -952,6 +971,23 @@ export class StteperFormComponent {
   cleanTasks() {
     this.scheduableTasks = [];
     this.loadTaskCards();
+  }
+
+  first: boolean = true;
+
+  endform(first?: boolean) {
+    if (!first) {
+      this.schedulerASP.deleteTimetable(this.apiTimeTable.id).subscribe(
+        (response) => {
+          this.router.navigate(['/']);
+        },
+        (error) => {
+          console.error('Error:', error);
+        }
+      );
+    } else {
+      this.router.navigate(['/']);
+    }
   }
 
   constructor(

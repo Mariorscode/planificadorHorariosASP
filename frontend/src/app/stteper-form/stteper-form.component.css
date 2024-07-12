@@ -68,3 +68,6 @@ ul {
   vertical-align: middle;
 }
 
+::ng-deep .mat-horizontal-stepper-header{
+  pointer-events: none !important;
+}

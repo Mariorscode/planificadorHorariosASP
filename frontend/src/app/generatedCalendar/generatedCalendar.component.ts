@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+// generated-calendar.component.ts
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { schedulerASP } from '../schedulerASP.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { GeneratedCalendarOptionComponent } from '../generatedCalendarOption/generatedCalendarOption.component';
 
 interface apiEvents {
   name: string;
@@ -15,12 +17,16 @@ interface Solution {
   solution_id: number;
   schedules: string[];
 }
+
 @Component({
   selector: 'app-generatedCalendar',
   templateUrl: './generatedCalendar.component.html',
   styleUrls: ['./generatedCalendar.component.css'],
 })
 export class GeneratedCalendarComponent implements OnInit {
+  @ViewChild(GeneratedCalendarOptionComponent)
+  calendarOptionComponent!: GeneratedCalendarOptionComponent;
+
   apiSchedules: apiEvents[] = [];
   solutions: any[] = [];
   displayedSolutions: any[] = [];
@@ -84,13 +90,18 @@ export class GeneratedCalendarComponent implements OnInit {
     this.currentIndex = nextIndex;
   }
 
-  selectSolution(solution: any) {
+  selectSolution(solution: Solution) {
     this.solution_id = solution.solution_id;
-    localStorage.setItem('solution_id', solution.solution_id);
+    localStorage.setItem('solution_id', solution.solution_id.toString());
     console.log('Solution selected:', solution.solution_id);
 
-    this.location.go(this.location.path());
-    location.reload();
+    const selectedSolution = this.solutions.find(
+      (sol: Solution) => sol.solution_id === this.solution_id
+    );
+
+    if (this.calendarOptionComponent && selectedSolution) {
+      this.calendarOptionComponent.loadSolution(selectedSolution);
+    }
   }
 
   saveSolution() {

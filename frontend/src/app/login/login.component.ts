@@ -53,13 +53,9 @@ export class LoginComponent {
       },
       (error) => {
         this.loginError = true;
-        this.snackBar.open(
-          'Hay un error con las credenciales introducidas, revisa tu usuario y contraseña. Si no tienes cuenta, regístrate.',
-          'Quitar',
-          {
-            duration: 5000,
-          }
-        );
+        this.snackBar.open('Usuario o contraseña incorrectos', 'Quitar', {
+          duration: 5000,
+        });
       }
     );
   }

@@ -29,6 +29,7 @@ export class SpaceDialogComponent {
       spaceCapacity: number;
       turns: Turn[];
       isCommon?: boolean;
+      restrictionTurns: Turn[];
       eliminate: (spaceToEliminate: String) => void;
     },
     private fb: FormBuilder
@@ -37,6 +38,11 @@ export class SpaceDialogComponent {
   ngOnInit(): void {
     this.spaceForm.get('name')?.setValue(this.data.spaceName);
     this.spaceForm.get('spaceCapacity')?.setValue(this.data.spaceCapacity);
+  }
+
+  ngAfterViewInit(): void {
+    // Trigger validation on load
+    this.spaceForm.markAllAsTouched();
   }
 
   onNoClick(): void {

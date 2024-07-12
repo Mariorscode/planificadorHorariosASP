@@ -1,0 +1,10 @@
+.fieldname{
+    margin-left: 5px;
+  }
+  
+  .fieldname mat-icon {
+    cursor: pointer;
+    vertical-align: middle;
+  }
+  
+  

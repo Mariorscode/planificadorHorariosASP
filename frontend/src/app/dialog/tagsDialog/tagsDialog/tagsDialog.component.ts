@@ -1,9 +1,13 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  Validators,
+  FormGroup,
+} from '@angular/forms';
 
 import { Tag } from 'src/app/stteper-form/stteper-form.component';
-import { Dialog } from '@angular/cdk/dialog';
 
 @Component({
   selector: 'app-tagsDialog',
@@ -12,35 +16,45 @@ import { Dialog } from '@angular/cdk/dialog';
 })
 export class TagsDialogComponent {
   tagsToAdd: Tag[] = [];
-  name: string = '';
+  tagForm: FormGroup;
 
-  tagForm = this.fb.group({
-    // name: [this.data.spaceName || '', Validators.required],
-    // spaceCapacity: ['', Validators.required],
-    // restrictionsSpace: [this.restrictionsSpace, Validators.required],
-    tagsToAdd: [this.tagsToAdd, Validators.required],
-  });
   constructor(
     public dialogRef: MatDialogRef<TagsDialogComponent>,
-    @Inject(MAT_DIALOG_DATA)
-    public data: {},
+    @Inject(MAT_DIALOG_DATA) public data: { tags: Tag[] },
     private fb: FormBuilder
-  ) {}
+  ) {
+    this.tagForm = this.fb.group({
+      name: ['', Validators.required],
+    });
+
+    this.tagForm.controls['name'].valueChanges.subscribe(() => {
+      this.validateTag();
+    });
+  }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
-  addTag(name: string) {
-    // Verify if the tag already exists if not add it
-    const auxTag = { name: name };
-    const index = this.tagsToAdd.findIndex((t) => t.name === name);
-    if (index === -1) {
-      this.tagsToAdd.push(auxTag);
+  validateTag() {
+    const nameValue = this.tagForm.controls['name'].value.trim().toLowerCase();
+    const tagExists = this.data.tags.some(
+      (tag) => tag.name.toLowerCase() === nameValue
+    );
+
+    if (tagExists) {
+      this.tagForm.controls['name'].setErrors({ tagExists: true });
+    } else {
+      this.tagForm.controls['name'].setErrors(null);
     }
   }
 
   saveTags(): void {
-    this.dialogRef.close(this.tagsToAdd);
+    if (this.tagForm.valid) {
+      const newTag = {
+        name: this.tagForm.controls['name'].value.trim().toLowerCase(),
+      };
+      this.dialogRef.close(newTag);
+    }
   }
 }

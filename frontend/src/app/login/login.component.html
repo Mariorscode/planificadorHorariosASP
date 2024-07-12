@@ -21,12 +21,7 @@
       </mat-form-field>
       <button type="submit" class="btn">Login</button>
       <div style="margin-top: 15px; display: flex; justify-content: center">
-        <a
-          class="linkRegister"
-          *ngIf="loginError"
-          (click)="redirectToRegister()"
-          >Crear cuenta</a
-        >
+        <a class="linkRegister" (click)="redirectToRegister()">Registrarse</a>
       </div>
     </form>
   </div>

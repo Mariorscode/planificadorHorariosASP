@@ -26,6 +26,7 @@ export class WorkerDialogComponent {
       workerName: string;
       turns: Turn[];
       isCommon?: boolean;
+      restrictionTurns: Turn[];
       eliminate: (workerToEliminate: String) => void;
     },
     private fb: FormBuilder
@@ -33,6 +34,11 @@ export class WorkerDialogComponent {
 
   ngOnInit(): void {
     this.workerForm.get('name')?.setValue(this.data.workerName);
+  }
+
+  ngAfterViewInit(): void {
+    // Trigger validation on load
+    this.workerForm.markAllAsTouched();
   }
 
   onNoClick(): void {
