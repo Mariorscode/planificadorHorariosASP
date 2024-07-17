@@ -103,7 +103,7 @@ export class StteperFormComponent {
   daysOfWeek: string[] = [
     'Lunes',
     'Martes',
-    'Miércoles',
+    'Miercoles',
     'Jueves',
     'Viernes',
     'Sábado',
